@@ -1,0 +1,47 @@
+/*题目大意：
+返回字符串的最长回文子串
+
+解题思路：（Manacher算法）
+对字符串预处理，统一奇偶：abba -> #a#b#b#a#
+声明辅助数组p，存放以每个字符为中心的最长回文串半径
+
+tips：
+&&是短路运算符，对于数组要先判断是否越界*/
+
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        int mx = 0; //右边界
+        int id = 0; //中心下标
+        
+        string pres(2*s.length()+1, '#');
+        for(int i = 0; i < s.length(); i++) //预处理
+            pres[2*i+1] = s[i];
+            
+        vector<int> p(pres.length(), 0); //辅助数组p
+        for(int i = 0; i < p.size(); i++){
+            if(mx > i) // initial p[i] 
+                p[i] = min(p[2*id-i], mx-i);
+            else
+                p[i] = 1;
+            
+            while(i-p[i]>=0 && i+p[i]<p.size() && pres[i-p[i]]==pres[i+p[i]])
+                p[i]++;
+            
+            if(i+p[i] > mx){ //超过右边界
+                mx = i+p[i];
+                id = i;
+            }
+        }
+        
+        int max_len = 0;
+        for(int i = 0; i < p.size(); i++){ //遍历数组p
+            if(p[i] > max_len){
+                max_len = p[i];
+                id = i;
+            }
+        }
+        
+        return s.substr((id-max_len+1)/2, max_len-1);
+    }
+};
