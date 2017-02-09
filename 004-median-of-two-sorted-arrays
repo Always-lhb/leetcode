@@ -1,0 +1,53 @@
+/*
+题目大意：返回两个有序数组的中位数
+
+解题思路：
+查找两个有序数列A,B合并后的中位数，转化为查找A,B合并后的第k小数（k根据奇偶而定）
+递归：分别查找A,B的第pa，pb(pb=k-pa)小数
+  if(A[pa-1] < B[pb-1]): A[0..pa-1]均属于合并后的前k小数，舍弃
+  if(A[pa-1] > B[pb-1]): B[0..pb-1]均属于合并后的前k小数，舍弃
+  if(A[pa-1] == B[pb-1]): 命中，返回
+临界条件：假设总有A.size()<=B.size()
+  if(k == 1) return min(A[0], B[0]);
+  if(A.size() == 0) return B[k-1];
+  
+tips:奇偶判断 
+if(a & 0x1) 奇数
+else  偶数
+*/
+
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        double res, res1, res2;
+        int total_len = nums1.size() + nums2.size();
+        if(total_len & 0x1)
+            res = find_k_min(nums1, nums1.size(), nums2, nums2.size(), (nums1.size() + nums2.size())/2+1);
+        else{
+            res1 = find_k_min(nums1, nums1.size(), nums2, nums2.size(), (nums1.size() + nums2.size())/2);
+            res2 = find_k_min(nums1, nums1.size(), nums2, nums2.size(), (nums1.size() + nums2.size())/2+1);
+            res = (res1 + res2)/2.0;
+        }
+        return res;
+    }
+    double find_k_min(vector<int>& nums1, int m, vector<int>& nums2, int n, int k){
+        if(m > n) // always assume len1<=len2
+            return find_k_min(nums2, n, nums1, m, k);
+        if(m == 0)
+            return nums2[k-1];
+        if(k == 1)
+            return min(nums1[0], nums2[0]);
+        int pos1 = min(k/2, m);
+        int pos2 = k - pos1;
+        if(nums1[pos1-1] < nums2[pos2-1]){
+            vector<int> nums3(nums1.begin()+pos1, nums1.end());
+            return find_k_min(nums3, m-pos1, nums2, n, k-pos1);
+        }
+        else if(nums1[pos1-1] > nums2[pos2-1]){
+            vector<int> nums4(nums2.begin()+pos2, nums2.end());
+            return find_k_min(nums1, m, nums4, n-pos2, k-pos2);
+        }
+        else
+            return nums1[pos1-1];
+    }
+};
