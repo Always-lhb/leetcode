@@ -1,0 +1,54 @@
+/*
+
+题目大意：
+返回i,j，使得nums[i]+nums[j]=target
+假设只有一组ij满足条件
+
+解题思路：
+N-Sum问题，固定一个数num1，查找target-num1
+1. vector:需使用algorithm的find()方法，但无法获取下标
+2. 为了获取下标，需使用unordered_map<int, int>，存储下标与对应值，并且unordered_map拥有find()方法
+
+*/
+
+/*
+思路没问题，但是使用了两层循环
+*/
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> res;
+        for(int i = 0; i < nums.size(); i++){
+            int tar = target - nums[i];
+            for(int j = i+1; j < nums.size(); j++){
+                if(nums[j] == tar){
+                    res.push_back(i);
+                    res.push_back(j);
+                    return res;
+                }
+            }
+        }
+    }
+};
+
+
+/*
+看了lbc的代码后，利用unordered_map的find()方法，优化代码
+*/
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<int> res;
+        unordered_map<int, int> um;
+        for(int i = 0; i < nums.size(); i++){
+            int tar = target - nums[i];
+            if(um.find(tar) != um.end()){
+                res.push_back(um[tar]);
+                res.push_back(i);
+                return res;
+            }
+            um[nums[i]] = i;
+        }
+        return res;
+    }
+};
