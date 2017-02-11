@@ -1,0 +1,25 @@
+/*
+题目大意： 
+x=123, return 321
+x=-123, return -321
+溢出则返回0
+
+解题思路：一开始想转换为string进行处理，但是编译提示reverse(s.begin(), s.end())不通过，所以采用直接求值法
+
+tips:
+1.注意溢出判断
+2.声明为long类型防止溢出
+*/
+
+
+class Solution {
+public:
+    int reverse(int x) {
+        long res = 0;
+        while(x != 0){
+            res = res * 10 + x % 10;
+            x /= 10;
+        }
+        return (res > INT_MAX || res < INT_MIN) ? 0 : res;
+    }
+};
