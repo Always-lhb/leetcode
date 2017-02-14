@@ -1,0 +1,31 @@
+/*
+题目大意：与上一题相对，将Roman字符串转换为integer
+解题思路：将罗马数字对应的integer存入map，从个到千判断，若um[s[i]]<um[s[i+1]]，sum-=um[s[i]];否则sum+=um[s[i]]
+*/
+
+
+class Solution {
+public:
+    int romanToInt(string s) {
+        unordered_map<char, int> um;
+        um['I'] = 1;
+        um['V'] = 5;
+        um['X'] = 10;
+        um['L'] = 50;
+        um['C'] = 100;
+        um['D'] = 500;
+        um['M'] = 1000;
+        
+        int sum = um[s.back()];
+        
+        for(int i = s.length()-2; i >= 0; i--){
+            if(um[s[i]] < um[s[i+1]]){
+                sum -= um[s[i]];
+            }
+            else{
+                sum += um[s[i]];
+            }
+        }
+        return sum;
+    }
+};
