@@ -1,0 +1,32 @@
+/*题目大意：给定一个int，判定是否为回文数
+解题思路：对最高位和最低位进行判断，如果相同，去掉这两位继续判断，否则返回false
+注意事项：负数不是回文数
+*/
+
+
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        if(x < 0)
+            return false;
+        int flag = 1, num = x;
+        while(num / 10 != 0){ //求出flag，即获取最高位时的除数
+            flag *= 10;
+            num /= 10;
+        }
+        
+        while(x != 0){
+            int low = x % 10; //最低位
+            int high = x / flag; //最高位
+            if(low != high)
+                return false;
+            else{ //去除最高位，最低位，继续判断
+                x = x - high*flag - low;
+                x = x / 10;
+                flag /= 100; //去除两位
+            }
+        }
+        //退出循环后，仅剩一位数
+        return true;
+    }
+};
