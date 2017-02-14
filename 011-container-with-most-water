@@ -1,0 +1,21 @@
+/*
+题目大意：给定一个vector<int> height,其中每个height[i]表示坐标轴上的一个点(i, height[i])，对每个点做垂直于x轴的线段，求出两条线段与x轴所代表容器能盛放的最大水量
+解题思路1：对i属于[2, height.size()-1]，求出它与0<=j<i的每个点组成的container的最大值，超时...
+解题思路2：首先通过第一个和最后一个点求出widest container，其他container必须比这个container更高才有可能超过它的容量
+*/
+
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int i = 0, j = height.size()-1;
+        int water = 0;
+        
+        while(i < j){
+            int h = min(height[i], height[j]);
+            water = max((j - i) * h, water);
+            while(height[i] <= h && i < j) i++;
+            while(height[j] <= h && i < j) j--;
+        }
+        return water;
+    }
+};
