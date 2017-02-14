@@ -1,0 +1,24 @@
+/*
+题目大意：将integer类型转换为Roman字符串,假设此ineger大小在0-3999之间
+I:1
+V:5
+X:10
+L:50
+C:100
+D:500
+M:1000
+解题思路：综合考虑，DISCUSS里的方法最为简单且易于理解，即分别定义4个string数组，对应千百十个位，再将字符串连接即可
+*/
+
+
+class Solution {
+public:
+    string intToRoman(int num) {
+        string M[] = {"", "M", "MM", "MMM"}; //千位
+        string C[] = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+        string X[] = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+        string I[] = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+        
+        return(M[num/1000] + C[(num%1000)/100] + X[(num%100)/10] + I[num%10]);
+    }
+};
