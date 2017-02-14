@@ -1,0 +1,17 @@
+/*题目大意：对于'.'和'*'进行匹配，其中'.'代表任何字符，'*'表示前一位字符重复任意次
+解题思路：对于p[1]是否为'*'进行区分，注意条件
+ps:利用动态规划可以更好地解决问题，第一次并未这么做
+*/
+
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        if(p.empty())
+            return s.empty();
+        if(p[1] == '*')
+            return isMatch(s, p.substr(2)) || !s.empty() && (s[0] == p[0] || '.' == p[0]) && isMatch(s.substr(1), p);
+        else
+            return !s.empty() && (s[0] == p[0] || '.' == p[0]) && isMatch(s.substr(1), p.substr(1));
+    }
+};
