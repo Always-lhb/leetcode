@@ -1,0 +1,48 @@
+/*题目大意：
+将string转换为integer
+1.忽略string开始的所有空格
+2.以'+'或'-'开头
+3.正负号后跟尽可能多的数字
+4.数字后面的其他字符忽略即可
+5.integer越界返回INT_MAX或INT_MIN
+
+ps:
+1.为防止溢出，声明为long
+2.得到res后，直接进行溢出判断
+*/
+
+class Solution {
+public:
+    int myAtoi(string str) {
+        if (str.length() == 0)
+            return 0;
+        long res = 0; //防止溢出
+        bool is_positive = true; //正负号
+        int i = 0;
+        
+        while(str[i] == ' ')
+            i++;
+        if(str[i] == '+'){
+            i++;
+        }
+        else if(str[i] == '-'){
+            is_positive = false;
+            i++;
+        }
+        for(int j = i; j < str.length(); j++){
+            if(str[j] >= '0' && str[j] <= '9'){
+                res = res * 10 + (str[j] - '0');
+                if(res > INT_MAX)
+                    return is_positive ? INT_MAX : INT_MIN;
+            }
+            else
+                break;
+        }
+        // if(res > INT_MAX)
+        //     return is_positive ? INT_MAX : INT_MIN;
+        if(is_positive)
+            return int(res);
+        else
+            return int(0-res);
+    }
+};
