@@ -1,0 +1,41 @@
+/*
+题目大意：对于vector<string> strs，返回最长共同前缀
+解题思路：对每一位，遍历整个string数组，如果均相同则加入，否则退出循环。 
+ps：1.本题一次就做对了，并且本人加入了对strs求最短长度，私以为这样更好，虽然提高不明显
+    2.min_len = min(min_len, int(strs[i].length())); //注意类型转换
+*/
+
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        string res = "";
+        
+        if(strs.size() == 0)
+            return res;
+            
+        int min_len = strs[0].length();
+        
+        for(int i = 1; i < strs.size(); i++){ //find min_len
+            // if(strs[i].length() < min_len)
+            //     min_len = strs[i].length();
+            min_len = min(min_len, int(strs[i].length()));
+        }
+        
+        for(int j = 0; j < min_len; j++){ //every bit
+            char value = strs[0][j];
+            int k;
+            for(k = 1; k < strs.size(); k++){ //every string
+                if(strs[k][j] != value){
+                    break;
+                }
+            }
+            if(k == strs.size()){ //hit
+                res.push_back(value);
+            }
+            else{
+                break;
+            }
+        }
+        return res;
+    }
+};
