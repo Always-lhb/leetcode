@@ -1,0 +1,109 @@
+/*
+题目大意：对给定vector<int>，返回所有的a,b,c，使得a+b+c=0;注意去重
+解题思路：排序，对给定nums[i],利用卡尺法查找nums[left]+nums[right] = -nums[i]
+tips:去重
+*/
+
+
+class Solution {
+public:
+    vector<vector<int>> result;
+    vector<int> temp;
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        if(nums.size() < 3)
+            return result;
+        sort(nums.begin(), nums.end());
+        for(int i = 0; i < nums.size()-2; i++){ //first num
+            if(i > 0 && nums[i] == nums[i-1]) // 去重
+                continue;
+            find(i+1, nums.size()-1, nums, -nums[i]);
+        }
+        return result;
+    }
+    void find(int start, int end, vector<int>& nums, int target){
+        for(int i = start; i < end; i++){ // second num
+            if(i > start && nums[i] == nums[i-1]) // 去重
+                continue;
+            for(int j = i+1; j <= end; j++){ // third num
+                if(nums[i] + nums[j] == target){
+                    temp.clear();
+                    temp.push_back(-target);
+                    temp.push_back(nums[i]);
+                    temp.push_back(nums[j]);
+                    result.push_back(temp);
+                    break; // 去重
+                }
+            }
+        }
+    }
+};
+
+/*第二次做，超时，原因在于find()函数*/
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> res;
+        vector<int> curr_res;
+        
+        if(nums.size() < 3)
+            return res;
+        
+        sort(nums.begin(), nums.end());
+        for(int i = 0; i < nums.size()-2; i++){ //first num
+            // int target = -nums[i];
+            for(int j = i+1; j < nums.size()-1; j++){ //second num
+                int target = -nums[i] - nums[j];
+                if(find(nums.begin()+j+1, nums.end(), target) != nums.end()){
+                    curr_res.clear();
+                    curr_res.push_back(nums[i]);
+                    curr_res.push_back(nums[j]);
+                    curr_res.push_back(target);
+                    if(find(res.begin(), res.end(), curr_res) == res.end()){
+                        res.push_back(curr_res);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+};
+
+
+/*卡尺法*/
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> res;
+        
+        if(nums.size() < 3)
+            return res;
+        
+        sort(nums.begin(), nums.end());
+        for(int i = 0; i < nums.size()-2; i++){ //first num
+            if(i != 0 && nums[i] == nums[i-1])
+                continue;
+            int left = i+1;
+            int right = nums.size()-1;
+            while(left < right){
+                if(nums[left] + nums[right] < -nums[i]){
+                    left++;
+                }
+                else if(nums[left] + nums[right] > -nums[i]){
+                    right--;
+                }
+                else{
+                    vector<int> tmp;
+                    tmp.push_back(nums[i]);
+                    tmp.push_back(nums[left]);
+                    tmp.push_back(nums[right]);
+                    res.push_back(tmp);
+                    left++;
+                    while(left < right && nums[left] == nums[left-1])
+                        left++;
+                }
+                
+            }
+        }
+        return res;
+    }
+};
