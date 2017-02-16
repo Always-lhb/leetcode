@@ -1,0 +1,39 @@
+/*
+题目大意：对于输入的数字，按照手机键位，返回所有可能的字符串和
+解题思路：综合DISCUSS和lbc的解法，果断选择“回溯法”，这个题应该要弄明白
+*/
+
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> res;
+        if(digits.size() < 1)
+            return res;
+        
+        unordered_map<char, string> um;
+        um['0'] = "";
+        um['1'] = "";
+        um['2'] = "abc";
+        um['3'] = "def";
+        um['4'] = "ghi";
+        um['5'] = "jkl";
+        um['6'] = "mno";
+        um['7'] = "pqrs";
+        um['8'] = "tuv";
+        um['9'] = "wxyz";
+        
+        res.push_back("");
+        for(int i = 0; i < digits.size(); i++){
+            vector<string> tmp;
+            string curr = um[digits[i]];
+            
+            for(int j = 0; j < curr.size(); j++){
+                for(int k = 0; k < res.size(); k++){
+                    tmp.push_back(res[k] + curr[j]);
+                }
+            }
+            res = tmp;
+        }
+        return res;
+    }
+};
