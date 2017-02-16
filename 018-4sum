@@ -1,0 +1,48 @@
+/*
+题目大意：N-Sum问题，对给定数组，返回所有a+b+c+d=target，注意去重
+解题思路：老办法，先排序，然后对于任意的nums[i]和nums[j]，利用卡尺法找最后两个位置
+tips：这道题做的很顺利，第一次提交时发现有重复答案，原因在于去重不完全，刚开始以为只需要在最后去重即可，实际上应该对第一个、第二个和最后均去重！！！
+      即四个数需要三次去重，同理是3-Sum需要两次去重，2-Sum需要一次去重
+*/
+
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        vector<vector<int>> res;
+        
+        if(nums.size() < 4)
+            return res;
+        
+        sort(nums.begin(), nums.end());
+        for(int i = 0; i < nums.size()-3; i++){ //first num
+            if(i != 0 && nums[i] == nums[i-1]) continue; //quchong
+            for(int j = i+1; j < nums.size()-2; j++){ //second num
+                if(j != i+1 && nums[j] == nums[j-1]) continue; //quchong
+            
+                int tar = target - nums[i] - nums[j];
+                int left = j+1, right = nums.size()-1;
+                
+                while(left < right){
+                    vector<int> tmp;
+                    
+                    if(nums[left] + nums[right] < tar)
+                        left++;
+                    else if(nums[left] + nums[right] > tar)
+                        right--;
+                    else{
+                        tmp.push_back(nums[i]);
+                        tmp.push_back(nums[j]);
+                        tmp.push_back(nums[left]);
+                        tmp.push_back(nums[right]);
+                        res.push_back(tmp);
+                        left++;
+                        
+                        while(left < right && nums[left] == nums[left-1]) //quchong
+                            left++;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+};
