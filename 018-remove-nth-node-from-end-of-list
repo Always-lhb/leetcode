@@ -1,0 +1,47 @@
+/*
+题目大意：对于给定链表，删除从后往前数的第n个节点
+解题思路：先算出该节点从前往后的位置，然后利用尾插法构造结果并返回，此题也很顺利。
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode *res = NULL, *currNode = NULL, *nextNode = NULL; // 分别为结果链表，尾节点，新节点
+        ListNode *tmp = head; //用于计算链表节点数
+        
+        if(head->next == NULL)
+            return res;
+        
+        int sum = 1;
+        while(tmp->next != NULL){
+            tmp = tmp->next;
+            sum++;
+        }
+        
+        int num = sum - n + 1; //去除正向第num个节点
+        for(int i = 1; i <= sum; i++){
+            if(i == num){
+                head = head->next;
+                continue;
+            }
+            nextNode = new ListNode(head->val);
+            head = head->next;
+            
+            if(res == NULL)
+                res = currNode = nextNode; //first node
+            else{
+                currNode->next = nextNode;
+                currNode = nextNode;
+            }
+        }
+        return res;
+    }
+};
