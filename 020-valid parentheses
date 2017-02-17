@@ -1,0 +1,35 @@
+/*
+题目大意：对于由(),[],{}构成的字符串，判断是否符合规范
+解题思路：此题明显要用到“栈”，第一次做这类题目，看了lbc的答案后，学习了stack的使用，此题就变得简单了。以后遇到stack的问题应该比较轻松了
+tips：注意在循环结束后，对于stack判断是否为空，为空才返回true
+*/
+
+class Solution {
+public:
+    bool isValid(string s) {
+        unordered_map<char, char> um;
+        um[')'] = '(';
+        um[']'] = '[';
+        um['}'] = '{';
+        
+        stack<char> st;
+        for(int i = 0; i < s.size(); i++){
+            if(s[i]=='(' || s[i]=='[' || s[i]=='{'){
+                st.push(s[i]);
+            }
+            else{
+                if(!st.empty() && um[s[i]] == st.top()){
+                    st.pop();
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        
+        if(st.size() == 0)
+            return true;
+        else
+            return false;
+    }
+};
