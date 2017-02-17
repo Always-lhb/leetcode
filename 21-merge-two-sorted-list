@@ -1,0 +1,65 @@
+/*
+题目大意：合并两个有序链表
+解题思路：很简单的链表问题，判断链表A,B当前值的大小，并构造新节点，然后利用尾插法构造结果链表即可
+tips：很顺利，直接AC
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        if(l1 == NULL)
+            return l2;
+        if(l2 == NULL)
+            return l1;
+        
+        ListNode *res = NULL, *currNode = NULL, *nextNode = NULL;
+        while(l1 && l2){
+            if(l1->val <= l2->val){
+                nextNode = new ListNode(l1->val);
+                if(res == NULL){ //first node
+                    res = currNode = nextNode;
+                }
+                else{
+                    currNode->next = nextNode;
+                    currNode = nextNode;
+                }
+                l1 = l1->next;
+            }
+            else{
+                nextNode = new ListNode(l2->val);
+                if(res == NULL){ //first node
+                    res = currNode = nextNode;
+                }
+                else{
+                    currNode->next = nextNode;
+                    currNode = nextNode;
+                }
+                l2 = l2->next;
+            }
+        }
+        while(l1){
+            nextNode = new ListNode(l1->val);
+            currNode->next = nextNode;
+            currNode = nextNode;
+            
+            l1 = l1->next;
+        }
+        while(l2){
+            nextNode = new ListNode(l2->val);
+            currNode->next = nextNode;
+            currNode = nextNode;
+            
+            l2 = l2->next;
+        }
+        
+        return res;
+    }
+};
