@@ -1,0 +1,30 @@
+/*
+题目大意：根据输入的个数n，构造所有符合规则的具有n个'('和n个')'的字符串
+解题思路：隐约感觉到本题需要用“回溯法”，但是自己还是没做出来。综合了lbc和DISCUSS，选出了一个自己理解的答案
+  left,right分别代表剩余左右括号数目，当右括号无剩余时，说明已构造好一个答案，并返回；当左括号有剩余时，插入一个'('；当左右括号数目不等时，需要插入一个')'
+
+tips:结合17题，理解回溯法，目前是一个弱项
+*/
+
+
+class Solution {
+public:
+    void addpar(vector<string>& res, string curr, int left, int right){
+        if(right == 0){
+            res.push_back(curr);
+            return;
+        }
+        if(left != 0){
+            addpar(res, curr+'(', left-1, right);
+        }
+        if(left != right){
+            addpar(res, curr+')', left, right-1);
+        }
+    }
+    
+    vector<string> generateParenthesis(int n) {
+        vector<string> res;
+        addpar(res, "", n, n);
+        return res;
+    }
+};
