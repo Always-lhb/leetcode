@@ -1,0 +1,42 @@
+/*
+题目大意：给定一个链表，交换两个相邻节点的值，返回头指针。如：给定1->2->3->4，要求返回2->1->4->3。要求只能用常数空间。
+解题思路：每次交换前判断链表是否还有两个节点，如果有就交换这两个节点。
+tips：思路没问题，第一次提交没过，看了yyp的注释后发现忘记标记每次交换后的尾节点了，需要标注尾节点，将链表连接起来
+*/
+
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if(head == NULL || head->next == NULL)
+            return head;
+        
+        bool is_first = true;
+        ListNode *first = head;
+        ListNode *curr = head;
+        while(first && first->next){
+            if(is_first){ // decide head
+                head = first->next;
+                is_first = false;
+            }
+            
+            ListNode *second = first->next;
+            curr->next = second;
+            first->next = second->next;
+            second->next = first;
+            
+            curr = first; // 尾节点
+            first = first->next; //next first_node
+        }
+        
+        return head;
+    }
+};
