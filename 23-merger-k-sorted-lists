@@ -1,0 +1,103 @@
+/*
+题目大意：合并k个有序链表
+解题思路：
+  1.由于刚看了17，22两个回溯算法的题，所以第一时间想用回溯去解决本题，即不断得合并一个新链表进入结果链表，直到没有新链表。思路没问题，复杂度为k*k*n
+  2.采用合并排序思想，i从0到（链表长度）/2,每次合并两个链表lists[2*i]和lists[2*i + 1]，将结果放入lists[i]中，直到链表总数为1，得到的就是要求的有序链表。
+    合并两个链表的思路与21相同
+  3.k路归并问题：采用小顶堆进行处理。通过本题学习了priority_queue的用法，时间复杂度k*log(n）
+tips:
+  通过本题总结了带头节点与不带头节点两种链表的差异：带头节点的链表，无需判断是否为第一个节点，但最后应返回head->next
+*/
+
+/*不带头节点*/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    struct cmp{
+        bool operator()(ListNode* a, ListNode* b){
+            return a->val > b->val;
+        }    
+    };
+    
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        priority_queue<ListNode*, vector<ListNode*>, cmp> q;
+        
+        ListNode *res = NULL, *currNode = NULL;
+        
+        for(int i = 0; i < lists.size(); i++){
+            if(lists[i] != NULL){
+                q.push(lists[i]); //one node
+            }
+        }
+        
+        while(!q.empty()){
+            ListNode *nextNode = q.top();
+            q.pop();
+            
+            if(res == NULL){ //first node
+                res = currNode = nextNode;
+            }else{
+                currNode->next = nextNode;
+                currNode = nextNode;
+            }
+            
+            if(nextNode->next)
+                q.push(nextNode->next);
+        }
+        
+        return res;
+    }
+};
+
+/*带头节点*/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    struct cmp{
+        bool operator()(ListNode* a, ListNode* b){
+            return a->val > b->val;
+        }    
+    };
+    
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        priority_queue<ListNode*, vector<ListNode*>, cmp> q;
+        
+        ListNode *res = new ListNode(0);
+        ListNode *currNode = res;
+        
+        for(int i = 0; i < lists.size(); i++){
+            if(lists[i] != NULL){
+                q.push(lists[i]); //one node
+            }
+        }
+        
+        while(!q.empty()){
+            ListNode *nextNode = q.top();
+            q.pop();
+            
+            
+            currNode->next = nextNode;
+            currNode = nextNode;
+            
+            if(nextNode->next)
+                q.push(nextNode->next);
+        }
+        currNode->next = NULL;
+        
+        return res->next;
+    }
+};
