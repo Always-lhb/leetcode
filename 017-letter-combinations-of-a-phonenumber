@@ -37,3 +37,47 @@ public:
         return res;
     }
 };
+
+
+/*做到第22题以后，回过头来再看本题，对于回溯法的理解更为深刻，采用递归实现回溯求解，思路如下：
+    如果digits.size()=0，说明得到一个解，插入解空间并返回；
+    否则的话，得到digits首字符对应的字符串chars，并对chars里的每一位，递归
+    一定注意某些变量的地址传递！！
+*/
+
+
+class Solution {
+public:
+    void dfs(vector<string>& res, string curr, unordered_map<char, string>& um, string digits){ //curr:当前已组字符串 digits:剩余传入字符串
+        if(!digits.size()){
+            res.push_back(curr);
+            return;
+        }
+        
+        string chars = um[digits[0]];
+        for(int i = 0; i < chars.size(); i++){
+            dfs(res, curr+chars[i], um, digits.substr(1));
+        }
+    }
+    
+    vector<string> letterCombinations(string digits) {
+        vector<string> res;
+        if(digits.size() == 0)
+            return res;
+            
+        unordered_map<char, string>um;
+        um['0'] = "";
+        um['1'] = "";
+        um['2'] = "abc";
+        um['3'] = "def";
+        um['4'] = "ghi";
+        um['5'] = "jkl";
+        um['6'] = "mno";
+        um['7'] = "pqrs";
+        um['8'] = "tuv";
+        um['9'] = "wxyz";
+        
+        dfs(res, "", um, digits);
+        return res;
+    }
+};
