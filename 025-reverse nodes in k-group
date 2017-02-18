@@ -1,0 +1,49 @@
+/*
+题目大意：给定链表和数字k，以k个节点为一组进行反转
+解题思路：本题本身并不难，可以有多种方法实现
+  1.spw:先把链表全部反转，再以k为一组进行反转
+  2.lbc:直接每k个节点进行一次反转
+  3.yyp:将k个元素依次插入以新队列当前尾指针为头指针的新队列的头部，以实现逆序，每次取k个处理，直至结束
+综上考虑，选择DISCUSS里的方法进行处理，加入pre,cur,nex三个指针，分别标记三个节点，使代码更简洁
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if(head == NULL || k == 1) return head;
+        
+        ListNode *preheader = new ListNode(-1);
+        preheader->next = head;
+        
+        ListNode *cur = preheader, *pre = preheader, *nex = head;
+        
+        int num = 0;
+        while(cur->next){
+            cur = cur->next;
+            num++;
+        }
+        while(num >= k){ //小于k的最后几个节点不处理
+            cur = pre->next;
+            nex = cur->next;
+            
+            for(int i = 1; i < k; i++){ //每k个节点需处理k-1次
+                cur->next = nex->next;
+                nex->next = pre->next;
+                pre->next = nex;
+                nex = cur->next;
+            }
+            pre = cur;
+            num -= k;
+        }
+        
+        return preheader->next;
+    }
+};
