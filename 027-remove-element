@@ -1,0 +1,19 @@
+/*
+题目大意：与上一题基本相同，返回数组中值不为val的元素个数len，只需要保证前len个元素正确即可
+解题思路：同样，用两个指针分别指向当前位置，与当前有效位置
+tips：本题很顺利，一次过
+*/
+
+
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        int len = 0;
+        for(int i = 0; i < nums.size(); i++){
+            if(nums[i] != val){
+                nums[len++] = nums[i];
+            }
+        }
+        return len;
+    }
+};
