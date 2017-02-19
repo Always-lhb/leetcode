@@ -1,0 +1,48 @@
+/*
+题目大意：对升序数组，去除数组中重复的项，并返回剩余数组长度
+解题思路：对数组遍历一次，如果是重复项则删除，否则判断下一位
+tips:本题不仅仅要求返回不重复项的长度，还要求删除数组的重复项，第一次审题不清。
+*/
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+
+        if(nums.size() <= 1)
+            return nums.size();
+        
+        int location = 1;
+        while(location < nums.size()){
+            if(nums[location] == nums[location-1]){
+                nums.erase(nums.begin()+location);
+            }
+            else{
+                location += 1;    
+            }
+        }
+        return nums.size();
+    }
+};
+
+
+/*
+再次审题之后发现，本题还有个坑，上述方法使用erase()的复杂度为n，实际上题目只要求返回长度len的同时，确保数组的前len个元素是不重复的，之后的元素无所谓
+因此可以简化如下：
+*/
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+
+        if(nums.size() <= 1)
+            return nums.size();
+        
+        int len = 1;
+        for(int i = 1; i < nums.size(); i++){
+            if(nums[i] != nums[i-1]){
+                nums[len++] = nums[i];
+            }
+        }
+        return len;
+    }
+};
