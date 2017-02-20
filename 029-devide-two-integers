@@ -2,7 +2,7 @@
 题目大意：不允许使用/,*,%,计算出两数相除的结果
 解题思路：一开始想到的方法是，通过被除数不断地减除数，直到被除数小于除数，超时...
   看了其他解答后，发现应该使用位运算，即左移<<和右移>>。左移代表乘2，右移代表除2
-  请额外注意本题，思考了很久才明白，为啥需要两层循环
+  请额外注意本题，思考了很久才明白，为啥需要两层循环!!!因为左移了count-1位，如果左移count位仅对应于整除情况
   
 tips:
   将正负号单独处理
@@ -43,5 +43,41 @@ public:
         if(is_pos)
             return res;
         return -res;
+    }
+};
+
+
+/*second time*/
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        if(divisor == 0) return INT_MAX;
+        if(dividend == INT_MIN && divisor == -1) return INT_MAX;
+        
+        long long n1 = dividend;
+        long long n2 = divisor;
+        
+        bool flag = true;
+        if((n1 < 0 && n2 > 0) || (n1 > 0 && n2 < 0)) flag = false;
+        
+        n1 = abs(n1);
+        n2 = abs(n2);
+        
+        int res = 0;
+        while(n1 >= n2){
+            long long cur = n2;
+            int count = 0;
+            while(n1 >= cur){
+                count ++;
+                cur = n2 << count;
+            }
+            res += 1 << (count-1); // 左移count位仅仅对应于整除情况
+            n1 -= n2 << (count-1);
+        }
+        
+        if(flag)
+            return res;
+        else 
+            return -res;
     }
 };
