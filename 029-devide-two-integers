@@ -1,0 +1,47 @@
+/*
+题目大意：不允许使用/,*,%,计算出两数相除的结果
+解题思路：一开始想到的方法是，通过被除数不断地减除数，直到被除数小于除数，超时...
+  看了其他解答后，发现应该使用位运算，即左移<<和右移>>。左移代表乘2，右移代表除2
+  请额外注意本题，思考了很久才明白，为啥需要两层循环
+  
+tips:
+  将正负号单独处理
+  为避免计算过程出现溢出，采用long long
+  溢出条件有两个：1.divisor == 0  2. dividend == INT_MIN && divisor == -1
+*/
+
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        if(divisor == 0) return INT_MAX;
+        
+        if(dividend == INT_MIN && divisor == -1) return INT_MAX;
+        
+        long long left = dividend, right = divisor;
+        bool is_pos = true;
+        
+        if(left < 0 && right > 0 || left > 0 && right < 0){
+            is_pos = false;
+        }
+        left = abs(left);
+        right = abs(right);
+            
+        int res = 0;
+        while(left >= right){
+            long long cur = right;
+            int shift = 0;
+            
+            while(left >= cur){
+                shift++;
+                cur = right << shift;
+            }
+            
+            res += 1 << (shift-1);
+            left -= right << (shift-1);
+        }
+
+        if(is_pos)
+            return res;
+        return -res;
+    }
+};
