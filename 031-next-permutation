@@ -1,0 +1,43 @@
+/*
+题目大意：给定一个整数序列，返回该序列的下一个字典序列。如果是降序序列，直接返回升序序列。
+解题思路：看了yyp的解释后，才明白题意...
+         对所给序列，从右至左查找，找到第一个index，使得nums[index]<nums[index+1]，如果找不到，说明原序列为降序排序，直接返回升序序列；
+         对找到的index,从nums.size()-1遍历到index+1,找到第一个大于nums[index]的i，交换nums[index],nums[i]；
+         最后再将nums[index+1..nums.size()-1]逆序即可
+tips：切勿忘记最后一步，这样才能得到字典序的下一个序列
+      注意reverse()函数的写法
+      切勿忘记break;
+*/
+
+
+class Solution {
+public:
+    void reverse(vector<int>& nums, int left, int right){
+        while(left < right){
+            swap(nums[left++], nums[right--]);
+        }
+    }
+    
+    void nextPermutation(vector<int>& nums) {
+        if(nums.size() < 2) return;
+        
+        int index = nums.size() - 2;
+        while(index >= 0 && nums[index] >= nums[index+1]){
+            index--;
+        }
+        
+        if(index == -1){
+            reverse(nums, 0, nums.size() - 1);
+            return;
+        }
+        
+        for(int i = nums.size() - 1; i > index; i--){
+            if(nums[i] > nums[index]){
+                swap(nums[i], nums[index]);
+                break;
+            }
+        }
+        reverse(nums, index + 1, nums.size() - 1);
+        return;
+    }
+};
