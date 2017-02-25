@@ -1,0 +1,41 @@
+/*
+题目大意：给定一个由'('和')'组成的字符串，返回这个字符串最长合法括号的长度
+解题思路：
+  1.一开始想到的是暴力解法，即对于每个可能的起始字符，求出以它开始的最长合法子串长，然后取最长。超时...
+  2.然后，我想到了用一个stack，从第一个左括号开始，遍历整个字符串并使用num计数，每次push和pop操作都加1，最后根据num及stack里剩余的左括号数量求解。
+  这个方法没考虑到：如果不合法的括号位于中间，需要分别求左右两边子串的长度，最后确定返回值
+  3.看了DISCUSS后，发现它与我的想法一致，并且，通过两点优化代码：1）将左括号右括号统一处理 2）在stack中存入下标而非'('
+*/
+
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int res = 0;
+        if(s.size() == 0) return res;
+        
+        stack<int> st;
+        for(int i = 0; i < s.size(); i++){ // regard '(' and ')' the same
+            if(s[i] == '(') st.push(i);
+            else{
+                if(!st.empty()){
+                    if(s[st.top()] == '(') st.pop();
+                    else st.push(i);
+                }
+                else st.push(i);
+            }
+        }
+        if(st.empty()) res = s.size();
+        else{
+            int l = 0, r = s.size();
+            while(!st.empty()){
+                l = st.top();
+                st.pop();
+                
+                res = max(res, r - l - 1);
+                r = l;
+            }
+            res = max(res, r); // last r without l
+        }
+        return res;
+    }
+};
