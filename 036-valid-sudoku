@@ -1,0 +1,52 @@
+/*
+题目大意：判断所给的9*9数独表是否合法，空格用'.'代表
+  1.每一行，1-9各出现一次
+  2.每一列，1-9各出现一次
+  3.每个子表的九格里，1-9各出现一次
+解题思路：分别遍历每行，每列，每个子表，如果都合法则返回true
+tips: 此题并不难，要理解数独的要求，尤其第三点
+*/
+
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        for(int i = 0; i < 9; i++){
+            vector<bool> flag(10, true);
+            for(int j = 0; j < 9; j++){
+                if(board[i][j] != '.'){
+                    int num = board[i][j] - '0';
+                    if(flag[num] == false)
+                        return false;
+                    flag[num] = false;
+                }
+            }
+        }
+        for(int i = 0; i < 9; i++){
+            vector<bool> flag(10, true);
+            for(int j = 0; j < 9; j++){
+                if(board[j][i] != '.'){
+                    int num = board[j][i] - '0';
+                    if(flag[num] == false)
+                        return false;
+                    flag[num] = false;
+                }
+            }
+        }
+        for(int i = 0; i < 3; i++){
+            for(int j = 0; j < 3; j++){
+                vector<bool> flag(10, true);
+                for(int k = 0; k < 3; k++){
+                    for(int l = 0; l < 3; l++){
+                        if(board[i*3+k][j*3+l] != '.'){
+                            int num = board[i*3+k][j*3+l] - '0';
+                            if(flag[num] == false)
+                                return false;
+                            flag[num] = false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+};
