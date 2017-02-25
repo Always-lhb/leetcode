@@ -1,0 +1,31 @@
+/*
+题目大意：给定一个升序数组和target，如果在数组内找到target则返回下标，如果没找到则返回target应插入的位置。假设数组内无重复元素
+解题思路：对于有序数组的位置查找，依然采用二分法解决。
+         退出循环时，如果low>high说明未找到target，此时根据nums[mid]与target的关系决定target插入mid前还是mid后。
+*/
+
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        if(target < nums[0]) return 0;
+        if(target > nums[nums.size()-1]) return nums.size();
+        
+        int low = 0, high = nums.size() - 1, mid;
+        while(low <= high){
+            mid = (low + high) / 2;
+            if(nums[mid] == target) return mid;
+            else if(nums[mid] > target){
+                high = mid - 1;
+            }
+            else if(nums[mid] < target){
+                low = mid + 1;
+            }
+        }
+        if(low > high){ // not found
+            if(nums[mid] < target)
+                return mid + 1;
+            if(nums[mid] > target)
+                return mid;
+        }
+    }
+};
