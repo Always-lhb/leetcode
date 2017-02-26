@@ -1,0 +1,42 @@
+/*
+题目大意：与上一题类似，给定一个集合和目标target，集合里的每个元素只能使用一次，返回所有的结果集合
+解题思路：与上一题类似，排序+dfs
+tips：本题存在几个需要注意的地方
+  1.每个元素只能使用一次，所以回溯时的下标变成i+1
+  2.在去重之后，应该有一个判定是否为candidates结尾的判断，否则发生数组越界。神奇的是，本题的所有case在不判断的情况下都能通过，但还是应该注意
+*/
+
+
+class Solution {
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        vector<vector<int>> res;
+        
+        if(target < candidates[0]) return res;
+        
+        vector<int> tmp;
+        dfs(res, tmp, candidates, target, 0);
+        return res;
+    }
+    void dfs(vector<vector<int>>& res, vector<int>& tmp, vector<int>& candidates, int remain, int index){
+        if(remain == 0){
+            res.push_back(tmp);
+            return;
+        }
+        if(remain < candidates[index]){
+            return;
+        }
+        else{
+            for(int i = index; i < candidates.size() && candidates[i] <= remain; i++){
+                while(i > index && i < candidates.size() && candidates[i] == candidates[i-1])
+                    i++;
+                if(i == candidates.size())
+                    return;
+                tmp.push_back(candidates[i]);
+                dfs(res, tmp, candidates, remain - candidates[i], i + 1);
+                tmp.pop_back();
+            }
+        }
+    }
+};
