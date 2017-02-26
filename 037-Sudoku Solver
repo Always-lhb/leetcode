@@ -1,0 +1,113 @@
+/*
+题目大意：给定一个不完整的数独表，完成数独表填写。假设唯一解
+解题思路：
+  1.显然要用到回溯法。声明函数util(vector<vector<char>>, int pos)，对于位置0..80遍历判断，如果pos>=81说明前81个位置均已放入相应数字，直接返回true
+    否则，先得到pos对应的行下标i和列下标j，对于board[i][j]判断，如果不是'.'，直接判断下一位置；
+    否则，对于可能放入的9个字符遍历，如果字符c不在i行且不在j列且不在i,j确定的子表内，则将c放入board[i][j]，然后进行下一位置判断；
+    注意回溯之后要恢复board。
+*/
+
+class Solution {
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        util(board, 0);
+    }
+    bool util(vector<vector<char>>& board, int pos){
+        if(pos >= 81) return true; //0..80
+        int i = pos / 9, j = pos % 9;
+        if(board[i][j] != '.'){
+            return util(board, pos + 1);
+        }
+        else{
+            for(char c = '1'; c <= '9'; c++){
+                if(!isInRaw(board, i, c) && !isInCol(board, j, c) && !isInSub(board, i, j, c)){
+                    board[i][j] = c; // 放入c，继续遍历
+                    if(util(board, pos + 1)){
+                        return true;
+                    }
+                    else{
+                        board[i][j] = '.'; // 恢复board
+                    }
+                }
+            }
+            return false; //没有能填入该位置的字符
+        }
+    }
+    bool isInRaw(vector<vector<char>> board, int i, char c){ // return true while c in raw i
+        for(int j = 0; j < 9; j++){
+            if(board[i][j] == c)
+                return true;
+        }
+        return false;
+    }
+    bool isInCol(vector<vector<char>> board, int j, char c){ // return true while c in col j
+        for(int i = 0; i < 9; i++){
+            if(board[i][j] == c){
+                return true;
+            }
+        }
+        return false;
+    }
+    bool isInSub(vector<vector<char>> board, int i, int j, char c){ // return true while c in sub
+        for(int m = 0; m < 3; m++){
+            for(int n = 0; n < 3; n++){
+                if(board[i / 3 * 3 + m][j / 3 * 3 + n] == c){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+};
+
+
+/*
+接下来给出lbc的解法，整体思路与上述一致，但是没有使用pos，而是直接使用行列号，感觉不如上述答案
+*/
+class Solution {
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        vector<vector<bool>> row(9, vector<bool>(9, false));
+        vector<vector<bool>> col(row);
+        vector<vector<bool>> grid(row);
+        init(board, row, col, grid);
+        dfs(board, 0, 0, row, col, grid);
+    }
+    void init(vector<vector<char>>& board, vector<vector<bool>>& row, vector<vector<bool>>& col, vector<vector<bool>>& grid){
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                if(board[i][j] != '.'){
+                    int index = board[i][j] - '1'; //0..8
+                    row[i][index] = true;
+                    col[j][index] = true;
+                    grid[i/3*3 + j/3][index] = true;
+                }
+            }
+        }
+    }
+    // x indicates row index, y indicates col index
+    bool dfs(vector<vector<char>>& board, int x, int y, vector<vector<bool>>& row, vector<vector<bool>>& col, vector<vector<bool>>& grid){
+        if(x == 9) return true;
+        if(y == 9){
+            return dfs(board, x+1, 0, row, col, grid);
+        }
+        if(board[x][y] != '.'){
+            return dfs(board, x, y+1, row, col, grid);
+        }else{
+            for(int i = 0; i < 9; i++){
+                if(row[x][i] == true || col[y][i] == true || grid[x/3*3 + y/3][i] == true) continue;
+                
+                board[x][y] = '1' + i;
+                row[x][i] = true;
+                col[y][i] = true;
+                grid[x/3*3 + y/3][i] = true;
+                if(dfs(board, x, y+1, row, col, grid)) return true;
+                board[x][y] = '.';
+                row[x][i] = false;
+                col[y][i] = false;
+                grid[x/3*3 + y/3][i] = false;
+            }
+            return false;
+        }
+    }
+};
