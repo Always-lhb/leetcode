@@ -1,0 +1,37 @@
+/*
+题目大意：给定一个无重复元素的set集合，和一个int类型的target，求出所有利用set里的元素能构成target的结果。set里的元素可多次使用，结果不能有重复
+解题思路：先将set排序，然后利用dfs求解
+tips：本题思路没问题，还算顺利，需注意以下两点：
+  1.在remain < candidates[0]返回前，不需要pop_back()，因为返回到上一层时有pop_back()
+  2.tmp里对同一元素可以存入多个，但是不能再存储比当前元素更小的元素了，这样会造成结果重复，因此需要传入index控制下标
+*/
+
+class Solution {
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        sort(candidates.begin(), candidates.end());
+        vector<vector<int>> res;
+        if(target < candidates[0]) return res;
+        
+        vector<int> tmp;
+        dfs(res, tmp, candidates, target, 0);
+        return res;
+    }
+    void dfs(vector<vector<int>>& res, vector<int>& tmp, vector<int>& candidates, int remain, int index){
+        if(remain == 0){
+            res.push_back(tmp);
+            return;
+        }
+        if(remain < candidates[0]){
+            // tmp.pop_back();
+            return;
+        }
+        else{
+            for(int i = index; i < candidates.size() && candidates[i] <= remain; i++){
+                tmp.push_back(candidates[i]);
+                dfs(res, tmp, candidates, remain - candidates[i], i);
+                tmp.pop_back();
+            }
+        }
+    }
+};
