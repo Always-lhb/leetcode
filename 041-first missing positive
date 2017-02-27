@@ -1,0 +1,25 @@
+/*
+题目大意：给定一个无序的数组，找出数组中缺失的第一个正整数。要求算法复杂度为O(n)，使用常数内存空间
+解题思路：
+  一开始想到的是先排序，然后找到第一个正数的位置first，通过first与nums.size()-1的对比，确定数组中正数的个数，然后分情况返回。但是sort()的复杂度是O(nlogn)，所以超时
+正确思路：
+  遍历一次数组，对于下标i：如果nums[i]是合法的，将它放到正确的位置上，注意应该使用循环，对换到位置i的元素不断处理。即if(nums[i]==5),将它与nums[4]交换
+  然后遍历数组，找到第一个位置上错误的下标i,返回i+1
+tips：思路很巧妙
+*/
+
+
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        for(int i = 0; i < nums.size(); i++){
+            while(nums[i] > 0 && nums[i] <= nums.size() && nums[i] != nums[nums[i]-1]) //合法判断
+                swap(nums[i], nums[nums[i]-1]);
+        }
+        for(int i = 0; i < nums.size(); i++){
+            if(nums[i] != i + 1)
+                return i + 1;
+        }
+        return nums.size() + 1;
+    }
+};
