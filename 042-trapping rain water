@@ -1,0 +1,37 @@
+/*
+题目大意：给定一个非负正数序列，分别表示高度，求出以这些高度为边界所能存储的水量
+解题思路：我的思路与DISCUSS里的比较一致，即从左到右遍历一次数组，每一次求出当前位置能够存储的水量，最后返回总水量
+  1.为了确定每次能够存储的水量，需要维护leftwall,rightwall，分别表示左边墙和右边墙高度
+  2.当height[left]<=height[right]时：
+    说明此时height[left]一定不大于右边墙，因此将它与左边墙比较，如果height>=heightwall，则更新左边墙高度，否则存水；往右走一格
+  3.右边同理，处理完往左走一格
+*/
+
+
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int res = 0;
+        if(height.size() <= 2) return res; //at least one left wall, one right wall, and both of them cannot contain water.
+        
+        int left = 0, right = height.size() - 1;
+        int leftwall = 0, rightwall = 0;
+        while(left <= right){
+            if(height[left] <= height[right]){ //means height[left] must <= right wall
+                if(height[left] >= leftwall)
+                    leftwall = height[left];
+                else
+                    res += (leftwall - height[left]);
+                left++;
+            }
+            else{
+                if(height[right] >= rightwall)
+                    rightwall = height[right];
+                else
+                    res += (rightwall - height[right]);
+                right--;
+            }
+        }
+        return res;
+    }
+};
