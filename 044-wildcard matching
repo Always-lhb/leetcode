@@ -67,3 +67,40 @@ public:
         return !p[j];
     }
 };
+
+
+/*
+结合第10题，对动归有了深刻理解，终于用动归解决了这类问题，一次AC，撒花...
+f[i][j]: s[0..i-1]与p[0..j-1]是否匹配，问题转化为求解f[m][n]
+f[i][j]: 
+  if(p[j-1] != '*'): 判断s与j的末位是否匹配，去除s与p的末位
+  if(p[j-1] == '*'): 
+    *可能表示empty，此时仅去除p的末位，f[i][j-1]
+    *可能表示>=1个任意字符，此时仅去除s的末位，f[i-1][j]
+初始化：
+  1.f[0][0]=true;
+  2.p为空时，对于s的第i个字符，都有f[i][0]=false;
+  3.s为空时，对于p的第j个字符，判断：p的末位即p[j-1]=='*' && f[0][j-1]
+*/
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int m = s.size(), n = p.size();
+        vector<vector<bool>> f(m + 1, vector<bool>(n + 1, false));
+        f[0][0] = true;
+        for(int i = 1; i <= m; i++)
+            f[i][0] = false;
+        for(int j = 1; j <= n; j++)
+            f[0][j] = (p[j-1] == '*') && f[0][j-1];
+        
+        for(int i = 1; i <= m; i++){
+            for(int j = 1; j <= n; j++){
+                if(p[j-1] != '*')
+                    f[i][j] = f[i-1][j-1] && (s[i-1] == p[j-1] || p[j-1] == '?');
+                else
+                    f[i][j] = f[i][j-1] || f[i-1][j];
+            }
+        }
+        return f[m][n];
+    }
+};
