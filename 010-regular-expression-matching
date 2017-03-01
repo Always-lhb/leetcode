@@ -15,3 +15,46 @@ public:
             return !s.empty() && (s[0] == p[0] || '.' == p[0]) && isMatch(s.substr(1), p.substr(1));
     }
 };
+
+
+/*
+看了第44题的通配符匹配问题后，发现动态规划逃不过了，于是回来用动态规划解决本题...
+f[i][j]: s[0..i-1]与p[0..j-1]是否匹配，问题变成了求解f[s.size()][p.size()]
+f[i][j]:
+    if(p[j-1] == '*'): 
+        此时p[j-2]+p[j-1]可能表示empty，即去掉p的后两位: f[i][j-2]
+        或者p[j-2]+p[j-1]表示>=1个s[i-1]，即去掉s的末位: (s[i-1]==p[j-2]||p[j-2]=='.')&&(f[i-1][j])
+    if(p[j-1] != '*'):
+        s和p的末位比较且去掉s和p的末位：f[i][j] = (s[i-1] == p[i-1] || p[i-1] == '.') && f[i-1][j-1]
+初始化：
+    1.f[0][0] = true;
+    2.当p空时，对于s的第i个字符有f[i][0]=false
+    3.当s空时，对于p的第j个字符，判断 j > 1 && p[j-1] == '*' && f[0][j-2]
+*/
+
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int m = s.size(), n = p.size();
+        vector<vector<bool>>  f(m + 1, vector<bool>(n + 1, false));
+        f[0][0] = true;
+        for(int i = 1; i <= m; i++)
+            f[i][0] = false;
+        for(int j = 1; j <= n; j++){
+            f[0][j] = j > 1 && p[j-1] == '*' && f[0][j-2];
+        }
+        
+        for(int i = 1; i <= m; i++){
+            for(int j = 1; j <= n; j++){
+                if(p[j-1] != '*'){
+                    f[i][j] = f[i-1][j-1] && (s[i-1] == p[j-1] || p[j-1] == '.');
+                }
+                else{
+                    f[i][j] = f[i][j-2] || (s[i-1]==p[j-2] || p[j-2] == '.') && f[i-1][j];
+                }
+            }
+        }
+        return f[m][n];
+    }
+};
