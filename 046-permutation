@@ -31,3 +31,28 @@ public:
         return res;
     }
 };
+
+
+/*
+做这道题的时候，总想起39,40两题，一直想通过当前处理的下标index去做，但是一直卡着，后来看了DISCUSS之后终于明白应该怎么做了
+根据index位置下标，swap获得该位置所能存放的所有数字
+*/
+class Solution {
+public:
+    void dfs(vector<vector<int>>& res, vector<int>& nums, int index){
+        if(index == nums.size()){
+            res.push_back(nums);
+            return;
+        }
+        for(int i = index; i < nums.size(); i++){
+            swap(nums[index], nums[i]);
+            dfs(res, nums, index + 1);
+            swap(nums[index], nums[i]);
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> res;
+        dfs(res, nums, 0);
+        return res;
+    }
+};
