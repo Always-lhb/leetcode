@@ -36,17 +36,18 @@ public:
 /*
 做这道题的时候，总想起39,40两题，一直想通过当前处理的下标index去做，但是一直卡着，后来看了DISCUSS之后终于明白应该怎么做了：
   每次将当前下标index的数与后面的每一位进行交换，得到当前位的所有可能，然后移动到下一位，再与其后面的数进行交换，依次进行，直到最后一个数。
+  这里与39，40主要的区别在于处理过程不同，那两道题目是为了构造tmp，不断地将index之后地数插入tmp里，而这道题则是需要与之后的数不断地交换
 */
 class Solution {
 public:
-    void dfs(vector<vector<int>>& res, vector<int>& nums, int index){
-        if(index == nums.size()){
+    void dfs(vector<vector<int>>& res, vector<int>& nums, int index){ //此index表示当前处理的位置下标
+        if(index == nums.size()){ //说明index=0..nums.size()-1均已处理
             res.push_back(nums);
             return;
         }
-        for(int i = index; i < nums.size(); i++){
+        for(int i = index; i < nums.size(); i++){ //对于当前位置index，它可能的值是与之后的每个值进行交换所得
             swap(nums[index], nums[i]);
-            dfs(res, nums, index + 1);
+            dfs(res, nums, index + 1);  //这里进入下一层dfs时传入index+1,一定要清楚index的含义，是指当前处理到的位置下标
             swap(nums[index], nums[i]);
         }
     }
