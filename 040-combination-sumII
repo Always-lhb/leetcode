@@ -9,34 +9,26 @@ tips：本题存在几个需要注意的地方
 
 class Solution {
 public:
-    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
-        sort(candidates.begin(), candidates.end());
-        vector<vector<int>> res;
-        
-        if(target < candidates[0]) return res;
-        
-        vector<int> tmp;
-        dfs(res, tmp, candidates, target, 0);
-        return res;
-    }
     void dfs(vector<vector<int>>& res, vector<int>& tmp, vector<int>& candidates, int remain, int index){
         if(remain == 0){
             res.push_back(tmp);
             return;
         }
-        if(remain < candidates[index]){
-            return;
+        if(remain < candidates[index]) return;
+        for(int i = index; i < candidates.size() && candidates[i] <= remain; i++){ //所有合法的下标i
+            if(i > index && candidates[i] == candidates[i-1]) continue; //因为candidates有重复，所以去重
+            tmp.push_back(candidates[i]);
+            dfs(res, tmp, candidates, remain-candidates[i], i+1); //注意与上题区别，每个元素只能用一次，所以放入candidates[i]之后，开始下标为i+1
+            tmp.pop_back();
         }
-        else{
-            for(int i = index; i < candidates.size() && candidates[i] <= remain; i++){
-                while(i > index && i < candidates.size() && candidates[i] == candidates[i-1])
-                    i++;
-                if(i == candidates.size())
-                    return;
-                tmp.push_back(candidates[i]);
-                dfs(res, tmp, candidates, remain - candidates[i], i + 1);
-                tmp.pop_back();
-            }
-        }
+    }
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<vector<int>> res;
+        if(candidates.size() < 1) return res;
+        
+        vector<int>tmp;
+        sort(candidates.begin(), candidates.end()); //要排序啊，这样index之后的值才都更大，竟然忘记排序，不应该！
+        dfs(res, tmp, candidates, target, 0);
+        return res;
     }
 };
