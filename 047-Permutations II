@@ -1,27 +1,35 @@
 /*
 题目大意：给定可能包含重复值的序列，求出所有可能的字典序
-解题思路：这道题看似跟上题几乎一样，只需要多一个去重操作即可，然而结果一直不对，猛然发现DISCUSS的答案使用了非引用的nums
+解题思路：与上一题几乎一样，多了重复元素的判断，为了判断重复元素，这里加入对nums的排序，使重复元素近邻
 */
 
 
 class Solution {
 public:
-    void dfs(vector<vector<int>>& res, vector<int> nums, int index, int end){
-        if(index == end-1){
-            res.push_back(nums);
+    void dfs(vector<vector<int>>& res, vector<int>& tmp, vector<int>& nums, vector<bool>& used){
+        if(tmp.size() == nums.size()){
+            res.push_back(tmp);
             return;
         }
-        for(int i = index; i < end; i++){
-            if(index != i && nums[i] == nums[index]) continue;
-            swap(nums[i], nums[index]);
-            dfs(res, nums, index + 1, end);
-            // swap(nums[i], nums[index]);
+        for(int i = 0; i < nums.size(); i++){
+            if(!used[i]){
+                used[i] = true;
+                tmp.push_back(nums[i]);
+                dfs(res, tmp, nums, used);
+                tmp.pop_back();
+                used[i] = false;
+                
+                while(nums[i+1] == nums[i]) i++; //去重操作在对nums[i]处理之后执行！！！很容易相通
+            }
         }
     }
     vector<vector<int>> permuteUnique(vector<int>& nums) {
-        sort(nums.begin(), nums.end());
         vector<vector<int>> res;
-        dfs(res, nums, 0, nums.size());
+        vector<int> tmp;
+        vector<bool> used(nums.size(), false);
+        
+        sort(nums.begin(), nums.end());
+        dfs(res, tmp, nums, used);
         return res;
     }
 };
