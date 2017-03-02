@@ -1,0 +1,66 @@
+/*
+题目大意：给定一个非负整数序列，nums[i]表示在i位置能跳跃的最大步数，求出从i=0跳跃到i=nums.size()-1所需的最小步数
+解题思路：
+  1.一开始想到利用回溯法dfs，用一个vector<int> ress存储所有到达序列尾的步数，然后返回ress的最小元素，然而超时...这种方法相当于求出了所有可能路径
+  2.正确思路：
+    贪心算法，对nums遍历，如果i超过了上一跳能到达的最远位置，则跳数+1，并更新上一跳的最远位置为本跳最远位置。如果本跳最远位置超过了序列尾则返回当前跳数
+      last-上一跳能到达的最远位置 
+      curr-当前跳能到达的最远位置 
+      jump-跳数
+*/
+
+
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        if(nums.size() <= 1) return 0;
+        
+        int last = 0, curr = 0;
+        int jump = 1; //至少需要一跳
+        
+        for(int i = 0; i < nums.size(); i++){ //遍历nums
+            if(i > last){ //i超过了上一跳能到达的最远位置
+                jump++;
+                last = curr;
+            }
+            curr = max(curr, i + nums[i]);
+            if(curr >= nums.size() - 1) return jump;
+        }
+        return jump;
+    }
+};
+
+
+
+
+
+/*
+超时的dfs
+*/
+class Solution {
+public:
+    void dfs(vector<int>& nums, int index, int jumps, vector<int>& ress){
+        if(index >= nums.size() - 1){
+            ress.push_back(jumps);
+            return;
+        }
+        int len = nums[index];
+        if((index + len) >= (nums.size() - 1)){
+            ress.push_back(jumps + 1);
+            return;
+        }
+        for(int i = 1; i <= len; i++){
+            dfs(nums, index + i, jumps + 1, ress);
+        }
+    }
+    int jump(vector<int>& nums) {
+        if(nums.size() <= 1) return 0;
+        vector<int> ress;
+        dfs(nums, 0, 0, ress);
+        
+        int i = 0, res = INT_MAX;
+        while(i < ress.size())
+            res = min(res, ress[i]);
+        return res;
+    }
+};
