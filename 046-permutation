@@ -1,0 +1,33 @@
+/*
+题目大意：给定一个无重复数字的set，返回所有可能的字典序列
+解题思路：很显然的dfs...一次就过了，yeah
+  res-最终结果
+  tmp-当前结果
+  remain-还能放入当前结果的数字序列
+*/
+
+
+class Solution {
+public:
+    void dfs(vector<vector<int>>& res, vector<int>& tmp, vector<int>& remain){
+        if(remain.size() == 0){
+            res.push_back(tmp);
+            return;
+        }
+        for(int i = 0; i < remain.size(); i++){
+            int num = remain[i];
+            tmp.push_back(num);
+            remain.erase(remain.begin() + i);
+            dfs(res, tmp, remain);
+            tmp.pop_back();
+            remain.insert(remain.begin() + i, num);
+        }
+    }
+    vector<vector<int>> permute(vector<int>& nums) {
+        // if(nums.size() <= 1)
+        vector<vector<int>> res;
+        vector<int> tmp;
+        dfs(res, tmp, nums);
+        return res;
+    }
+};
