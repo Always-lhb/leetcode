@@ -22,14 +22,13 @@ public:
             res.push_back(tmp);
             return;
         }
-        if(remain < candidates[0]){
-            // tmp.pop_back();
+        if(remain < candidates[index]){
             return;
         }
         else{
-            for(int i = index; i < candidates.size() && candidates[i] <= remain; i++){
+            for(int i = index; i < candidates.size() && candidates[i] <= remain; i++){ //对于所有合法的元素下标i
                 tmp.push_back(candidates[i]);
-                dfs(res, tmp, candidates, remain - candidates[i], i);
+                dfs(res, tmp, candidates, remain - candidates[i], i); //这里index已经变成了i，切记！！！！！！！！
                 tmp.pop_back();
             }
         }
