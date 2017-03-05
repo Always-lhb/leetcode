@@ -1,0 +1,29 @@
+/*
+题目大意：实现n*n矩阵顺时针旋转90度
+解题思路：
+  1.对于每个需要旋转的元素，将其放到对应位置 a[i][j]->a[j][n-i-1]->a[n-i-1][n-j-1]->a[n-j-1][i]-a[i][j]
+  2.yyp的思路：分两次交换，即先沿对角线交换，再沿中轴线交换
+tips:
+  难点一：找到对应位置
+  难点二：i,j的取值范围
+  元素交换时，竟然一开始写错了，没有用到tmp,不应该...
+*/
+
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        
+        if(n <= 1) return;
+        
+        for(int i = 0; i < n/2; i++){
+            for(int j = 0; j < (n+1)/2; j++){
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[n-j-1][i];
+                matrix[n-j-1][i] = matrix[n-i-1][n-j-1];
+                matrix[n-i-1][n-j-1] = matrix[j][n-i-1];
+                matrix[j][n-i-1] = tmp;
+            }
+        }
+    }
+};
