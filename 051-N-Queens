@@ -1,0 +1,40 @@
+/*
+题目大意：n皇后问题
+解题思路：按行进行递归，对该行的每个位置，判断是否可以放入皇后
+注意的点：判断是否可以放入皇后时，由于是按行进行的递归，所以只需进行列/45°/135°三个方向的判定即可
+*/
+
+class Solution {
+public:
+    bool isValid(vector<string>& tmp, int row, int col, int n){
+        for(int i = 0; i < row; i++) //列判定
+            if(tmp[i][col] == 'Q')
+                return false;
+        for(int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) //135°判定
+            if(tmp[i][j] == 'Q')
+                return false;
+        for(int i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) //45°判定
+            if(tmp[i][j] == 'Q')
+                return false;
+        return true;
+    }
+    void dfs(vector<vector<string>>& res, vector<string>& tmp, int row, int n){
+        if(row == n){
+            res.push_back(tmp);
+            return;
+        }
+        for(int col = 0; col < n; col++){
+            if(isValid(tmp, row, col, n)){
+                tmp[row][col] = 'Q';
+                dfs(res, tmp, row+1, n);
+                tmp[row][col] = '.';
+            }
+        }
+    }
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> res;
+        vector<string> tmp(n, string(n, '.'));
+        dfs(res, tmp, 0, n);
+        return res;
+    }
+};
