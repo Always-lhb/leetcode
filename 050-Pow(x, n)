@@ -1,0 +1,33 @@
+/*
+题目大意：实现浮点数的幂运算
+解题思路：将幂表示成二进制形式，若幂当前位的值为1，则res *= cur。例如对于x的5次方，5的二进制形式为“101”，x^5 = x^(4+1) = x^4 * x^1
+注意的点：
+  1.注意正负号的判定
+  2.注意越界判定，即INT_MIN
+  3.注意右移写法：n = n >> 1; 已经第二次犯这个错误了......
+*/
+
+class Solution {
+public:
+    double myPow(double x, int n) {
+        double res = 1, cur = x;
+        
+        if(n == 0) return 1.0;
+        if(n < 0){ //正负号判定
+            if(n == INT_MIN){ //越界判定
+                return 1.0 / (myPow(x, INT_MAX)*x);
+            }
+            else{
+                return 1.0 / (myPow(x, -n));
+            }
+        }
+        while(n > 0){
+            if(n & 0x1){
+                res *= cur;
+            }
+            cur *= cur;
+            n = n >> 1; //注意写法
+        }
+        return res;
+    }
+};
