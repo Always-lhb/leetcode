@@ -1,0 +1,18 @@
+/*
+题目大意：给定一个数组，返回数组中子串最大和
+解题思路：利用currMax存储扫描到当前下标时的最大子串和，如果currMax>max则更新max
+*/
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int max = nums[0], currMax = nums[0];
+        
+        if(nums.size() <= 1) return max;
+        for(int i = 1; i < nums.size(); i++){
+            currMax = (currMax + nums[i]) > nums[i] ? currMax + nums[i] : nums[i];
+            max = currMax > max ? currMax : max;
+        }
+        return max;
+    }
+};
