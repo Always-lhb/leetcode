@@ -1,0 +1,29 @@
+/*
+题目大意：给定字符串数组，返回所有包含相同字符的字符串
+解题思路：声明一个key为string，value为vector<string>的map，其中注意对key进行排序
+tips:
+  1.用到了数据类型占位符auto
+  2.注意first,second写法，他们并不是方法
+  3.另外本题我的原始解法有问题，需要验证...
+*/
+
+
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> res;
+        unordered_map<string, vector<string>> um;
+        
+        for(auto s : strs){ //tips1
+            string key = s;
+            sort(key.begin(), key.end());
+            um[key].push_back(s);
+        }
+        
+        for(auto m : um){
+            res.push_back(m.second); //tips2
+        }
+        
+        return res;
+    }
+};
