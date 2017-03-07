@@ -6,6 +6,7 @@
 注意的点：
   1.不要忘记退出循环时，放入最后一个tmp
   2.注意sort(intervals.begin(), intervals.end(), comp)的自定义写法，要求比较函数必须是静态的static
+  3.结合第23题，区分sort()与priority_queue自定义比较方法的写法区分...
 */
 
 
