@@ -1,0 +1,47 @@
+/*
+题目大意：给定一些时间间隔Interval，合并有重合的Interval
+解题思路：
+  先按照Interval.start进行升序排序，声明tmp，初始化为intervals[0]，然后遍历剩余元素，如果intervals[i].start > tmp.end，说明无重合，将tmp放入res，
+  更新tmp；否则，根据tmp.end与intervals[i].end的大小关系更新tmp
+注意的点：
+  1.不要忘记退出循环时，放入最后一个tmp
+  2.注意sort(intervals.begin(), intervals.end(), comp)的自定义写法，要求比较函数必须是静态的static
+*/
+
+
+/**
+ * Definition for an interval.
+ * struct Interval {
+ *     int start;
+ *     int end;
+ *     Interval() : start(0), end(0) {}
+ *     Interval(int s, int e) : start(s), end(e) {}
+ * };
+ */
+class Solution {
+public:
+    static bool comp(Interval a, Interval b){ // static关键字不可少！！！
+        return a.start < b.start; //升序
+    }
+    vector<Interval> merge(vector<Interval>& intervals) {
+        vector<Interval> res;
+        if(intervals.size() < 1) return res;
+        
+        sort(intervals.begin(), intervals.end(), comp);
+        Interval tmp;
+        tmp.start = intervals[0].start;
+        tmp.end = intervals[0].end;
+        for(int i = 1; i < intervals.size(); i++){
+            if(intervals[i].start > tmp.end){
+                res.push_back(tmp);
+                tmp.start = intervals[i].start;
+                tmp.end = intervals[i].end;
+            }
+            else{
+                tmp.end = max(tmp.end, intervals[i].end);
+            }
+        }
+        res.push_back(tmp);
+        return res;
+    }
+};
