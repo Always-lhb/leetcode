@@ -1,0 +1,19 @@
+/*
+题目大意：给定一个非负正数序列nums，判断能否从位置0跳到位置nums.size()-1
+解题思路：联想到第45题，45题假设在总能到达最后的前提下，求最小跳数。本题比45题更为简单，采用类似做法，遍历数组，求出每跳的最远位置，如果最远位置等于
+下标，说明无法再往前跳，返回false；如果最远位置>=nums.size()-1，说明可以到达，返回true
+*/
+
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        if(nums.size() <= 1) return true;
+        
+        int curr = 0;
+        for(int i = 0; i < nums.size(); i++){
+            curr = max(curr, i + nums[i]);
+            if(curr == i) return false;
+            if(curr >= nums.size() - 1) return true;
+        }
+    }
+};
