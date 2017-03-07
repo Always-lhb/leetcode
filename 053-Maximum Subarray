@@ -1,6 +1,7 @@
 /*
 题目大意：给定一个数组，返回数组中子串最大和
-解题思路：利用currMax存储扫描到当前下标时的最大子串和，如果currMax>max则更新max
+解题思路：利用currMax存储以nums[i]结尾的最大子串和，如果currMax>max则更新max。例如对于序列 5,-1,2，currMax分别等于5,4,6
+注意的点：扫描到nums[i]时，nums[i]把数组分成currMax+nums[i]和nums[i]两个子串
 */
 
 class Solution {
