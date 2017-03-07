@@ -1,0 +1,44 @@
+/*
+题目大意：给定一个Matrix，将该矩阵螺旋输出
+解题思路：分别按向右，向下，向左，向上四个方向扫描并存储
+注意的点：
+  1.本题一开始没能做出来，因为没有定义startRow,endRow等，看了DISCUSS之后发现其实并不难
+  2.注意在每次沿着某方向的操作结束后，进行是否为最后一行/列的判断
+*/
+
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> res;
+        if(matrix.size() == 0) return res;
+        
+        int rows = matrix.size(), cols = matrix[0].size();
+        int startRow = 0, endRow = rows - 1, startCol = 0, endCol = cols - 1;
+        while(startRow <= endRow && startCol <= endCol){
+            for(int j = startCol; j <= endCol; j++){
+                res.push_back(matrix[startRow][j]);    
+            }
+            startRow++;
+            if(startRow > endRow) break; //是否最后一行
+            
+            for(int i = startRow; i <= endRow; i++){
+                res.push_back(matrix[i][endCol]);
+            }
+            endCol--;
+            if(startCol > endCol) break; //是否最后一列
+            
+            for(int j = endCol; j >= startCol; j--){
+                res.push_back(matrix[endRow][j]);
+            }
+            endRow--;
+            if(startRow > endRow) break; //是否最后一行
+            
+            for(int i = endRow; i >= startRow; i--){
+                res.push_back(matrix[i][startCol]);
+            }
+            startCol++;
+            if(startCol > endCol) break; //是否最后一列
+        }
+        return res;
+    }
+};
