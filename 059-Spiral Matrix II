@@ -1,0 +1,42 @@
+/*
+题目大意：与54题几乎一致，改读取为填入。给定行数列数n，按照螺旋式填写矩阵
+解题思路：与54题一致，定义startRow,endRow,startCol,endCol,然后逐个填入num
+注意的点：一开始没有对res进行初始化，报了错误"reference binding to null pointer of type 'struct value_type'"，
+         因为未初始化则不能直接通过res[i][j]访问res的元素
+*/
+
+
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        vector<int> row(n, 0);
+        vector<vector<int>> res(n, row);
+        if(n == 0) return res;
+        
+        int startRow = 0, endRow = n-1, startCol = 0, endCol = n-1;
+        int num = 1;
+        
+        while(startRow <= endRow && startCol <= endCol){
+            for(int j = startCol; j <= endCol; j++, num++)
+                res[startRow][j] = num;
+            startRow++;
+            if(startRow > endRow) break;
+            
+            for(int i = startRow; i <= endRow; i++, num++)
+                res[i][endCol] = num;
+            endCol--;
+            if(startCol > endCol) break;
+            
+            for(int j = endCol; j >= startCol; j--, num++)
+                res[endRow][j] = num;
+            endRow--;
+            if(startRow > endRow) break;
+            
+            for(int i = endRow; i >= startRow; i--, num++)
+                res[i][startCol] = num;
+            startCol++;
+            if(startCol > endCol) break;
+        }
+        return res;
+    }
+};
