@@ -1,0 +1,28 @@
+/*
+题目大意：求出字符串s中最后一个word的长度，其中s由字符和空格组成，word由空格划分
+解题思路：res存储结果，初始化为0；对s进行遍历，如果s[i]不是空格，则res++；如果s[i]是空格，判断后面是否还有word，如果有则清空res，如果没有则返回res
+注意的点：注意当s的末位为空格时，返回前一个word的长度，一开始没有考虑到这种情况
+*/
+
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int res = 0;
+        if(s.size() == 0) return res;
+        
+        for(int i = 0; i < s.size(); i++){
+            if(s[i] == ' '){
+                while((i+1) < s.size() && s[i+1] == ' ') i++;
+                if((i+1) == s.size()) return res;
+                else{
+                    res = 0;
+                    continue;
+                }
+            }
+            else{
+                res++;
+            }
+        }
+        return res;
+    }
+};
