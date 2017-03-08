@@ -1,0 +1,65 @@
+/*
+题目大意：将newInterval插入intervals序列，假设原intervals序列按照Interval.start升序排列
+解题思路：找到newInterval应该插入的位置pos，插入
+注意的点：
+  1.记得把pos之前的元素逐个插入res
+  2.注意判断newInterval是否需要与原序列某元素合并
+  3.需要合并的情况与上一题一致，不要忘记把最后的tmp插入res
+ps: 这道hard难度的题，并不难，很容易就AC了...
+*/
+
+/**
+ * Definition for an interval.
+ * struct Interval {
+ *     int start;
+ *     int end;
+ *     Interval() : start(0), end(0) {}
+ *     Interval(int s, int e) : start(s), end(e) {}
+ * };
+ */
+class Solution {
+public:
+    vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
+        vector<Interval> res;
+        Interval tmp;
+        int pos = 0;
+        
+        if(intervals.size() == 0){ //特殊处理
+            res.push_back(newInterval);
+            return res;
+        }
+        
+        for(; pos < intervals.size(); pos++){ //查找pos
+            if(intervals[pos].end >= newInterval.start)
+                break;
+        }
+        if(pos == intervals.size()){ //newInterval大于原序列所有元素
+            intervals.push_back(newInterval);
+            return intervals;
+        }
+        
+        for(int i = 0; i < pos; i++) res.push_back(intervals[i]); //将pos之前的元素放入res
+        if(intervals[pos].start > newInterval.end){ //如果newInterval不需要与原序列intervals[pos]合并
+            res.push_back(newInterval);
+            for(int i = pos; i < intervals.size(); i++)
+                res.push_back(intervals[i]);
+            return res;
+        }
+        
+        tmp.start = min(intervals[pos].start, newInterval.start); //需要合并的情况
+        tmp.end = max(intervals[pos].end, newInterval.end);
+        for(int i = pos + 1; i < intervals.size(); i++){
+            if(intervals[i].start > tmp.end){
+                res.push_back(tmp);
+                tmp.start = intervals[i].start;
+                tmp.end = intervals[i].end;
+            }
+            else{
+                tmp.end = max(tmp.end, intervals[i].end);
+            }
+        }
+        res.push_back(tmp);
+        
+        return res;
+    }
+};
