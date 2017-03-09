@@ -1,0 +1,93 @@
+/*
+题目大意：判断给定字符串是否是数字
+解题思路：普遍反应这道题比较繁杂，需要判断的点较多，这里综合各种解法，得到一个相对简洁且容易理解的方法，具体描述如下：
+  1.去除s前后的空格，如果s为空，说明原s全部由空格组成，返回false
+  2.合法数字可以由'+','-'号开头，但正负号后必须有内容
+  3.正负号之后可以跟数字或小数点，但小数点个数不能大于一，数字个数不能为0
+  4.如果有指数符号'e'/'E'，同理指数符号后必须有内容
+  5.指数符号后可以跟正负号或数字且正负号不能在最后
+  6.最终返回index == s.size();即合法数字后不能再有其他不合法符号
+注意的点：判断比较繁琐，需要多次练习
+*/
+
+
+class Solution {
+public:
+    string trim(string s){
+        if(s == "") return "";
+        int l = 0, r = s.size() - 1;
+        while(l <= r && s[l] == ' ') l++;
+        while(l <= r && s[r] == ' ') r--;
+        if(l > r) return "";
+        return s.substr(l, r - l + 1);
+    }
+    bool isNumber(string s) {
+        s = trim(s);
+        
+        int index = 0;
+        if (index == s.size()) return false;
+
+        if (s[index] == '+' || s[index] == '-') index++;
+        if (index == s.size()) return false;
+
+        int dot = 0, num = 0;
+        while (index < s.size() && ((s[index] <= '9' && s[index] >= '0') || s[index] == '.')) {
+            if (s[index] == '.') dot++;
+            else num++;
+            index++;
+        }
+        if (dot > 1 || num == 0) return false;
+        if (index == s.size()) return true;
+
+        if (s[index] == 'e' || s[index] == 'E') {
+            index++;
+            if (index == s.size()) return false;
+            if (s[index] == '+' || s[index] == '-') index++;
+            if (index == s.size()) return false;
+            while (index < s.size() && s[index] >= '0' && s[index] <= '9') index++;
+        }
+        
+        return index == s.size();
+    }
+};
+
+/*自己试写一次，通过，还需要练习*/
+class Solution {
+public:
+    string trim(string s){
+        if(s == "") return "";
+        int l = 0, r = s.size() - 1;
+        while(l <= r && s[l] == ' ') l++;
+        while(l <= r && s[r] == ' ') r--;
+        
+        if(l > r) return "";
+        return s.substr(l, r - l + 1);
+    }
+    bool isNumber(string s) {
+        s = trim(s);
+        int index = 0;
+        if(s[index] == '+' || s[index] == '-') index++;
+        if(index == s.size()) return false;
+        
+        int dot = 0, num = 0;
+        while(s[index] == '.' || s[index] >= '0' && s[index] <= '9'){
+            if(s[index] == '.') dot++;
+            else num++;
+            index++;
+        }
+        if(dot > 1 || num == 0) return false;
+        if(index == s.size()) return true;
+        
+        if(s[index] == 'e' || s[index] == 'E'){
+            index++;
+            if(index == s.size()) return false;
+            
+            if(s[index] == '+' || s[index] == '-') index++;
+            if(index == s.size()) return false;
+            
+            while(s[index] >= '0' && s[index] <= '9') index++;
+        }
+        
+        return index == s.size();
+    }
+};
