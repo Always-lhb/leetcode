@@ -52,6 +52,7 @@ public:
 };
 
 /*自己试写一次，通过，还需要练习*/
+/*去掉了index < s.size()的判断，提高效率*/
 class Solution {
 public:
     string trim(string s){
