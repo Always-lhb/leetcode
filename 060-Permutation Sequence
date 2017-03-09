@@ -32,3 +32,30 @@ public:
         return res;
     }
 };
+
+/*第二次做，感觉不错，用yyp的方法更快，不需要每次循环时计算阶乘，用一次除法代替*/
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        string res;
+        vector<int> num;
+        int index;
+        int factorial = 1;
+        
+        for(int i = 1; i <= n; i++){
+            num.push_back(i);
+            factorial *= i; // n!
+        }
+        
+        k--;
+        for(int i = 0; i < n; i++){
+            factorial /= (n-i); // (n-1)!...
+            index = k / factorial;
+            res.push_back('0' + num[index]);
+            num.erase(num.begin() + index);
+            k %= factorial;
+        }
+        
+        return res;
+    }
+};
