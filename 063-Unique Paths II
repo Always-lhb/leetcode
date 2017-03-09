@@ -1,0 +1,44 @@
+/*
+题目大意：与上一题目相似，当obstacleGrid[i][j]=1时表示为障碍物
+解题思路：与上题类似，但是多了对障碍物的处理
+注意的点：初始化和迭代过程中，都需要对障碍物处理。另外spw的另一种做法在62,63题上都体现出更简洁的代码，找时间问一下他...
+*/
+
+
+class Solution {
+public:
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        int row = obstacleGrid.size(), col = obstacleGrid[0].size();
+        vector<vector<int>> res(row, vector<int>(col, 0));
+        
+        res[0][0] = obstacleGrid[0][0] ? 0 : 1;
+        
+        for(int i = 1; i < row; i++){
+            if(obstacleGrid[i][0] == 1 || res[i-1][0] == 0) //这里res[i-1][0] == 0不能少，对于i=1会用到res[0][0]的结果，不然会出错！！！
+                res[i][0] = 0;
+            else
+                res[i][0] = 1;
+        }
+        for(int j = 1; j < col; j++){
+            if(obstacleGrid[0][j] == 1 || res[0][j-1] == 0)
+                res[0][j] = 0;
+            else
+                res[0][j] = 1;
+        }
+        
+        for(int i = 1; i < row; i++){
+            for(int j = 1; j < col; j++){
+                res[i][j] = 0; //把所有障碍物的res存入0
+                if(obstacleGrid[i][j] == 0){
+                    if(obstacleGrid[i-1][j] == 0){
+                        res[i][j] += res[i-1][j];
+                    }
+                    if(obstacleGrid[i][j-1] == 0){
+                        res[i][j] += res[i][j-1];
+                    }
+                }
+            }
+        }
+        return res[row-1][col-1];
+    }
+};
