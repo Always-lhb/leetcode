@@ -1,0 +1,52 @@
+/*
+题目大意：将链表右移k个位置
+解题思路：
+  这里的k是可以大于链表长度的，因此先求出链表长度num，然后pos = k % num表示右移的量。
+  链表右移：
+    声明两个指针pre,cur均指向头节点，先把pre右移pos个位置，然后当pre->next != NULL时，同时右移pre和cur，此时pre指向尾节点，cur->next为
+    结果的头节点。
+注意的点：
+  1.注意对k取余操作
+  2.注意特殊情况处理
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(head == NULL || head->next == NULL) return head; //特殊情况一
+        
+        ListNode *res;
+        ListNode *pre = head, *cur = head;
+        int num = 0, pos = 0;
+        while(cur){
+            num++;
+            cur = cur->next;
+        }
+        cur = head;
+        
+        pos = k % num; //特殊情况二
+        if(pos == 0) return head;
+        
+        for(int i = 0; i < pos; i++)
+            pre = pre->next;
+        
+        while(pre->next != NULL){
+            pre = pre->next;
+            cur = cur->next;
+        }
+        
+        res = cur->next;
+        pre->next = head;
+        cur->next = NULL;
+        
+        return res;
+    }
+};
