@@ -1,0 +1,21 @@
+/*
+题目大意：一个非负整数由数组表示，数组下标0的位置保存该数最高位，返回该数加1的数
+解题思路：从后往前遍历数组，对末位执行加1操作，利用flag保存进位
+注意的点：不要忘记最后一个进位。另外注意vector的push_back操作，是先往下标小的位置插入....
+*/
+
+
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        int flag = 1;
+        for(int i = digits.size() - 1; i >= 0; i--){
+            int tmp = digits[i] + flag;
+            digits[i] = tmp % 10;
+            flag = tmp / 10;
+        }
+        if(flag == 1)
+            digits.insert(digits.begin(), 1);
+        return digits;
+    }
+};
