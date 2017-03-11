@@ -1,0 +1,37 @@
+/*
+题目大意：给定一个字符串数组和每行长度maxWidth，贪心地把每个字符串放入当前行，每个字符串之间用空格分开，空格平均分布，且当空格不能平均分布时，多余空格
+从左往右填入；最后一行，每个字符串之间只放入一个空格，剩下的空格全部填入最后
+解题思路：
+  对字符串数组遍历，首先计算得到所有能放在当前行的字符串words[i]..words[i+k-1]
+  然后对于最后一行，每个字符串之间填入一个空格；对于其他行，按要求填入空格
+  
+注意的点：本题考查贪心，做下来之后看并不复杂，但是要考虑的地方较多，且最后一行要单独处理
+*/
+
+class Solution {
+public:
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        vector<string> res;
+        
+        for(int i = 0, k; i < words.size(); i += k){
+            int len = 0;
+            for(k = 0; i + k < words.size() && len + words[i+k].size() <= maxWidth - k; k++){ // words[i]..words[i+k-1]
+                len += words[i+k].size();
+            }
+            
+            string tmp = words[i];
+            for(int j = 0; j < k - 1; j++){
+                if(i + k >= words.size()) tmp += ' '; //last line
+                else{
+                    tmp += string((maxWidth - len) / (k - 1), ' ');
+                    if(j < (maxWidth - len) % (k - 1))
+                        tmp += ' ';
+                }
+                tmp += words[i+j+1];
+            }
+            tmp += string(maxWidth - tmp.size(), ' ');
+            res.push_back(tmp);
+        }
+        return res;
+    }
+};
