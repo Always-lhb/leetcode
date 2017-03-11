@@ -1,0 +1,28 @@
+/*
+题目大意：实现求平方根sqrt操作
+解题思路：二分法
+注意的点：
+  1.乘法会溢出，因此利用除法计算
+  2.退出循环后，low > high，因此返回high
+  3.本题要记住，需多次练习...
+*/
+
+class Solution {
+public:
+    int mySqrt(int x) {
+        if(x < 2) return x;
+        
+        int low = 0, high = x;
+        while(low <= high){
+            int mid = (low + high) / 2;
+            int div = x / mid;
+            if(div == mid)
+                return mid;
+            else if(div < mid) // means mid too large
+                high = mid - 1;
+            else 
+                low = mid + 1;
+        }
+        return high; // when break, low > high
+    }
+};
