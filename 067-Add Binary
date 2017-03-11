@@ -1,0 +1,30 @@
+/*
+题目大意：两个二进制字符串求和
+解题思路：假设a的长度总是不小于b的长度，若b长度为0，直接返回a；否则的话，对于a,b从右向左扫描，当a,b均不为空时，当只有a不为空时
+注意的点：不要忘记最后的进位。 这道题一次通过，很顺利。
+*/
+
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        int flag = 0;
+        
+        if(b.size() > a.size()) return addBinary(b, a); // len(a) >= len(b)
+        if(b.size() == 0) return a;
+        
+        for(int i = a.size() - 1, j = b.size() - 1; j >= 0; i--, j--){
+            int sum = a[i] - '0' + b[j] - '0' + flag;
+            a[i] = sum % 2 + '0';
+            flag = sum / 2;
+        }
+        for(int i = a.size() - b.size() - 1; i >= 0; i--){
+            int sum = a[i] - '0' + flag;
+            a[i] = sum % 2 + '0';
+            flag = sum / 2;
+        }
+        if(flag){
+            a.insert(a.begin(), '1');
+        }
+        return a;
+    }
+};
