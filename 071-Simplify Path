@@ -1,0 +1,41 @@
+/*
+题目大意：简化所给的Unix形式的绝对路径
+解题思路：利用stack。
+  保存每两个'/'之间的字符串，如果是".."则弹出用栈保存的上一层文件夹，如果是'.'或空则不做处理，如果是字符串则将当前文件夹名压入栈。
+  如果栈空则压入'/'，最后利用栈得到结果
+注意的点：一开始想到了利用stack解决问题，但是只想到对每一位进行分析，未免太繁杂，还是yyp的思路好，对每两个/之间的内容进行分类处理
+*/
+
+class Solution {
+public:
+    string simplifyPath(string path) {
+        string res;
+        stack<string> st;
+        
+        for(int i = 1; i < path.size(); i++){
+            string tmp;
+            while(i < path.size() && path[i] != '/'){
+                tmp += path[i];
+                i++;
+            }
+            if(tmp == ".."){
+                if(!st.empty()){
+                    st.pop();
+                }
+            }
+            else if(tmp == "." || tmp.size() == 0){
+                continue;
+            }
+            else{
+                st.push("/" + tmp);
+            }
+        }
+        if(st.empty()) st.push("/");
+        
+        while(!st.empty()){
+            res = st.top() + res;
+            st.pop();
+        }
+        return res;
+    }
+};
