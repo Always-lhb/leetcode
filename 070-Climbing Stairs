@@ -1,0 +1,22 @@
+/*
+题目大意：爬梯子，一共需要爬n步，每步可以爬1或2格，求共有多少种爬法。
+解题思路：简单的dp
+  dp[i]：从0爬到i的不同路径数，问题转化为求解dp[n]
+  dp[i] = dp[i-1] + dp[i-2];
+  初始化：dp[0] = 0, dp[1] = 1, dp[2] = 2;
+注意的点：在声明dp时必需初始化，否则dp.size()=0，在进行赋值时发生数组越界
+*/
+
+class Solution {
+public:
+    int climbStairs(int n) {
+        vector<int> dp(n+1, 0);
+        
+        if(n < 3) return n;
+        
+        dp[0] = 0, dp[1] = 1, dp[2] = 2;
+        for(int i = 3; i <= n && i >= 3; i++)
+            dp[i] = dp[i-1] + dp[i-2];
+        return dp[n];
+    }
+};
