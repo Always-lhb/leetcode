@@ -1,0 +1,29 @@
+/*
+题目大意：给定一个矩阵，矩阵每行从左往右升序，且下一行第一个元素大于本行末尾元素。返回给定target是否存在于矩阵中
+解题思路：二分法
+注意的点：
+  1.直接对矩阵元素进行二分搜索，对mid求出行列号
+  2.行列号的求解要除以每行元素个数，也就是n，而非m，切记！！！
+*/
+
+
+class Solution {
+public:
+    bool searchMatrix(vector<vector<int>>& matrix, int target) {
+        if(matrix.size() == 0) return false;
+        
+        int m = matrix.size(), n = matrix[0].size();
+        int low = 0, high = m * n - 1, mid;
+        int row, col;
+        
+        while(low <= high){
+            mid = (low + high) / 2;
+            row = mid / n;
+            col = mid % n;
+            if(matrix[row][col] == target) return true;
+            else if(matrix[row][col] < target) low = mid + 1;
+            else high = mid - 1;
+        }
+        return false;
+    }
+};
