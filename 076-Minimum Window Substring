@@ -1,0 +1,51 @@
+/*
+题目大意：给定字符串s和t，返回s中包含t中所有字符的最小子串
+解题思路：定义两个指针i,j标记左右窗口，当窗口内未包含t中所有字符时，右指针右移，直至包含t中所有字符；这时将左指针右移，直至不再包含所有字符，求出当前子串
+         如果当前子串长度小于res，则更新res。重复上述过程，直到字符串尾部
+注意的点：一开始想到需要用字典存储t中各个字符，但具体如何扫描s并未相通，后来看了yyp的思路后写下代码，私以为比yyp的更好一些。*/
+
+class Solution {
+public:
+    string minWindow(string s, string t) {
+        unordered_map<char, int> dict;
+        unordered_map<char, int> read;
+        int i = 0, j = 0, min = s.size();
+        string res;
+        
+        for(auto c : t) dict[c]++;
+        int num = dict.size();
+        
+        while(i < s.size() && j < s.size()){
+            if(num > 0){
+                for(; j < s.size(); j++){
+                    if(dict.find(s[j]) != dict.end()){
+                        read[s[j]]++;
+                        if(read[s[j]] == dict[s[j]]){
+                            num--;
+                            if(num == 0) break;
+                        }
+                    }
+                }
+            }
+            if(num == 0){
+                for(; i <= j; i++){ // i=j对应于t只含一个元素且恰是s的i元素
+                    if(dict.find(s[i]) != dict.end()){
+                        read[s[i]]--;
+                        if(read[s[i]] < dict[s[i]]){
+                            num++;
+                            break;
+                        }
+                    }
+                }
+                string tmp = s.substr(i, j - i + 1);
+                if(tmp.size() <= min){ // 这里=对应tmp与min初始值可能相等的情况
+                    min = tmp.size();
+                    res = tmp;
+                }
+                i++;
+                j++;
+            }
+        }
+        return res;
+    }
+};
