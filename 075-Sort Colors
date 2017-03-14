@@ -1,0 +1,21 @@
+/*
+题目大意：给定由0,1,2组成的数组，对数组排序，不允许使用sort()
+解题思路：声明low,mid,high，low是0的边界，high是2的边界，mid用于遍历数组。遇到0，则交换nums[low]和nums[mid]，并且low++,mid++，保证mid永远不小于low；
+         遇到1，则mid++继续扫描；遇到2，则交换nums[mid]和nums[high]，并且high--
+*/
+
+
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        int low = 0, mid = 0, high = nums.size() - 1;
+        while(mid <= high){
+            if(nums[mid] == 0)
+                swap(nums[mid++], nums[low++]);
+            else if(nums[mid] == 1)
+                mid++;
+            else if(nums[mid] == 2)
+                swap(nums[mid], nums[high--]);
+        }
+    }
+};
