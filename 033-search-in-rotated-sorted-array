@@ -33,3 +33,38 @@ public:
         return -1;
     }
 };
+
+
+
+/*
+做到80题时，发现之前对此处的有序判断理解并不对，只不过因为原数组无重复元素，所以此题才通过。
+实际上，判断是否有序，只通过nums[mid]与nums[high]比较即可；
+由于本题数组无重复元素，故可以直接把'='放入判断条件一，否则需要把'='单独提出进行考虑，详见第80题
+*/
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int low = 0, high = nums.size() - 1, mid;
+        while(low <= high){ // while low=high, mid=low=high
+            mid = (low + high) / 2;
+            if(nums[mid] == target) return mid;
+            else if(nums[mid] <= nums[high]){ // mid..high sorted
+                if(target > nums[mid] && target <= nums[high]){
+                    low = mid + 1;
+                }
+                else{
+                    high = mid - 1;
+                }
+            }
+            else{ // low..mid sorted
+                if(target < nums[mid] && target >= nums[low]){
+                    high = mid - 1;
+                }
+                else{
+                    low = mid + 1;
+                }
+            }
+        }
+        return -1;
+    }
+};
