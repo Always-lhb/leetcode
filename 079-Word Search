@@ -1,0 +1,52 @@
+/*
+题目大意：对给定的二位字符矩阵board，能否找到字符串word。word可以用board中的相邻字符构成，相邻指的的上下或者左右相邻，相同字符不可以用多次
+解题思路：这是一道特殊的dfs题型。一开始想到的是dp，希望利用dp[i]表示word[0..i-1]是否存在于board，但是后来发现dp[i]的求解方程式有问题：
+         首先保证dp[i-1]，其次要求word[i-1]=board[x][y]，但是board里的x,y有四种情况，即word[i-2]所在位置的相邻位置。但是这个位置无法确定。
+         所以，这道题的正解还是回溯，深度搜索。
+         1.遍历整个board，从word下标位置0开始查找，如果查找到整个word，返回true，否则返回false
+         2.查找过程：如果下标为word.size()，说明合法下标0..word.size()-1均已查找完毕，返回true
+                    如果board的下标i,j不合法或已访问或与查找元素不等，说明当前位置不可用，返回false
+                    否则，当前位置命中，标记并对于可能的四个下一位置，回溯查找word的下一元素，如果查找成功，返回true
+                    否则，当前位置的下一位置不可用，去除标记并返回false
+         
+注意的点：1.这里的dfs是bool型，而非void型
+         2.index--当前判断的word元素下标
+           i,j----当前board的位置
+           flag---控制一次访问*/
+
+
+class Solution {
+public:
+    bool dfs(vector<vector<char>>& board, string word, int index, int i, int j, vector<vector<bool>>& flag){
+        if(index == word.size()) return true;
+        if(i < 0 || i >= board.size() || j < 0 || j >= board[0].size() || flag[i][j] || board[i][j] != word[index])
+            return false;
+            
+        flag[i][j] = true; //命中，即board[i][j]==word[index]，这时标记相应flag并访问它，然后回溯地访问它的相邻位置
+        int ni[] = {-1, 0, 1, 0};
+        int nj[] = {0, -1, 0, 1};
+        for(int a = 0; a < 4; a++){
+            if(dfs(board, word, index + 1, i + ni[a], j + nj[a], flag))
+                return true;
+        }
+        flag[i][j] = false; //相邻位置不满足，去除标记并返回false
+        
+        return false;
+    }
+    bool exist(vector<vector<char>>& board, string word) {
+        if(word.size() == 0 || board.size() == 0 || board[0].size() == 0) return false;
+        
+        int m = board.size(), n = board[0].size();
+        vector<vector<bool>> flag(m, vector<bool>(n, false));
+        
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(dfs(board, word, 0, i, j, flag)){
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+};
