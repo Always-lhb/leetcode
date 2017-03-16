@@ -1,0 +1,26 @@
+/*
+题目大意：类似26题，给定一升序数组，每个数字允许最多出现两次，返回最终数组长度len，只要求前len位顺序正确。
+解题思路：同26题，关键是判断当前数字是否合法，需要一个计数器count
+注意的点：这道题竟然一开始没做出来，想着直接把当前值与前两位进行比较，实际上应该通过计数器，不断把当前值与前一位进行比较。感觉最近状态不大好啊...
+*/
+
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if(nums.size() <= 2) return nums.size();
+        
+        int len = 1, count = 1, pre = nums[0];
+        for(int i = 1; i < nums.size(); i++){
+            if(nums[i] == pre && count < 2){
+                nums[len++] = nums[i];
+                count++;
+            }
+            else if(nums[i] != pre){
+                nums[len++] = nums[i];
+                count = 1;
+                pre = nums[i];
+            }
+        }
+        return len;
+    }
+};
