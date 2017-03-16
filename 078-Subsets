@@ -1,0 +1,29 @@
+/*
+题目大意：求给定数组的所有子集
+解题思路：dfs
+注意的点：一开始想到了回溯，但是卡在“结束判断”，后来看了DISCUSS发现，还真的是结束判断有问题，因为回溯过程中传入下标为i+1，所以应该在nums.size()+1时返回，
+         否则将不处理最后一位！！！！
+         index：处理到的位置下标，因为要通过下标处理元素，所以记得要排序。
+*/
+
+class Solution {
+public:
+    void dfs(vector<vector<int>>& res, vector<int>& tmp, vector<int>& nums, int index){
+        if(index == nums.size() + 1) return; // 注意此处
+        res.push_back(tmp);
+        for(int i = index; i < nums.size(); i++){
+            tmp.push_back(nums[i]);
+            dfs(res, tmp, nums, i + 1);
+            tmp.pop_back();
+        }
+    }
+    vector<vector<int>> subsets(vector<int>& nums) {
+        vector<vector<int>> res;
+        vector<int> tmp;
+        
+        sort(nums.begin(), nums.end());
+        dfs(res, tmp, nums, 0);
+        
+        return res;
+    }
+};
