@@ -1,0 +1,35 @@
+/*
+题目大意：与上一题类似，也是删除链表的重复元素，但是允许重复元素剩余一个，即对于1->2->2->3返回1->2->3
+解题思路：与上一题类似，因为重复元素可以出现一次，所以当不断后移到cur时，cur一定是可用的，因此不需要通过valid进行额外处理
+注意的点：无
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(!head || !head->next) return head;
+        
+        ListNode *pre = new ListNode(-1);
+        ListNode *respre = pre;
+        ListNode *cur = head;
+        
+        while(cur){
+            while(cur->next && cur->next->val == cur->val){
+                cur = cur->next;
+            }
+            pre->next = cur;
+            pre = cur;
+            cur = cur->next;
+        }
+        pre->next = NULL;
+        return respre->next;
+    }
+};
