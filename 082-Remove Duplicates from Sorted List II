@@ -1,0 +1,47 @@
+/*
+题目大意：给定一个链表，去除所有重复元素，即对于1->2->2->3，去除后变成1->3
+解题思路：不断地判定当前节点是否可用，如果不可用直接后移cur，如果可用则执行相应操作
+注意的点：这道题真是一把辛酸泪啊...本来挺简单的一道题，出现了好多问题
+         1.声明节点时竟然直接声明了空指针！！！醉了
+         2.当前节点可用时，pre和cur指针都应该后移，此前竟然忘了后移pre，醉了！！！
+         3.结果头指针respre,前一节点pre,当前节点cur
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(!head || !head->next) return head;
+        
+        ListNode *pre = new ListNode(-1);
+        ListNode *respre = pre;
+        ListNode *cur = head;
+        
+        while(cur){
+            bool valid = true;
+            if(cur->next && cur->next->val == cur->val){
+                valid = false;
+                while(cur->next && cur->next->val == cur->val){
+                    cur = cur->next;
+                }
+            }
+            if(!valid){
+                cur = cur->next;
+            }
+            else{
+                pre->next = cur;
+                pre = cur;
+                cur = cur->next;
+            }
+        }
+        pre->next = NULL;
+        return respre->next;
+    }
+};
