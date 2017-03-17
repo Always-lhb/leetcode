@@ -1,0 +1,43 @@
+/*
+题目大意：给定一个由'0'和'1'构成的矩阵，返回矩阵中所有由'1'组成的最大矩形面积
+解题思路：将题目转换成84题。对于矩阵的每一行，想象沿着当前行横切，由横切面向上的各列代表高度集合，其高度为横切面向上的连续1的个数，则对于当前行，题目转化
+         为：给定高度序列，求最大矩形面积，即题目84；对于矩阵的每一行执行上述操作，即可求得本题解。
+注意的点：这两道题确实经典！
+
+*/
+
+class Solution {
+public:
+    int maxRectangleArea(vector<int>& height){
+        int h, w, maxArea = 0;
+        stack<int> st;
+        
+        for(int i = 0; i < height.size(); i++){
+            if(st.empty() || height[i] >= height[st.top()])
+                st.push(i);
+            else{
+                while(!st.empty() && height[st.top()] > height[i]){
+                    h = height[st.top()];
+                    st.pop();
+                    w = st.empty() ? i : i-st.top()-1;
+                    if(h * w > maxArea) maxArea = h * w;
+                }
+                st.push(i);
+            }
+        }
+        return maxArea;
+    }
+    int maximalRectangle(vector<vector<char>>& matrix) {
+        if(matrix.size() == 0 || matrix[0].size() == 0) return 0;
+        
+        int maxArea = 0;
+        vector<int> height(matrix[0].size() + 1, 0);
+        
+        for(int i = 0; i < matrix.size(); i++){
+            for(int j = 0; j < matrix[0].size(); j++)
+                height[j] = matrix[i][j] == '1' ? height[j] + 1 : 0;
+            maxArea = max(maxArea, maxRectangleArea(height));
+        }
+        return maxArea;
+    }
+};
