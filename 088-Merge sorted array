@@ -1,0 +1,27 @@
+/*
+题目大意：给定两个有序数组nums1,nums2，两个非负整数m,n分别代表nums1和nums2的初始长度。要求把nums2合并加入nums1，假设nums1足够长。
+解题思路：对于nums2的每一位，查找其在nums1的位置并插入。如果tmp大于当前nums1的所有值，则直接插入到相应位置；否则，需要把nums1中插入位置之后的各元素后移，
+         一位，然后插入tmp。
+注意的点：审清题意很重要，题目中nums1的空位都用0填充。这个简单题竟然花费了这么长时间，醉了...
+*/
+
+class Solution {
+public:
+    void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+        for(int i = 0; i < n; i++){
+            int tmp = nums2[i], j = 0;
+            for(; j < m + i; j++){
+                if(nums1[j] >= tmp){
+                    break;
+                }
+            }
+            if(j == m + i) nums1[j] = tmp;
+            else{
+                for(int k = m + i - 1; k >= j; k--){
+                    nums1[k+1] = nums1[k];
+                }
+                nums1[j] = tmp;
+            }
+        }
+    }
+};
