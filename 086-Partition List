@@ -1,0 +1,43 @@
+/*
+题目大意：给定一个链表和数字x，对链表重新排序，所有值小于x的在前，大于等于x的在后，且这两部分内部各元素位置不变
+解题思路：声明两个链表respre1,respre2分别存放值小于x的节点和值大于等于x的节点，遍历初始链表每个节点，把节点放入对应的respre1或respre2，
+         最后把两个respre2接在respre1后面即可。
+注意的点：无，一次通过。
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        if(!head || !head->next) return head;
+        
+        ListNode *respre1 = new ListNode(-1);
+        ListNode *respre2 = new ListNode(-1);
+        ListNode *pre1 = respre1, *pre2 = respre2;
+        ListNode *cur = head;
+        
+        while(cur){
+            if(cur->val < x){
+                pre1->next = cur;
+                pre1 = cur;
+                cur = cur->next;
+            }
+            else{
+                pre2->next = cur;
+                pre2 = cur;
+                cur = cur->next;
+            }
+        }
+        pre1->next = respre2->next;
+        pre2->next = NULL;
+        
+        return respre1->next;
+    }
+};
