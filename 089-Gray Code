@@ -1,0 +1,23 @@
+/*
+题目大意：给定非负整数n，求n位格雷码
+解题思路：n位格雷码 = 逆序(n-1位格雷码的第n位置1)...可以n=3举例验证(0,1,3,2,6,7,5,4)
+注意的点：注意格雷码的求解方法，要记住本题。
+*/
+
+class Solution {
+public:
+    vector<int> grayCode(int n) {
+        vector<int> res;
+        res.push_back(0);
+        
+        if(n == 0) return res;
+        while(n){
+            int tmp = res.size();
+            for(int i = res.size() - 1; i >= 0; i--){
+                res.push_back(res[i] + tmp);
+            }
+            n--;
+        }
+        return res;
+    }
+};
