@@ -1,0 +1,44 @@
+/*
+题目大意：给定链表，反转第m到第n的元素
+解题思路：从左至右遍历链表，其中用leftTail标记需反转链表左边的最后一个节点，midHead标记需反转链表头节点，midTail标记需反转链表尾节点。
+注意的点：注意链表反转函数reverse的书写
+*/
+
+class Solution {
+public:
+    ListNode* reverse(ListNode *head){
+        ListNode *ret = NULL;
+        while(head){
+            ListNode *nNode = head->next;
+            head->next = ret;
+            ret = head;
+            head = nNode;
+        }
+        return ret;
+    }
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        if(m == n) return head;
+        
+        ListNode *res = new ListNode(-1);
+        ListNode *leftTail = res;
+        leftTail->next = head;
+        ListNode *cur = head, *midHead, *midTail;
+        
+        for(int i = 1; i < m; i++){
+            leftTail = cur;
+            cur = cur->next;
+        }
+        midHead = cur;
+        
+        for(int i = m; i <=n; i++){
+            midTail = cur;
+            cur = cur->next;
+        }
+        midTail->next = NULL;
+        
+        leftTail->next = reverse(midHead);
+        midHead->next = cur;
+        
+        return res->next;
+    }
+};
