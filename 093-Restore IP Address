@@ -1,0 +1,53 @@
+/*
+题目大意：给定由数字构成的字符串，返回所有能构成的ip地址
+解题思路：显然是dfs。
+         扫描给定字符串，当前ip串个数为4时，如果恰好当前扫描位置为s.size()，说明已得到的tmp合法，放入res并返回，否则说明不合法，直接返回；
+         对当前位置index，当前ip地址串长度可以为1，2，3，得到当前ip地址串，如果合法则放入tmp，利用下一位置构造下一ip串。注意此处应该判断ip串数量
+         index:当前扫描到的位置，
+         count:当前ip串个数
+注意的点：
+         1.isValid函数，判断是否合法时，首先不能有连续0，其次ip串大小应在0..255之间
+         2.回溯时，注意对ip串数量即count进行判断
+         3.回溯时的条件判断里，一定要有越界判断，不然会超时
+*/
+         
+class Solution {
+public:
+    bool isValid(string cur){
+        if(cur[0] == '0') return cur == "0";
+        else{
+            int num = stoi(cur);
+            return num > 0 && num <= 255;
+        }
+    }
+    void dfs(vector<string>& res, string tmp, string s, int index, int count){
+        if(count == 4){
+            if(index == s.size())
+                res.push_back(tmp);
+            return;
+        }
+        else{
+            for(int i = 1; i <= 3 && index + i <= s.size(); i++){
+                string cur = s.substr(index, i);
+                if(isValid(cur)){
+                    if(count == 3){
+                        tmp = tmp + cur;
+                        dfs(res, tmp, s, index + i, count + 1);
+                        tmp = tmp.substr(0, tmp.size() - i);
+                    }
+                    else{
+                        tmp = tmp + cur + '.';
+                        dfs(res, tmp, s, index + i, count + 1);
+                        tmp = tmp.substr(0, tmp.size() - i - 1);
+                    }
+                }
+            }
+        }
+    }
+    vector<string> restoreIpAddresses(string s) {
+        vector<string> res;
+        string tmp;
+        dfs(res, tmp, s, 0, 0);
+        return res;
+    }
+};
