@@ -1,0 +1,38 @@
+/**
+题目大意：对所给数字n，求出1..n所能构成的所有二叉搜索树
+解题思路：回溯
+         sub(left, right)：返回left..right所能构成的所有二叉搜索树；如果left>right则存入NULL并返回，否则，对于left与right之间的任一数i，
+         将left..right分为三部分：left..i-1, i, i+1..right，其中第一部分构成i的所有左子树，第三部分构成i的所有右子树；任选一个左子树和一个
+         右子树，它们与i共同构成一个解。
+注意的点：这道题看了lbc的解法之后才弄懂，要反复练习
+ */
+class Solution {
+public:
+    vector<TreeNode*> sub(int left, int right){
+        vector<TreeNode *> ans;
+        if(left > right){
+            ans.push_back(NULL);
+            return ans;
+        }
+        for(int i = left; i <= right; i++){
+            vector<TreeNode *> L = sub(left, i-1);
+            vector<TreeNode *> R = sub(i+1, right);
+            for(auto l : L){
+                for(auto r : R){
+                    TreeNode *root = new TreeNode(i);
+                    root->left = l;
+                    root->right = r;
+                    ans.push_back(root);
+                }
+            }
+        }
+        return ans;
+    }
+    vector<TreeNode*> generateTrees(int n) {
+        vector<TreeNode*> res;
+        if(n == 0) return res;
+        
+        res = sub(1, n);
+        return res;
+    }
+};
