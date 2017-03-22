@@ -1,0 +1,59 @@
+/*
+题目大意：二叉树的中序遍历
+解题思路：dfs。如果当前节点左子树不为空，则递归访问左子树；然后访问当前元素；如果当前节点右子树不为空，则递归访问右子树。
+注意的点：这道题一次ac
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void dfs(vector<int>& res, TreeNode *cur){
+        if(cur->left) dfs(res, cur->left);
+        res.push_back(cur->val);
+        if(cur->right) dfs(res, cur->right);
+    }
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        dfs(res, root);
+        return res;
+    }
+};
+
+/*
+递归解法so easy，下面是非递归解法：二叉树的非递归解法用到栈stack
+循环条件：当前节点不为空或者栈不为空
+         如果当前节点不为空，则入栈，然后指向左子树；
+         否则，说明当前节点为空而栈不为空，这时出栈并访问，然后指向当前节点的右子树
+*/
+
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        stack<TreeNode*> st;
+        TreeNode *cur = root;
+        
+        while(cur || !st.empty()){
+            if(cur){
+                st.push(cur);
+                cur = cur->left;
+            }
+            else{
+                cur = st.top();
+                st.pop();
+                res.push_back(cur->val);
+                cur = cur->right;
+            }
+        }
+        
+        return res;
+    }
+};
