@@ -22,13 +22,16 @@ public:
     }
     vector<int> inorderTraversal(TreeNode* root) {
         vector<int> res;
+        if(!root) return res;
+        
         dfs(res, root);
         return res;
     }
 };
 
 /*
-递归解法so easy，下面是非递归解法：二叉树的非递归解法用到栈stack
+递归解法so easy，下面是非递归解法：二叉树的非递归解法用到栈stack。扫描（不是访问）当前节点，如果其左子树不为空，则入栈，继续扫描其左子树；否则，当前
+                                 节点左子树为空或已访问，出栈并访问当前节点，然后扫描它右子树
 循环条件：当前节点不为空或者栈不为空
          如果当前节点不为空，则入栈，然后指向左子树；
          否则，说明当前节点为空而栈不为空，这时出栈并访问，然后指向当前节点的右子树
