@@ -1,0 +1,39 @@
+/*
+题目大意：二叉搜索树有两个节点值被交换，请换回这两个节点值
+解题思路：二叉搜索树节点值正确的顺序与中序遍历一致，即升序排序。因此中序遍历二叉树，如果前一节点的值>=当前节点值，则找到一个被交换的节点
+注意的点：通过这道题对于回溯dfs的理解更为深刻，详见注释
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    TreeNode* first = NULL, * second = NULL;
+    TreeNode* pre = new TreeNode(INT_MIN); //前一节点值初始化为INT_MIN
+public:
+    void inorder(TreeNode* root){
+        if(root == NULL) return; //对二叉树root，如果为空则返回；否则处理它的左子树；然后处理当前节点；最后处理右子树
+        inorder(root->left); // 处理左子树
+        
+        if(first == NULL && pre->val >= root->val) //处理当前节点
+            first = pre;
+        if(first != NULL && pre->val >= root->val)
+            second = root;
+        pre = root;
+        
+        inorder(root->right); //处理右子树
+    }
+    void recoverTree(TreeNode* root) {
+        inorder(root);
+        int tmp = first->val;
+        first->val = second->val;
+        second->val = tmp;
+    }
+};
