@@ -1,0 +1,29 @@
+/*
+题目大意：判断所给二叉树是否是合法的二叉搜索树
+解题思路：对每个节点进行回溯判断，如果当前节点值合法且左子树和右子树均合法，则返回true，否则返回false
+注意的点：本题涉及到节点值的越界问题，必须使用long型，使用int型则报错！！！
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isValid(TreeNode* root, long min, long max){
+        if(root == NULL) 
+            return true;
+        if(root->val > min && root->val < max && isValid(root->left, min, root->val) && isValid(root->right, root->val, max))
+            return true;
+        return false;
+    }
+    bool isValidBST(TreeNode* root) {
+        if(root == NULL) return true;
+        return isValid(root, LONG_MIN, LONG_MAX);
+    }
+};
