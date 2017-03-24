@@ -1,0 +1,24 @@
+/*
+题目大意：比较给定的两棵二叉树是否相等
+解题思路：dfs。当前节点值相同且左右子树都相同则两树相同。
+注意的点：很简单，1min通过...
+/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if(p == NULL) return q == NULL;
+        if(q == NULL) return p == NULL;
+        
+        return p->val == q->val && isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+    }
+};
