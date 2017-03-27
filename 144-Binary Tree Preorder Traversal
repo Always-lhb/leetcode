@@ -1,0 +1,47 @@
+/*
+题目大意：二叉树先序遍历
+解题思路1：递归。简单，一次通过
+解题思路2：利用栈stack。循环条件与中序遍历一致，当cur不为空时，直接访问该节点，把该节点的右孩子入栈，节点左移；否则说明cur为空且栈不为空，出栈
+注意的点：无
+*/
+
+/*递归解法*/
+class Solution {
+public:
+    void preorder(vector<int>& res, TreeNode* root){
+        res.push_back(root->val);
+        if(root->left) preorder(res, root->left);
+        if(root->right) preorder(res, root->right);
+    }
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> res;
+        if(root == NULL) return res;
+        
+        preorder(res, root);
+        return res;
+    }
+};
+
+/*非递归解法*/
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> res;
+        stack<TreeNode*> st;
+        if(root == NULL) return res;
+        
+        TreeNode *cur = root;
+        while(cur || !st.empty()){
+            if(cur){
+                res.push_back(cur->val);
+                st.push(cur->right);
+                cur = cur->left;
+            }
+            else{ //此时当前节点与它的左子树都已访问完毕，且栈内存储的都是右子树，所以直接出栈访问即可
+                cur = st.top();
+                st.pop();
+            }
+        }
+        return res;
+    }
+};
