@@ -27,3 +27,16 @@ public:
         return isValid(root, LONG_MIN, LONG_MAX);
     }
 };
+
+/*easy...*/
+class Solution {
+public:
+    bool isValid(TreeNode* root, long min, long max){
+        if(root == NULL) return true;
+        return root->val > min && root->val < max && isValid(root->left, min, root->val) && isValid(root->right, root->val, max);
+    }
+    bool isValidBST(TreeNode* root) {
+        if(root == NULL) return true;
+        return isValid(root, LONG_MIN, LONG_MAX);
+    }
+};
