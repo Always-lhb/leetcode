@@ -1,0 +1,44 @@
+/*
+题目大意：通过先序遍历和中序遍历序列构造二叉树。假设序列没有重复元素
+解题思路：先序遍历的首元素是根节点，它把中序遍历序列分割成左右两部分，其中左部分是左子树，右部分是右子树。递归
+注意的点：注意i的取值范围是[l2..r2]，
+         当i=l2时，r1<l1，因此tips 1必不可少；
+         当i=r2且不满足if条件时，i=r2+1>r2，此时无法构造左右子树，因此要有tips 2
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* build(vector<int>& preorder, vector<int>& inorder, int l1, int r1, int l2, int r2){
+        if(l1 > r1) return NULL; //tips 1
+        
+        TreeNode *root = new TreeNode(preorder[l1]);
+        if(l1 == r1) return root;
+        
+        int i = l2;
+        for(; i <= r2; i++){
+            if(inorder[i] == preorder[l1])
+                break;
+        }
+        if(i <= r2){ //tips 2
+            TreeNode *L = build(preorder, inorder, l1 + 1, l1 + i - l2, l2, i - 1);
+            TreeNode *R = build(preorder, inorder, l1 + i - l2 + 1, r1, i + 1, r2);
+            root->left = L;
+            root->right = R;
+        }
+        
+        return root;
+    }
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        if(preorder.size() == 0) return NULL;
+        return build(preorder, inorder, 0, preorder.size() - 1, 0, inorder.size() - 1);
+    }
+};
