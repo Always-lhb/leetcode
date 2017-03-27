@@ -1,0 +1,27 @@
+/*
+题目大意：判断给定二叉树是否是镜像的，即中心对称
+解题思路：递归。对当前两个根，判断两个根的节点值及左根的左子树与右根的右子树是否相同
+注意的点：简单题，一开始没想到...
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool check(TreeNode* p, TreeNode* q){
+        if(p == NULL) return q == NULL;
+        if(q == NULL) return p == NULL;
+        return p->val == q->val && check(p->left, q->right) && check(p->right, q->left);
+    }
+    bool isSymmetric(TreeNode* root) {
+        if(root == NULL) return true;
+        return check(root->left, root->right);
+    }
+};
