@@ -1,0 +1,41 @@
+/*
+题目大意：根据中序遍历序列和后序遍历序列构造二叉树，假设无重复元素
+解题思路：与上一题一致，把先序的首元素改为后序的尾元素
+注意的点：无
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* build(vector<int>& postorder, vector<int>& inorder, int l1, int r1, int l2, int r2){
+        if(l1 > r1) return NULL;
+        TreeNode *root = new TreeNode(postorder[r1]);
+        if(l1 == r1) return root;
+        
+        int i = l2;
+        for(; i <= r2; i++){
+            if(inorder[i] == postorder[r1])
+                break;
+        }
+        
+        if(i <= r2){
+            TreeNode* L = build(postorder, inorder, l1, l1 + i - l2 - 1, l2, i - 1);
+            TreeNode* R = build(postorder, inorder, l1 + i - l2, r1 - 1, i + 1, r2);
+            root->left = L;
+            root->right = R;
+        }
+        return root;
+    }
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        if(postorder.size() == 0) return NULL;
+        return build(postorder, inorder, 0, postorder.size() - 1, 0, inorder.size() - 1);
+    }
+};
