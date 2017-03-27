@@ -2,3 +2,53 @@
 题目大意：二叉树的后序遍历
 解题思路1：递归。easy
 解题思路2：利用栈stack。*/
+
+/*递归解法*/
+class Solution {
+public:
+    void postOrder(vector<int>& res, TreeNode* root){
+        if(root->left) postOrder(res, root->left);
+        if(root->right) postOrder(res, root->right);
+        res.push_back(root->val);
+    }
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> res;
+        if(root == NULL) return res;
+        
+        postOrder(res, root);
+        return res;
+    }
+};
+
+/*非递归解法，详见注释*/
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> res;
+        stack<TreeNode*> st;
+        if(root == NULL) return res;
+        
+        TreeNode *cur = root;
+        TreeNode *pre = NULL; //前一个访问的节点
+        while(cur || !st.empty()){
+            if(cur){
+               st.push(cur);
+               cur = cur->left;
+            }
+            else{ //左子树为空或已访问完毕
+                cur = st.top();
+                if(cur->right && cur->right != pre){ //如果右子树存在且未访问，则先访问右子树
+                    cur = cur->right;
+                }
+                else{ //左右子树都已访问完毕，则访问当前节点
+                    res.push_back(cur->val);
+                    pre = cur;
+                    cur = NULL; //注意此处，将cur置空使得不进入第一个if内
+                    st.pop();
+                }
+                
+            }
+        }
+        return res;
+    }
+};
