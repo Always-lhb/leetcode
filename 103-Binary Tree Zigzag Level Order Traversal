@@ -1,0 +1,48 @@
+/*
+题目大意：二叉树的ZigZag层次遍历，即对奇数层从左往右，偶数层从右往左
+解题思路：利用栈stack。flag作为方向标志位
+注意的点：一开始以为和层次遍历一致，所以使用queue求解，但是求解过程中发现：对于每层而言，先进入的后访问，这是栈的性质，改为stack
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        stack<TreeNode*> st;
+        vector<vector<int>> res;
+        bool flag = true;
+        
+        if(root == NULL) return res;
+        
+        st.push(root);
+        while(!st.empty()){
+            vector<int> tmp;
+            stack<TreeNode*> st_new;
+            while(!st.empty()){
+                TreeNode *cur = st.top();
+                st.pop();
+                tmp.push_back(cur->val);
+                if(flag){
+                    if(cur->left) st_new.push(cur->left);
+                    if(cur->right) st_new.push(cur->right);
+                }
+                else{
+                    if(cur->right) st_new.push(cur->right);
+                    if(cur->left) st_new.push(cur->left);
+                }
+            }
+            res.push_back(tmp);
+            st = st_new;
+            flag = flag == true ? false : true;
+        }
+        return res;
+    }
+};
