@@ -1,0 +1,31 @@
+/*
+题目大意：通过给定的升序数组，构造平衡二叉搜索树
+解题思路：递归。平衡二叉树的根节点是数组的中间元素，中间元素把数组分成三部分，左边是左子树，右边是右子树。
+注意的点：不难发现，在二叉树与vector共同出现的题目里，一般都使用递归实现，且需要传入vector的起止下标low,high！！！
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* bst(vector<int>& nums, int l, int r){
+        if(l > r) return NULL;
+        
+        int mid = (l + r) / 2;
+        TreeNode *root = new TreeNode(nums[mid]);
+        root->left = bst(nums, l, mid - 1);
+        root->right = bst(nums, mid + 1, r);
+        return root;
+    }
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        if(nums.size() == 0) return NULL;
+        return bst(nums, 0, nums.size() - 1);
+    }
+};
