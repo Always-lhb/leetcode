@@ -1,0 +1,52 @@
+/*
+题目大意：根据升序链表，构造平衡二叉树
+解题思路1：求出链表长度，然后递归构造。注意递归时长度的求解
+解题思路2：把链表转换为序列，利用108的代码求解。lbc
+注意的点：一开始我的思路是利用上一题的思想，求出链表长度后，传入了l,r两个量，但是超时；而传入len就通过，想不明白
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* bst(ListNode* head, int len){
+        if(len <= 0) return NULL;
+        if(len == 1) return new TreeNode(head->val);
+        
+        int mid = len / 2;
+        ListNode *cur = head;
+        for(int i = 0; i < mid; i++){
+            cur = cur->next;
+        }
+        TreeNode *root = new TreeNode(cur->val);
+        root->left = bst(head, mid);
+        root->right = bst(cur->next, len - mid - 1);
+        return root;
+    }
+    TreeNode* sortedListToBST(ListNode* head) {
+        if(head == NULL) return NULL;
+        
+        ListNode *cur = head;
+        int len = 0;
+        while(cur){
+            len++;
+            cur = cur->next;
+        }
+        return bst(head, len);
+    }
+};
