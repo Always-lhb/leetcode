@@ -1,0 +1,45 @@
+/*
+题目大意：二叉树层次遍历，要求结果从下往上，即先存储叶子节点所在层，最后存储根节点所在层
+解题思路：首先按照正常层次遍历获取结果，然后reverse即可
+注意的点：无
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void reverse(vector<vector<int>>& res){
+        int l = 0, r = res.size() - 1;
+        while(l < r){
+            swap(res[l++], res[r--]);
+        }
+    }
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+        vector<vector<int>> res;
+        queue<TreeNode*> q;
+        if(root == NULL) return res;
+        
+        q.push(root);
+        while(!q.empty()){
+            vector<int> tmp;
+            int len = q.size();
+            for(int i = 0; i < len; i++){
+                TreeNode *cur = q.front();
+                q.pop();
+                tmp.push_back(cur->val);
+                if(cur->left) q.push(cur->left);
+                if(cur->right) q.push(cur->right);
+            }
+            res.push_back(tmp);
+        }
+        reverse(res);
+        return res;
+    }
+};
