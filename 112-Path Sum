@@ -1,0 +1,35 @@
+/*
+题目大意：对给定二叉树和sum，判断是否有一条从根节点到叶子节点的路径，使得路径上的值和恰好等于sum
+解题思路：dfs。利用num存储当前路径节点值得和，如果是叶子节点，则进行判断，否则，如果有左子树则对左子树进行判断，如果有右子树则对右子树进行判断
+注意的点：一开始加了一个判断，即num>sum返回false，然而节点值可能为负，因此去掉该判断
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool dfs(TreeNode* root, int sum, int num){
+        if(root->left == NULL && root->right == NULL){ //leaf node
+            if((num + root->val) == sum) return true;
+            else return false;
+        }
+        if(root->left){
+            if(dfs(root->left, sum, num + root->val)) return true;
+        }
+        if(root->right){
+            if(dfs(root->right, sum, num + root->val)) return true;
+        }
+        return false;
+    }
+    bool hasPathSum(TreeNode* root, int sum) {
+        if(root == NULL) return false;
+        return dfs(root, sum, 0);
+    }
+};
