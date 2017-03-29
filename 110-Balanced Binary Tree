@@ -1,0 +1,29 @@
+/*
+题目大意：判断给定二叉树是否是平衡树。平衡树定义：左右子树高度差不大于1，且左右子树都是平衡树
+解题思路：如果root为空，返回true；否则，分别求出左右子树高度，按照定义判断
+注意的点：记住本题两个函数的写法
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int depth(TreeNode* root){
+        if(root == NULL) return 0;
+        return max(depth(root->left), depth(root->right)) + 1;
+    }
+    bool isBalanced(TreeNode* root) {
+        if(root == NULL) return true;
+        
+        int l = depth(root->left);
+        int r = depth(root->right);
+        return abs(l-r) <= 1 && isBalanced(root->left) && isBalanced(root->right);
+    }
+};
