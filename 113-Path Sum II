@@ -1,0 +1,48 @@
+/*
+题目大意：与上题类似，本题要求返回所有路径
+解题思路：dfs。利用res存储最终结果，tmp保存当前路径
+注意的点：在叶子节点判断内，当前路径满足条件时，注意tmp的弹出操作不可少！！！
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void dfs(vector<vector<int>>& res, vector<int>& tmp, TreeNode* root, int sum, int num){
+        if(root->left == NULL && root->right == NULL){
+            if((num + root->val) == sum){
+                tmp.push_back(root->val);
+                res.push_back(tmp);
+                tmp.pop_back(); //tips
+                return;
+            }
+            else return;
+        }
+        if(root->left){
+            tmp.push_back(root->val);
+            dfs(res, tmp, root->left, sum, num + root->val);
+            tmp.pop_back();
+        }
+        if(root->right){
+            tmp.push_back(root->val);
+            dfs(res, tmp, root->right, sum, num + root->val);
+            tmp.pop_back();
+        }
+    }
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        vector<vector<int>> res;
+        vector<int> tmp;
+        
+        if(root == NULL) return res;
+        
+        dfs(res, tmp, root, sum, 0);
+        return res;
+    }
+};
