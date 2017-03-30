@@ -43,7 +43,7 @@ public:
                 else{ //左右子树都已访问完毕，则访问当前节点
                     res.push_back(cur->val);
                     pre = cur;
-                    cur = NULL; //注意此处，将cur置空使得不进入第一个if内
+                    cur = NULL; //注意此处，将cur置空使得不进入第一个if内,避免再次入栈
                     st.pop();
                 }
                 
