@@ -1,0 +1,39 @@
+/*
+题目大意：给定任意二叉树，将同一层的节点通过next指针向右连接
+解题思路：二叉树的层次遍历。对于每一层，声明pre代表前一节点，如果pre为空说明cur是当前层首节点，令cur=pre，否则利用next不断向右指
+注意的点：
+*/
+
+/**
+ * Definition for binary tree with next pointer.
+ * struct TreeLinkNode {
+ *  int val;
+ *  TreeLinkNode *left, *right, *next;
+ *  TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void connect(TreeLinkNode *root) {
+        if(root == NULL) return;
+        
+        queue<TreeLinkNode*> q;
+        q.push(root);
+        while(!q.empty()){ // current level
+            int len = q.size();
+            TreeLinkNode *pre = NULL;
+            for(int i = 0; i < len; i++){
+                TreeLinkNode *cur = q.front();
+                q.pop();
+                if(cur->left) q.push(cur->left);
+                if(cur->right) q.push(cur->right);
+                
+                if(pre == NULL) pre = cur;
+                else{
+                    pre->next = cur;
+                    pre = cur;
+                }
+            }
+        }
+    }
+};
