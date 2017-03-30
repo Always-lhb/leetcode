@@ -1,0 +1,37 @@
+/*
+题目大意：按照先序遍历把二叉树转换成链表
+解题思路：先序遍历。详见注释
+注意的点：这道题是看了lbc的解法后才弄懂，要反复练习
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        if(root == NULL) return;
+        
+        stack<TreeNode*> st;
+        while(root){ // 处理当前节点
+            if(root->left){ //如果左子树存在，则处理左子树
+                if(root->right) st.push(root->right); //如果右子树存在，入栈
+                root->right = root->left;
+                root->left = NULL;
+            }
+            else if(root->right == NULL){ //如果左右子树均为空，出栈
+                if(!st.empty()){
+                    root->right = st.top();
+                    st.pop();
+                }
+            }
+            root = root->right; //处理下一节点，此时节点一定位于当前节点右子树
+        }
+    }
+};
