@@ -1,0 +1,25 @@
+/*
+题目大意：返回Pascal三角形行下标为rowIndex的行
+解题思路：与上题基本一致，循环构造Pascal三角形的每一行，如果行号=rowIndex则返回当前行
+注意的点：无
+*/
+
+class Solution {
+public:
+    vector<int> getRow(int rowIndex) {
+        vector<int> pre, cur;
+        pre.push_back(1);
+        if(rowIndex == 0) return pre;
+        
+        for(int i = 1; i <= rowIndex; i++){
+            cur.push_back(1);
+            for(int j = 1; j <= i; j++){
+                if(j == i) cur.push_back(1);
+                else cur.push_back(pre[j-1] + pre[j]);
+            }
+            pre = cur;
+            if(i == rowIndex) return cur;
+            else cur.clear();
+        }
+    }
+};
