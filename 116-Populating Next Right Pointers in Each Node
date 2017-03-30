@@ -1,10 +1,9 @@
 /*
 题目大意：给定一棵完全二叉树，设置每个节点的next指针指向它右边的结点，如果右边没有节点则设置成NULL.开始时树中所有节点的next值都设成NULL
-解题思路：一开始想到层次遍历，但是层次遍历用到queue，本题要求常数空间，故不可取。
-         这里采用yyp的思路：对当前根，左子树的next是该根的右子树，该根右子树的next是根的next的左子树
-注意的点：思路很重要！
+解题思路：1.层次遍历。
+         2.yyp的思路：对当前根，左子树的next是该根的右子树，该根右子树的next是根的next的左子树
+注意的点：思路很重要！看了下一题之后，我发现这种题型，还是直接用levelorder比较好，一致！
 */
-
 
 /**
  * Definition for binary tree with next pointer.
@@ -14,6 +13,32 @@
  *  TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}
  * };
  */
+ 
+/*层次遍历*/
+void connect(TreeLinkNode *root) {
+        if(root == NULL) return;
+        
+        queue<TreeLinkNode*> q;
+        q.push(root);
+        while(!q.empty()){ // current level
+            int len = q.size();
+            TreeLinkNode *pre = NULL;
+            for(int i = 0; i < len; i++){
+                TreeLinkNode *cur = q.front();
+                q.pop();
+                if(cur->left) q.push(cur->left);
+                if(cur->right) q.push(cur->right);
+                
+                if(pre == NULL) pre = cur;
+                else{
+                    pre->next = cur;
+                    pre = cur;
+                }
+            }
+        }
+    }
+
+/*yyp思路*/
 class Solution {
 public:
     void connect(TreeLinkNode *root) {
