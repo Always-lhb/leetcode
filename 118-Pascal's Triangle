@@ -1,0 +1,28 @@
+/*
+题目大意：给定行数，构造Pascal三角形
+解题思路：简单题。Pascal三角形定义：对于每行，首元素和尾元素为1，其余元素为上一行当前列和前一列元素之和
+注意的点：这是一道简单题，循环构造每一行即可。一开始利用二维数组解，声明了n*n的二维数组，但是多出许多元素
+*/
+
+class Solution {
+public:
+    vector<vector<int>> generate(int numRows) {
+        vector<vector<int>> res;
+        if(numRows == 0) return res;
+        
+        vector<int> pre, cur;
+        pre.push_back(1);
+        res.push_back(pre);
+        for(int i = 1; i < numRows; i++){ // current row
+            cur.push_back(1);
+            for(int j = 1; j <= i; j++){
+                if(j == i) cur.push_back(1);
+                else cur.push_back(pre[j-1] + pre[j]);
+            }
+            pre = cur;
+            res.push_back(cur);
+            cur.clear();
+        }
+        return res;
+    }
+};
