@@ -1,0 +1,32 @@
+/*
+题目大意：求s里有多少个等于t的子串
+解题思路：动态规划。
+         dp[i][j]: s[0..i-1]里有多少个t[0..j-1]的子串，求解dp[m][n]
+         dp[i][j]: 如果s[i-1]与t[j-1]不同，则s[0..i-1]与s[0..i-2]里包含的t[j-1]个数一致，即dp[i][j]=dp[i-1][j]
+                   如果s[i-1]与t[j-1]相同，则s[0..i-1]里包含的t[j-1]个数，需要在dp[i-1][j]的基础上，再加上s,t均去掉最后一位的数目
+         初始化：空串是任意字符串的子串
+注意的点：怎么自己就想不到dp呢...
+*/
+
+class Solution {
+public:
+    int numDistinct(string s, string t) {
+        int m = s.size(), n = t.size();
+        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+        
+        for(int i = 0; i <= m; i++){
+            dp[i][0] = 1;
+        }
+        for(int i = 1; i <= m; i++){
+            for(int j = 1; j <= n; j++){
+                if(s[i-1] == t[j-1]){
+                    dp[i][j] = dp[i-1][j] + dp[i-1][j-1];
+                }
+                else{
+                    dp[i][j] = dp[i-1][j];
+                }
+            }
+        }
+        return dp[m][n];
+    }
+};
