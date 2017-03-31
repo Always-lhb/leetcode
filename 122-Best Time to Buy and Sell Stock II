@@ -1,0 +1,18 @@
+/*
+题目大意：依然是买卖股票，与上一题相比，从一次买卖变成了多次买卖，求最大利润
+解题思路：如果当前价格高于前一天的价格，那么价格差即可转化为利润。由于股票的价格曲线应该是一个波浪形曲线，只需要找到每一段上升区间，并将其交易即可。
+注意的点：神思路...
+*/
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int res = 0;
+        for(int i = 1; i < prices.size(); i++){
+            if(prices[i] > prices[i-1]){
+                res += prices[i] - prices[i-1];
+            }
+        }
+        return res;
+    }
+};
