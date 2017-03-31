@@ -1,0 +1,33 @@
+/*
+题目大意：求二叉树的最大路径和，可以不经过根节点。节点值可正可负
+解题思路：递归。求出以每个节点为根的最大路径和，必要时更新maxValue。
+注意的点：
+*/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int maxValue = INT_MIN;
+    int sub(TreeNode* root){ //以root为根的最大路径和
+        if(root == NULL) return 0;
+        
+        int left = max(0, sub(root->left));
+        int right = max(0, sub(root->right));
+        maxValue = max(maxValue, left + right + root->val); //必要时更新maxValue
+        
+        return max(left, right) + root->val; //返回时只能选取左右子树里的一棵
+    }
+    int maxPathSum(TreeNode* root) {
+        if(root == NULL) return 0;
+        sub(root);
+        return maxValue;
+    }
+};
