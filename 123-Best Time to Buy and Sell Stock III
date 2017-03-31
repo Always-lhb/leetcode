@@ -1,0 +1,20 @@
+/*
+题目大意：依然是股票问题，最多进行两次买卖，求最大利润
+解题思路：假设初始钱为0，hold1：第一次买股票后的钱, ,release1：第一次卖股票后的钱, hold2：第二次买股票后的钱，release2：第二次卖股票后的钱
+         对每个位置，更新上述自个量。
+注意的点：一开始从122出发，以为选取最长的两段上升区间求和，实际并非如此。
+*/
+
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int hold1 = INT_MIN, hold2 = INT_MIN, release1 = 0, release2 = 0;
+        for(int i : prices){
+            hold1 = max(hold1, -i);
+            release1 = max(release1, hold1 + i);
+            hold2 = max(hold2, release1 - i);
+            release2 = max(release2, hold2 + i);
+        }
+        return release2;
+    }
+};
