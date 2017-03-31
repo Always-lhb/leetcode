@@ -19,3 +19,17 @@ public:
         return maxProf;
     }
 };
+
+
+/*看了123题之后，利用其思想解决本题*/
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int hold = INT_MIN, release = 0;
+        for(int i : prices){
+            hold = max(hold, -i);
+            release = max(release, hold + i);
+        }
+        return release;
+    }
+};
