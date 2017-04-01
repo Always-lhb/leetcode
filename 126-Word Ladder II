@@ -3,78 +3,18 @@
 解题思路：
          1.利用DFS求出所有可能的路径，然后选出最短的返回。超时
          2.看了老宋他们的解法，利用BFS广度遍历字典，找到字典里每个字符串的层次，再利用DFS从后往前构造路径。超时......
+         3.把vector改为set之后可以ac，大概是因为vector的查找复杂度较高
 注意的点：
          1.unordered_map
          2.unordered_set
          3.BFS类似于二叉树的层次遍历，需要借助queue
 */
  
-/*方法1*/
-class Solution {
-public:
-    bool isValid(string w1, string w2){
-        int count = 0;
-        for(int i = 0; i < w1.size(); i++){
-            if(w1[i] != w2[i]){
-                count++;
-            }
-        }
-        if(count == 1) return true;
-        else return false;
-    }
-    void dfs(vector<vector<string>>& res, vector<string>& tmp, string tail, string endWord, vector<string>& wordList, unordered_map<string, bool>& isUsed){
-        if(tail == endWord){
-            res.push_back(tmp);
-            return;
-        }
-        for(auto word : wordList){
-            if(!isUsed[word]){
-                if(isValid(tail, word)){
-                    tmp.push_back(word);
-                    isUsed[word] = true;
-                    dfs(res, tmp, word, endWord, wordList, isUsed);
-                    isUsed[word] = false;
-                    tmp.pop_back();
-                }
-            }
-        }
-    }
-    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
-        vector<vector<string>> res;
-        vector<vector<string>> ans;
-        vector<string> tmp;
-        
-        if(wordList.size() == 0) return res;
-        
-        unordered_map<string, bool> isUsed; //tips，map声明时不需要指定空间
-        for(auto word : wordList){
-            isUsed[word] = false;
-        }
-        
-        tmp.push_back(beginWord);
-        dfs(res, tmp, beginWord, endWord, wordList, isUsed);
-        
-        int minLen = INT_MAX;
-        for(int i = 0; i < res.size(); i++){
-            if(res[i].size() < minLen)
-                minLen = res[i].size();
-        }
-        for(int i = 0; i < res.size(); i++){
-            if(res[i].size() == minLen)
-                ans.push_back(res[i]);
-        }
-        
-        return ans;
-    }
-};
-
-
-/*方法2*/
 class Solution {
 public:
     void getPath(vector<vector<string>>& res, unordered_map<string, vector<string>>& pa, string cur, vector<string>& path){
         if(pa.find(cur) == pa.end()){ // cur:last word in path
-            res.push_back(vector<string>(path.rbegin(), path.rend())); //tips，vector逆序构造
+            res.push_back(vector<string>(path.rbegin(), path.rend()));
             return;
         }
         
@@ -85,17 +25,20 @@ public:
         }
     }
     vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> wordDict;
+        for(auto s : wordList) wordDict.insert(s);
+        
         vector<vector<string>> res;
         unordered_map<string, vector<string>> pa;
-        unordered_set<string> visited; //tips....注意，相对比vector，unordered_set内无重复元素，因此它可以通过元素直接insert,erase，并有find方法
+        unordered_set<string> visited;
         queue<string> q;
         
         q.push(beginWord);
-        visited.insert(beginWord); //
+        visited.insert(beginWord);
         
         while(!q.empty()){
             int len = q.size(); // current level size
-            unordered_map<string, vector<string>> newPa;
+            unordered_map<string, vector<string>> newPa; //存储当前层次字符串的父亲节点
             for(int i = 0; i < len; i++){ // every current level word
                 string cur = q.front();
                 q.pop();
@@ -110,20 +53,19 @@ public:
                     char old = cur[j];
                     for(char c = 'a'; c <= 'z'; c++){
                         cur[j] = c;
-                        //first time deal with cur
-                        if(find(wordList.begin(), wordList.end(), cur) != wordList.end() && pa.find(cur) == pa.end()){
-                            newPa[cur].push_back(pre);
-                            if(visited.find(cur) == visited.end()){
-                                q.push(cur);
-                                visited.insert(cur);
-                            }
-                        }
+                        if(wordDict.find(cur) == wordDict.end() || visited.find(cur) != visited.end())
+                            continue;
+                         //第一次在当前层次找到cur的父节点，则加入队列，否则说明已在当前层找到过cur的父节点，不需要重复入栈
+                        if(newPa.find(cur) == newPa.end())
+                            q.push(cur);
+                        newPa[cur].push_back(pre);
                     }
                     cur[j] = old;
                 }
             }
             for(auto a : newPa){
-                pa[a.first] = a.second;
+                pa.insert(a); //把当前层次的结果添加入总结果！！！
+                visited.insert(a.first);
             }
         }
         return res;
