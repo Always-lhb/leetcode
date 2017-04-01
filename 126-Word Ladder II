@@ -6,6 +6,7 @@
 注意的点：
          1.unordered_map
          2.unordered_set
+         3.BFS类似于二叉树的层次遍历，需要借助queue
 */
  
 /*方法1*/
