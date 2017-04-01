@@ -1,8 +1,9 @@
 /*
 题目大意：与上题基本一致，更为简单。只需要返回最短路径长度即可
-解题思路：BFS。一开始我的想法是，声明一个队列，利用BFS求解，类似二叉树的层次遍历，unordered_set<string>visited存储已访问的字符串。在q非空的情况下
+解题思路：1. BFS。一开始我的想法是，声明一个队列，利用BFS求解，类似二叉树的层次遍历，unordered_set<string>visited存储已访问的字符串。在q非空的情况下
          循环求解，但是一直超时，三位大神做法也是如此...
-         后来，在网上找到一个ac代码，发现它声明的unordered_set<string>visited存储未被访问的字符串，过了，不懂啊...
+         2. 后来，在网上找到一个ac代码，发现它声明的unordered_set<string>visited存储未被访问的字符串，过了，不懂啊...
+         3. 将vector转换成unordered_set也可以通过，大概是因为查找时复杂度降低了
 注意的点：这题是个坑啊...
 */
 
@@ -64,6 +65,46 @@ public:
                     for(char ch = 'a'; ch <= 'z'; ch++){
                         tmp[j] = ch;
                         if(find(wordList.begin(), wordList.end(), tmp) != wordList.end() && visited.find(tmp) == visited.end()){
+                            q.push(tmp);
+                            visited.insert(tmp);
+                        }
+                    }
+                    tmp[j] = c;
+                }
+            }
+            res++;
+        }
+        return 0;
+    }
+};
+
+
+/*以后就按下面的方法写吧，转换一下即可...*/
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        int res = 1;
+        queue<string> q;
+        unordered_set<string> visited;
+        unordered_set<string> wordDict;
+        
+        for(auto s : wordList) wordDict.insert(s); //只有在元素不同于set内任何元素时才会插入
+        
+        q.push(beginWord);
+        visited.insert(beginWord);
+        while(!q.empty()){
+            // res++;
+            int len = q.size();
+            for(int i = 0; i < len; i++){
+                string tmp = q.front();
+                q.pop();
+                if(tmp == endWord) return res;
+                
+                for(int j = 0; j < tmp.size(); j++){
+                    char c = tmp[j];
+                    for(char ch = 'a'; ch <= 'z'; ch++){
+                        tmp[j] = ch;
+                        if(wordDict.find(tmp) != wordDict.end() && visited.find(tmp) == visited.end()){
                             q.push(tmp);
                             visited.insert(tmp);
                         }
