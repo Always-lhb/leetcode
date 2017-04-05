@@ -71,3 +71,63 @@ public:
         return res;
     }
 };
+
+/*终于按照自己的思路做出来了...*/
+class Solution {
+public:
+    void dfs(vector<vector<string>>& res, vector<string>& path, string cur, unordered_map<string, vector<string>>& fa){
+        if(fa.find(cur) == fa.end()){
+            res.push_back(vector<string>(path.rbegin(), path.rend()));
+            return;
+        }
+        for(auto s : fa[cur]){
+            path.push_back(s);
+            dfs(res, path, s, fa);
+            path.pop_back();
+        }
+    }
+    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        vector<vector<string>> res;
+        unordered_set<string> wordDict;
+        for(auto s : wordList) wordDict.insert(s);
+        unordered_set<string> visited;
+        queue<string> q;
+        unordered_map<string, vector<string>> fa;
+        bool flag = true;
+        
+        q.push(beginWord);
+        visited.insert(beginWord);
+        
+        while(!q.empty() && flag){ //flag标志是否应退出循环
+            int len = q.size();
+            unordered_map<string, vector<string>> curFa;
+            for(int i = 0; i < len; i++){
+                string cur = q.front();
+                q.pop();
+                if(cur == endWord){
+                    vector<string> path;
+                    path.push_back(cur);
+                    dfs(res, path, cur, fa);
+                    flag = false; //修改标志位！！！
+                }
+                string pre = cur;
+                for(int j = 0; j < cur.size(); j++){
+                    char c = cur[j];
+                    for(char ch = 'a'; ch <= 'z'; ch++){
+                        cur[j] = ch;
+                        if(wordDict.find(cur) != wordDict.end() && visited.find(cur) == visited.end()){ //与127的判断条件统一
+                            if(curFa.find(cur) == curFa.end()){ //第一次在本层得到cur，入队，避免多次入队
+                                q.push(cur);
+                            }
+                            curFa[cur].push_back(pre);
+                        }
+                    }
+                    cur[j] = c;
+                }
+                visited.insert(pre); //pre处理完后，加入visited
+            }
+            for(auto s : curFa) fa.insert(s); //本层处理完后，更新fa
+        }
+        return res;
+    }
+};
