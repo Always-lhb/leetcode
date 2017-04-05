@@ -1,0 +1,32 @@
+/*
+题目大意：给定int数组，返回该数组内最长连续整数的长度
+解题思路：数组可能包含重复元素，声明unordered_set<int>us存放无重复的元素；对nums进行一次遍历，找到nums[i]在内的连续长度，最后返回最长的长度
+注意的点：每次找到元素后，对us执行erase操作，避免nums里的重复元素和已扫描过的元素多次计算，导致超时
+*/
+
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> us;
+        for(auto i : nums) us.insert(i);
+        
+        int res = 0, tmp, count;
+        for(int i = 0; i < nums.size(); i++){
+            count = 1;
+            tmp = nums[i] - 1;
+            while(us.find(tmp) != us.end()){
+                count++;
+                us.erase(tmp); //避免多次进入循环
+                tmp--;
+            }
+            tmp = nums[i] + 1;
+            while(us.find(tmp) != us.end()){
+                count++;
+                us.erase(tmp);
+                tmp++;
+            }
+            res = max(res, count);
+        }
+        return res;
+    }
+};
