@@ -1,0 +1,51 @@
+/*
+题目大意：给定字符'X'和'O'构成的二维数组，把所有由'X'围起来的区域都设置为'X'
+解题思路：dfs。所有位于四条边界的'O'不变，以及由这些'O'能到达的'O'不变
+         分别遍历四条边界，如果值为'O'则进入dfs，将可以保留的'O'全部设置为'#'，最后遍历二维数组，把'#'设置为'O'，剩余的设置为'X'
+注意的点：看了yyp的思路后，提交超时，原因在于回溯过程中的边界问题，因为是从四条边界进入的回溯，所以注意回溯的条件没有等号
+*/
+
+class Solution {
+public:
+    void dfs(int x, int y, vector<vector<char>>& board){
+        int m = board.size(), n = board[0].size();
+        board[x][y] = '#';
+        
+        if(x-1 > 0 && board[x-1][y] == 'O') //tips，这里注意不能有等号
+            dfs(x-1, y, board);
+        if(x+1 < m-1 && board[x+1][y] == 'O')
+            dfs(x+1, y, board);
+        if(y-1 > 0 && board[x][y-1] == 'O')
+            dfs(x, y-1, board);
+        if(y+1 < n-1 && board[x][y+1] == 'O')
+            dfs(x, y+1, board);
+    }
+    void solve(vector<vector<char>>& board) {
+        if(board.size() == 0) return;
+        
+        int m = board.size(), n = board[0].size();
+        if(m < 3 || n < 3) return;
+        
+        for(int j = 0; j < n; j++)
+            if(board[0][j] == 'O')
+                dfs(0, j, board);
+        for(int j = 0; j < n; j++)
+            if(board[m-1][j] == 'O')
+                dfs(m-1, j, board);
+        for(int i = 1; i < m-1; i++)
+            if(board[i][0] == 'O')
+                dfs(i, 0, board);
+        for(int i = 1; i < m-1; i++)
+            if(board[i][n-1] == 'O')
+                dfs(i, n-1, board);
+                
+        for(int i = 0; i < m; i++){
+            for(int j = 0; j < n; j++){
+                if(board[i][j] == '#')
+                    board[i][j] = 'O';
+                else
+                    board[i][j] = 'X';
+            }
+        }
+    }
+};
