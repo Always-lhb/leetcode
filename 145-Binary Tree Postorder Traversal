@@ -52,3 +52,35 @@ public:
         return res;
     }
 };
+
+/*第二次做，竟然习惯性地在循环之间对root进行了入栈，导致结果错误，不该呀！！！*/
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        vector<int> res;
+        if(root == NULL) return res;
+        
+        TreeNode* pre = NULL;
+        stack<TreeNode*> st;
+        //st.push(root); //不应该呀，太想当然了！！！
+        while(root || !st.empty()){
+            if(root){
+                st.push(root);
+                root = root->left;
+            }
+            else{
+                root = st.top();
+                if(root->right && root->right != pre){
+                    root = root->right;
+                }
+                else{
+                    st.pop();
+                    res.push_back(root->val);
+                    pre = root;
+                    root = NULL;
+                }
+            }
+        }
+        return res;
+    }
+};
