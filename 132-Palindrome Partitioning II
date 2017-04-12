@@ -1,0 +1,34 @@
+/*
+题目大意：给定字符串，至少需cut几次，使得所有子串全部是回文串。例如"aab"，cut=1，切分为"aa"和'b'
+解题思路：按照131的方法，回溯求得所有划分导致超时。
+         这里按照discuss里的方法dp求解：
+            pal[i][j]: s[i..j]是否回文
+            d[i]: s[i..n-1]的最小cut数，求d[0]
+                  if(pal[i][j] == true):
+                    if(j==n-1): 说明s[i..n-1]回文，那么d[i]=0
+                    else: 对于i..j,j+1..n-1，在j之后切一刀，则d[i] = min(d[i], d[j+1]+1)
+注意的点：思路
+*/
+        
+class Solution {
+public:
+    int minCut(string s) {
+        if(s.size() < 2) return 0;
+        
+        int n = s.size();
+        vector<vector<int>> pal(n, vector<int>(n, false));
+        vector<int> d(n, 0);
+        
+        for(int i = n - 1; i >= 0; i--){
+            d[i] = n - i - 1;
+            for(int j = i; j < n; j++){
+                if(s[i] == s[j] && (j - i < 2 || pal[i+1][j-1])){
+                    pal[i][j] = true;
+                    if(j == n-1) d[i] = 0;
+                    else d[i] = min(d[i], d[j+1] + 1);
+                }
+            }
+        }
+        return d[0];
+    }
+};
