@@ -1,0 +1,59 @@
+/*
+题目大意：无向图的克隆。无向图节点包含标签label和指向其他节点的指针序列neighbors
+解题思路：递归
+注意的点：
+*/
+
+/**
+ * Definition for undirected graph.
+ * struct UndirectedGraphNode {
+ *     int label;
+ *     vector<UndirectedGraphNode *> neighbors;
+ *     UndirectedGraphNode(int x) : label(x) {};
+ * };
+ */
+class Solution {
+public:
+    unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> hash;
+    UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
+        if(node == NULL) return node;
+        
+        if(hash.find(node) == hash.end()){
+            hash[node] = new UndirectedGraphNode(node->label);
+            for(auto x : node->neighbors){
+                (hash[node]->neighbors).push_back(cloneGraph(x)); //递归构造
+            }
+        }
+        return hash[node];
+    }
+};
+
+/*思路二，lbc，通过维持待访问节点队列，构造无向图*/
+class Solution {
+public:
+    UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
+        if (node == NULL) return NULL;
+
+        UndirectedGraphNode *root = new UndirectedGraphNode(node->label);
+
+        unordered_map<int, UndirectedGraphNode *> buf; //新图节点值->节点
+        buf[root->label] = root;
+
+        queue<UndirectedGraphNode *> q; //旧图节点
+        q.push(node);
+
+        while (q.size()) {
+            auto cur = q.front(); q.pop();
+            auto now = buf[cur->label];
+            for (auto n : cur->neighbors) {
+                if (buf.find(n->label) == buf.end()) {
+                    buf[n->label] = new UndirectedGraphNode(n->label);
+                    q.push(n);
+                }
+                now->neighbors.push_back(buf[n->label]);
+            }
+        }
+
+        return root;
+    }
+};
