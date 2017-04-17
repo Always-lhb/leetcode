@@ -1,0 +1,33 @@
+/*
+题目大意：给定小朋友序列，每个小朋友有一个等级，给小朋友发糖果，要求每个小朋友至少有一个糖果，且当小朋友等级高于他的邻居时，他的糖果也更多。求至少发多少个糖果
+解题思路：两次扫描。初始时先给每个小朋友一个糖果，从左至右扫描一次，如果当前小朋友等级高于他左边的小朋友，则更新他的糖果数为左边加1；然后从右至左扫描一次，
+         如果当前小朋友等级高于他右边的小朋友，则更新他的糖果数为max(candy[i], candy[i+1]+1)
+注意的点：
+        1.对于由左右两边限定当前值的题目，分别沿两个方向扫描，满足两个方向的约束
+        2.在第二次扫描的时候，要判断candy[i]与candy[i+1]+1的大小。延伸可知，第n次扫描时，需要考虑前n-1次得到的结果
+        这个hard题目并不难
+*/
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        int res = 0;
+        int n = ratings.size();
+        
+        if(n < 2) return n;
+        
+        vector<int> candy(n, 1);
+        for(int i = 1; i < n; i++){
+            if(ratings[i] > ratings[i-1])
+                candy[i] = candy[i-1] + 1;
+        }
+        for(int i = n-2; i >= 0; i--){
+            if(ratings[i] > ratings[i+1])
+                candy[i] = max(candy[i], candy[i+1] + 1);
+        }
+        
+        for(int i = 0; i < n; i++){
+            res += candy[i];
+        }
+        return res;
+    }
+};
