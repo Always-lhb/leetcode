@@ -1,0 +1,56 @@
+/*
+题目大意：给定数组，某数出现一次，其他数出现三次，求出该数
+解题思路：
+        1.利用unordered_map<int, int>存储每个数字出现次数，返回一次的数即可。但利用了额外空间
+        2.位运算，将所有数表示成二进制进行计算，其余数均出现三次，说明数值为1的每位上的1出现三次，把出现三次1的位置0，最后所得即为所求。
+          one:出现一个1的位，two:出现两个1的位，详见注释
+注意的点：
+        与0异或不变，与1异或取反
+*/
+
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int one = 0, two = 0, mask = 0;
+        for(int n : nums){
+            two |= (one & n); //two的计算不影响one，但one的计算影响two，所以先计算本次的two
+            one ^= n;
+            mask = ~(two & one); //(two&one)代表出现了三个1的位，此时需要把该位置0，通过取反+与操作实现
+            one &= mask;
+            two &= mask;
+        }
+        return one;
+    }
+};
+
+//与上述方法一致，区别在置0操作的实现
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int one = 0, two = 0, mask = 0;
+        for(int n : nums){
+            two |= (one & n);
+            one ^= n;
+            mask = (two & one);//(two&one)代表出现了三个1的位，此时需要把该位置0，通过异或操作实现
+            one ^= mask;
+            two ^= mask;
+        }
+        return one;
+    }
+};
+
+//我的原始方法
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        unordered_map<int, int> dict;
+        for(int n : nums){
+            if(dict.find(n) == dict.end()) dict[n] = 1;
+            else dict[n]++;
+        }
+        for(auto n : nums){
+            if(dict[n] == 1)
+                return n;
+        }
+    }
+};
