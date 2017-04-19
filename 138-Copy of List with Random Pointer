@@ -1,0 +1,28 @@
+/*
+题目大意：给定一个链表，每个节点有一个random指针，指向链表里的任意节点或null。复制该链表
+解题思路：一下子就想到了无向图复制133，利用相同思路递归求解，一次通过。
+注意的点：无
+*/
+
+/**
+ * Definition for singly-linked list with a random pointer.
+ * struct RandomListNode {
+ *     int label;
+ *     RandomListNode *next, *random;
+ *     RandomListNode(int x) : label(x), next(NULL), random(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    unordered_map<RandomListNode*, RandomListNode*> hash;
+    RandomListNode *copyRandomList(RandomListNode *head) {
+        if(head == NULL) return head;
+        
+        if(hash.find(head) == hash.end()){
+            hash[head] = new RandomListNode(head->label);
+            hash[head]->next = copyRandomList(head->next);
+            hash[head]->random = copyRandomList(head->random);
+        }
+        return hash[head];
+    }
+};
