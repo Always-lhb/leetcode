@@ -1,0 +1,37 @@
+/*
+题目大意：给定非空字符串s和字符串字典wordDict，向s添加空格使得s由字典里的字符串组合而成，返回所有可能的最终结果
+解题思路：一开始想到了dfs，超时...
+注意的点：
+*/
+
+
+//超时的dfs...
+//tmp:添加了若干空格的当前字符串， s:字符串s， index:s中字符串初始下标， count:已添加的空格数 
+class Solution {
+public:
+    void dfs(vector<string>& res, string tmp, string s, int index, int count, unordered_set<string>& wordList){
+        if(index == s.size()){
+            res.push_back(tmp);
+            return;
+        }
+        for(int i = index; i < s.size(); i++){
+            string cur = s.substr(index, i - index + 1);
+            if(wordList.find(cur) != wordList.end()){
+                if(i < s.size()-1) tmp = tmp.insert(i + count + 1, " "); //最后一个位置不添加空格
+                
+                dfs(res, tmp, s, i+1, count + 1, wordList);
+                
+                if(i < s.size()-1) tmp = tmp.erase(i + count + 1, 1);
+            }
+        }
+    }
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> wordList;
+        for(auto s : wordDict) wordList.insert(s);
+        
+        vector<string> res;
+        dfs(res, s, s, 0, 0, wordList); //tmp初始化是s
+        
+        return res;
+    }
+};
