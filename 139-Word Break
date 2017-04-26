@@ -1,0 +1,38 @@
+/*
+题目大意：给定非空字符串s和字符串数组wordDict，判断s是否可以由wordDict内的字符串组合而成
+解题思路：一开始想到的是回溯，后来发现应该是动归dp
+         1.dp[i]: s[0..i-1]是否能由wordList构成，求解dp[n]
+         2.dp[i]: 对于每个合法的j，j把s[0..i-1]分割成s[0..j-1]+s[j..i-1]两部分，第一部分即dp[j]，第二部分即s.substr(j, i-j)，如果这两部分都为true，
+                  则dp[i]=true
+         3.初始化：dp[0] = true;
+注意的点：把vector转化为unordered_set求解
+*/
+
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int n = s.size();
+        
+        unordered_set<string> wordList;
+        for(string s : wordDict) wordList.insert(s);
+        
+        vector<bool> dp(n+1, false);
+        dp[0] = true;
+        
+        for(int i = 1; i <= n; i++){
+            string tmp = s.substr(0, i);
+            if(wordList.find(tmp) != wordList.end()){
+                dp[i] = true;
+                continue;
+            }
+            for(int j = 1; j < i; j++){
+                string left = s.substr(j, i-j);
+                if(dp[j] && wordList.find(left) != wordList.end()){
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        return dp[n];
+    }
+};
