@@ -1,0 +1,41 @@
+/*
+题目大意：接上题，如果有环，返回环开始的节点，否则返回NULL
+解题思路：依然定义两个指针fast,slow，fast每次走两步，slow每次走一步，当fast与slow第一次相遇时，重置slow=head，然后fast与slow每次走一步，当fast与slow
+         再次相遇时，当前节点就是环开始的节点。
+         假设从head到环开始的节点长度为x，第一次相遇时fast在环里走了b，slow在环里走了a，则有：
+            x+b = 2(x+a)
+            b = a + n*r , r为环的周长
+            由上述二式得 x = n*r - a，因此当第一次相遇，把slow重置为head后，到第二次相遇，slow和fast又走过了x即n*r-a，且fast自第一次相遇后由a出发，
+            因此第二次相遇时恰位于环的起始位置。
+注意的点：思路神奇，经典题目，多练习。
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        if(head == NULL || head->next == NULL) return NULL;
+        
+        ListNode *fast = head, *slow = head;
+        while(fast && fast->next){
+            fast = fast->next->next;
+            slow = slow->next;
+            if(fast == slow){
+                slow = head;
+                while(fast != slow){
+                    fast = fast->next;
+                    slow = slow->next;
+                }
+                return fast;
+            }
+        }
+        return NULL;
+    }
+};
