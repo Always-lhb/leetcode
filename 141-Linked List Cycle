@@ -1,0 +1,27 @@
+/*
+题目大意：判断链表是否有环
+解题思路：经典老题，通过快慢指针解决。快指针每次走两步，慢指针每次走一步，若有环则快慢指针总会相遇
+注意的点：一开始利用unordered_set<ListNode*>存储已访问过的节点解决，但是利用了额外空间。
+*/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if(head == NULL || head->next == NULL) return false;
+        
+        ListNode *fast = head->next, *slow = head;
+        while(fast && fast->next){
+            if(fast == slow) return true;
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        return false;
+    }
+};
