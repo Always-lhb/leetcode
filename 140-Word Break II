@@ -1,9 +1,42 @@
 /*
 题目大意：给定非空字符串s和字符串字典wordDict，向s添加空格使得s由字典里的字符串组合而成，返回所有可能的最终结果
 解题思路：一开始想到了dfs，超时...
+         正确思路：类似于无向图复制的递归解法，从后往前遍历且后面部分word是存在于字典中，即s = remain + word，然后对于remain递归求解
 注意的点：
 */
 
+class Solution {
+private:
+    unordered_map<string, vector<string>> dict;
+public:
+    vector<string> wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> wordList;
+        for(auto s : wordDict) wordList.insert(s);
+        
+        return wordBreak2(s, wordList);
+    }
+    
+    vector<string> wordBreak2(string s, unordered_set<string>& wordList){
+        if(dict.find(s) != dict.end()) return dict[s];
+        
+        vector<string> res;
+        if(wordList.find(s) != wordList.end()) res.push_back(s);
+        for(int i = 1; i < s.size(); i++){
+            string word = s.substr(i);
+            if(wordList.find(word) != wordList.end()){
+                string remain = s.substr(0, i);
+                vector<string> tmp = wordBreak2(remain, wordList);
+                // for(auto s : tmp) s = s + " " + word; //适用于无序的
+                for(int i = 0; i < tmp.size(); i++){
+                    tmp[i] = tmp[i] + " " + word;
+                }
+                res.insert(res.end(), tmp.begin(), tmp.end());
+            }
+        }
+        dict[s] = res;
+        return res;
+    }
+};
 
 //超时的dfs...
 //tmp:添加了若干空格的当前字符串， s:字符串s， index:s中字符串初始下标， count:已添加的空格数 
