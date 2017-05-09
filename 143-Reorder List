@@ -1,0 +1,52 @@
+/*
+题目大意：给定链表1->2->...->n-1->n,将他重排序为1->n->2->n-1->...
+解题思路：找到链表中点，反转后半部分链表，然后合并即可
+注意的点：
+         1.最好将链表反转作为单独的函数，模块化
+         2.第一次做这道题时，竟然因为两行代码顺序写反导致浪费了一个小时，啊...
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverse(ListNode* head){ //反转链表
+        ListNode *res = NULL;
+        while(head){
+            ListNode *n = head->next;
+            head->next = res;
+            res = head;
+            head = n;
+        }
+        return res;
+    }
+    void reorderList(ListNode* head) {
+        if(!head || !head->next || !head->next->next) return;
+        
+        //find mid
+        ListNode *p1 = head, *p2 = head->next;
+        while(p2 && p2->next){
+            p1 = p1->next;
+            p2 = p2->next->next;
+        }
+        ListNode *head2 = p1->next; //自己的代码竟然把这两行顺序写反了，导致找了好久问题，醉了........
+        p1->next = NULL;
+        
+        //reverse head2
+        head2 = reverse(head2);
+        
+        //merge head and head2
+        for(p1 = head, p2 = head2; p1; ){
+            ListNode *n = p1->next;
+            p1->next = p2;
+            p1 = p2;
+            p2 = n;
+        }
+    }
+};
