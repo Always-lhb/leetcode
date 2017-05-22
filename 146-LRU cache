@@ -1,0 +1,81 @@
+题目大意：为实现最近最少使用缓冲区设计数据结构。功能包括get和set
+解题思路：unordered_map + 双向链表
+注意的点：题目新颖，不难理解，多练习。
+
+class LRUCache {
+private:
+    struct node{
+        int k, v;
+        node *pre, *post;
+    };
+    int cap, count;
+    unordered_map<int, node*> dict;
+    node *head, *tail;
+public:
+    void remove(node *now){ //remove current node now
+        node *n1 = now->pre;
+        node *n2 = now->post;
+        n1->post = n2;
+        n2->pre = n1;
+    }
+    void add(node *now){ // add a new node
+        now->pre = head;
+        now->post = head->post;
+        head->post->pre = now;
+        head->post = now;
+    }
+    void movetoHead(node *now){ // move current node now to head
+        remove(now);
+        add(now);
+    }
+    node *popTail(){
+        node *t = tail->pre;
+        remove(t);
+        return t;
+    }
+    LRUCache(int capacity) { // initialize
+        cap = capacity;
+        count = 0;
+        head = new node();
+        tail = new node();
+        head->pre = NULL;
+        head->post = tail;
+        tail->pre = head;
+        tail->post = NULL;
+    }
+    
+    int get(int key) {
+        if(dict.find(key) == dict.end()){
+            return -1;
+        }
+        movetoHead(dict[key]);
+        return dict[key]->v;
+    }
+    
+    void put(int key, int value) {
+        if(dict.find(key) == dict.end()){
+            node *newnode = new node();
+            newnode->k = key;
+            newnode->v = value;
+            dict[key] = newnode;
+            add(newnode);
+            count++;
+            if(count > cap){
+                count--;
+                node *t = popTail();
+                dict.erase(t->k);
+            }
+        }
+        else{
+            dict[key]->v = value;
+            movetoHead(dict[key]);
+        }
+    }
+};
+
+/**
+ * Your LRUCache object will be instantiated and called as such:
+ * LRUCache obj = new LRUCache(capacity);
+ * int param_1 = obj.get(key);
+ * obj.put(key,value);
+ */
