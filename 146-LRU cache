@@ -5,7 +5,7 @@
 class LRUCache {
 private:
     struct node{
-        int k, v;
+        int k, v; // 注意此处
         node *pre, *post;
     };
     int cap, count;
@@ -28,7 +28,7 @@ public:
         remove(now);
         add(now);
     }
-    node *popTail(){
+    node *popTail(){ //注意这里的返回类型，因为删除该节点时需要从dict删除
         node *t = tail->pre;
         remove(t);
         return t;
@@ -63,7 +63,7 @@ public:
             if(count > cap){
                 count--;
                 node *t = popTail();
-                dict.erase(t->k);
+                dict.erase(t->k); //注意此处
             }
         }
         else{
