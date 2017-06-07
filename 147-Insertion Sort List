@@ -1,0 +1,35 @@
+/*
+  题目大意：利用插入排序对给定链表进行排序
+  解题思路：遍历原链表的每个节点，在新链表里找到插入位置并进行插入
+  注意的点：挺简单的...
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        if(head == NULL || head->next == NULL) return head;
+        
+        ListNode *n; 
+        ListNode *newhead = new ListNode(0);
+        while(head){
+            n = head->next; //原链表当前节点的下一个节点
+            ListNode *tmp = newhead;
+            
+            while(tmp->next != NULL && head->val > tmp->next->val){
+                tmp = tmp->next;
+            }
+            head->next = tmp->next;
+            tmp->next = head;
+            head = n;
+        }
+        return newhead->next;
+    }
+};
