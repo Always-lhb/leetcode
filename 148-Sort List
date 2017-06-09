@@ -1,0 +1,86 @@
+/*
+  题目大意：链表排序，要求时间复杂度O(nlogn)，空间复杂度O(1)
+  解题思路：上一题考了插入排序，复杂度O(n*n)；快排平均复杂度O(nlogn)；归并排序复杂度总是O(nlogn)
+  注意的点：使用归并排序
+*/
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* merge(ListNode* l1, ListNode* l2){
+        ListNode * newhead = new ListNode(0);
+        ListNode * tail = newhead;
+        
+        int n1, n2, num;
+        while(l1 != NULL || l2 != NULL){
+            n1 = l1==NULL ? INT_MAX : l1->val;
+            n2 = l2==NULL ? INT_MAX : l2->val;
+            num = min(n1, n2);
+            if(num == n1){
+                tail->next = l1;
+                l1 = l1->next;
+            }
+            else{
+                tail->next = l2;
+                l2 = l2->next;
+            }
+            tail = tail->next;
+        }
+        tail->next = NULL;
+        return newhead->next;
+    }
+    ListNode* sortList(ListNode* head) {
+        if(head == NULL || head->next == NULL) return head;
+        ListNode *slow = head, *fast = head;
+        
+        while(fast->next != NULL && fast->next->next != NULL){
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        fast = slow->next;
+        slow->next = NULL;
+        
+        return merge(sortList(head), sortList(fast));
+    }
+};
+
+
+//以下给出链表快排的代码
+class Solution {
+private:
+    void quickSort(ListNode*head, ListNode * end)
+    {
+        if(head == end || head->next == end)
+            return;
+        int num = head->val, tmp;
+        ListNode *cur = head->next, *newhead = head;
+        while(cur != end)
+        {
+            if(cur->val < num)
+            {
+                newhead->val = cur->val;
+                newhead = newhead->next;
+                cur->val = newhead->val;
+            }
+            cur = cur->next;
+        }
+        newhead->val = num; //num的正确位置
+        quickSort(head, newhead);
+        quickSort(newhead->next, end);
+        return;
+    }
+public:
+    ListNode* sortList(ListNode* head) {
+        if(head == NULL || head->next == NULL)
+            return head;
+        quickSort(head, NULL);
+        return head;
+    }
+};
