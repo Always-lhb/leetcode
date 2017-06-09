@@ -23,7 +23,7 @@ public:
             n = head->next; //原链表当前节点的下一个节点
             ListNode *tmp = newhead;
             
-            while(tmp->next != NULL && head->val > tmp->next->val){
+            while(tmp->next != NULL && head->val > tmp->next->val){ //注意这里的判断，带头结点的链表，对tmp->next进行比较
                 tmp = tmp->next;
             }
             head->next = tmp->next;
