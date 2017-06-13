@@ -51,3 +51,47 @@ public:
             return nums1[pos1-1];
     }
 };
+
+
+/*
+第二次做，遇到的问题如下：
+  1、需假设总有l1<=l2
+  2、l1==0的判断应该在k==1的判断之前，不然会产生数组越界：即在l1==0的情况下返回nums1[0]
+*/
+class Solution {
+public:
+    double findLeastKNum(vector<int>& nums1, int l1, vector<int>& nums2, int l2, int k){
+        if(l1 > l2) return findLeastKNum(nums2, l2, nums1, l1, k); // tips1
+        
+        if(l1 == 0) return nums2[k-1]; //tips2
+        if(k == 1) return min(nums1[0], nums2[0]);
+
+        int p1 = min(k/2, l1);
+        int p2 = k -p1; //tips3
+        if(nums1[p1 - 1] < nums2[p2 - 1]){
+            vector<int> nums3(nums1.begin() + p1, nums1.end());
+            return findLeastKNum(nums3, nums3.size(), nums2, nums2.size(), k-p1);
+        }
+        else if(nums1[p1 - 1] > nums2[p2 - 1]){
+            vector<int> nums4(nums2.begin() + p2, nums2.end());
+            return findLeastKNum(nums1, nums1.size(), nums4, nums4.size(), k-p2);
+        }
+        else{
+            return nums1[p1 - 1];
+        }
+    }
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        double res, res1, res2;
+        int total_len = nums1.size() + nums2.size();
+        
+        if(total_len & 0x1){
+            res = findLeastKNum(nums1, nums1.size(), nums2, nums2.size(), total_len/2 + 1);
+        }
+        else{
+            res1 =  findLeastKNum(nums1, nums1.size(), nums2, nums2.size(), total_len/2);
+            res2 = findLeastKNum(nums1, nums1.size(), nums2, nums2.size(), total_len/2 + 1);
+            res = (res1 + res2) / 2;
+        }
+        return res;
+    }
+};
