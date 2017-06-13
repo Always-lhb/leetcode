@@ -52,3 +52,24 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，比较顺利，对于N-Sum问题，固定一个数，查找另一个数；并利用unordered_map<int, int>使复杂度为O(n)
+*/
+class Solution{
+public:
+    vector<int> towSum(vector<int>& nums, int target){
+    vector<int> res;
+    unordered_map<int, int> dict;
+    for(int i = 0; i < nums.size(); i++){
+        if(dict.find(target-nums[i]) == dict.end()){
+            dict[nums[i]] = i;
+        }
+        else{
+            res.push_back(i);
+            res.push_back(dict[target-nums[i]]);
+            return res;
+        }
+    }
+};
