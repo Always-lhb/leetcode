@@ -32,3 +32,30 @@ public:
         return max_len;
     }
 };
+
+
+/*
+第二次做，比较顺利。遍历找到每个字符起始的最长符合要求子串即可
+*/
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        if(s.size() < 2) return s.size();
+        
+        int res = 0;
+        string subs = "";
+        for(int i = 0; i < s.size(); i++){
+            for(int j = i + 1; j < s.size(); j++){
+                subs = s.substr(i, j - i);
+                if(subs.find(s[j]) != -1){
+                    break;
+                }
+                else{
+                    subs += s[j]; //注意这里不能忘记
+                }
+            }
+            res = max(res, int(subs.size()));
+        }
+        return res;
+    }
+};
