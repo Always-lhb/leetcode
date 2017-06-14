@@ -23,3 +23,9 @@ public:
         return (res > INT_MAX || res < INT_MIN) ? 0 : res;
     }
 };
+
+
+/*
+简单题，第二次做神奇的出错了，原因在于应该声明res为long型。对于可能越界的题，注意声明为long
+这里仍采用以上代码，简练。
+*/
