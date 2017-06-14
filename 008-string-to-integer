@@ -1,7 +1,7 @@
 /*题目大意：
 将string转换为integer
 1.忽略string开始的所有空格
-2.以'+'或'-'开头
+2.正负号可选
 3.正负号后跟尽可能多的数字
 4.数字后面的其他字符忽略即可
 5.integer越界返回INT_MAX或INT_MIN
@@ -44,5 +44,39 @@ public:
             return int(res);
         else
             return int(0-res);
+    }
+};
+
+
+/*
+第二次做，比较顺利。记住了在每次得到一个res后进行越界判断
+*/
+class Solution {
+public:
+    int myAtoi(string str) {
+        if(str.size() < 1) return 0;
+        
+        long res = 0;
+        bool flag = true;
+        int i = 0;
+        
+        while(str[i] == ' ') i++;
+        
+        if(str[i] == '+') i++;
+        else if(str[i] == '-'){
+            flag = false;
+            i++;
+        }
+        
+        while(i < str.size() && str[i] >= '0' && str[i] <= '9'){
+            res = res * 10 + (str[i] - '0');
+            i++;
+            if(res > INT_MAX){
+                return flag ? INT_MAX : INT_MIN; //注意这里
+            }
+        }
+        
+        if(flag) return res;
+        else return -res;
     }
 };
