@@ -30,3 +30,35 @@ public:
         return true;
     }
 };
+
+
+/*
+第二次做，很顺利
+*/
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        if(x < 0) return false;
+        if(x < 10) return true;
+        
+        int l, r;
+        int d = 1;
+        int num = x;
+        
+        while(num > 9){
+            num /= 10;
+            d *= 10;
+        }
+        
+        while(x > 0){
+            l = x / d;
+            r = x % 10;
+            if(l != r) return false;
+            else{
+                x = (x - l * d) / 10;
+                d /= 100;
+            }
+        }
+        return true;
+    }
+};
