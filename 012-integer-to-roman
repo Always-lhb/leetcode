@@ -22,3 +22,25 @@ public:
         return(M[num/1000] + C[(num%1000)/100] + X[(num%100)/10] + I[num%10]);
     }
 };
+
+
+/*
+第二次做，很顺利。
+*/
+class Solution {
+public:
+    string intToRoman(int num) {
+        string g[] = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+        string s[] = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+        string b[] = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+        string q[] = {"", "M", "MM", "MMM"};
+        
+        string G = g[num % 10];
+        string S = s[(num % 100) / 10];
+        string B = b[(num % 1000) / 100];
+        string Q = q[num / 1000];
+        string res = Q + B + S + G;
+        
+        return res;
+    }
+};
