@@ -45,3 +45,37 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，很顺利。注意当去掉的节点是首节点时的特殊判断。
+再对比第一次的代码，当时太繁杂了...
+*/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        int count = 0;
+        ListNode *cur = head;
+        
+        while(cur != NULL){
+            count++;
+            cur = cur->next;
+        }
+        if(n == count) return head->next; //tips
+        
+        int pos = count - n;
+        cur = head;
+        for(int i = 1; i < pos; i++) cur = cur->next;
+        cur->next = cur->next->next;
+        
+        return head;
+    }
+};
