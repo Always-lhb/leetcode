@@ -107,3 +107,39 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，遇到的问题：想到了卡尺法，但是忘记给数组排序，另外要注意去重，详见备注。
+*/
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> res;
+        if(nums.size() < 3) return res;
+        
+        sort(nums.begin(), nums.end()); //tips1
+        for(int i = 0; i < nums.size()-2; i++){
+            if(i != 0 && nums[i] == nums[i-1]) continue; //tips2
+            
+            int tar = 0 - nums[i];
+            int l = i + 1, r = nums.size() - 1;
+            while(l < r){
+                if(nums[l] + nums[r] == tar){
+                    vector<int> tmp;
+                    tmp.push_back(nums[i]);
+                    tmp.push_back(nums[l]);
+                    tmp.push_back(nums[r]);
+                    res.push_back(tmp);
+                    
+                    l++;
+                    while(nums[l] == nums[l-1]) l++; //tips3
+                    r--;
+                }
+                else if(nums[l] + nums[r] < tar) l++;
+                else r--;
+            }
+        }
+        return res;
+    }
+};
