@@ -29,3 +29,32 @@ public:
         return sum;
     }
 };
+
+
+/*
+第二次做，很顺利。从千位到个位进行判断
+*/
+class Solution {
+public:
+    int romanToInt(string s) {
+        int res = 0;
+        unordered_map<char, int> dict;
+        dict['I'] = 1;
+        dict['V'] = 5;
+        dict['X'] = 10;
+        dict['L'] = 50;
+        dict['C'] = 100;
+        dict['D'] = 500;
+        dict['M'] = 1000;
+        
+        for(int i = 0; i < s.size(); i++){
+            if(dict[s[i+1]] <= dict[s[i]]){
+                res += dict[s[i]];
+            }
+            else{
+                res -= dict[s[i]];
+            }
+        }
+        return res;
+    }
+};
