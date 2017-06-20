@@ -81,3 +81,42 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，很顺利。dfs
+*/
+class Solution {
+public:
+    void dfs(vector<string>& res, string cur, string digits, int pos, unordered_map<char, string> dict){
+        if(pos == digits.size()){
+            res.push_back(cur);
+            return;
+        }
+        string tmp = dict[digits[pos]];
+        for(int i = 0; i < tmp.size(); i++){
+            cur += tmp[i];
+            dfs(res, cur, digits, pos+1, dict);
+            cur.pop_back();
+        }
+    }
+    vector<string> letterCombinations(string digits) {
+        vector<string> res;
+        if(digits.size() == 0) return res;
+        
+        unordered_map<char, string> dict;
+        dict['0'] = "";
+        dict['1'] = "";
+        dict['2'] = "abc";
+        dict['3'] = "def";
+        dict['4'] = "ghi";
+        dict['5'] = "jkl";
+        dict['6'] = "mno";
+        dict['7'] = "pqrs";
+        dict['8'] = "tuv";
+        dict['9'] = "wxyz";
+        
+        dfs(res, "", digits, 0, dict);
+        return res;
+    }
+};
