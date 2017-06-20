@@ -38,3 +38,31 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，很顺利。排序+卡尺法
+*/
+class Solution {
+public:
+    int threeSumClosest(vector<int>& nums, int target) {
+        int dist = INT_MAX, res = INT_MAX;
+        
+        sort(nums.begin(), nums.end());
+        for(int i = 0; i < nums.size() - 2; i++){
+            int l = i + 1, r = nums.size() - 1;
+            while(l < r){
+                int tmp = nums[i] + nums[l] + nums[r];
+                if(tmp == target) return target;
+                if(abs(tmp-target) < dist){
+                    dist = abs(tmp-target);
+                    res = tmp;
+                }
+                
+                if(tmp < target) l++;
+                else r--;
+            }
+        }
+        return res;
+    }
+};
