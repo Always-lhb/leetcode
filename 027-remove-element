@@ -17,3 +17,22 @@ public:
         return len;
     }
 };
+
+
+/*
+第二次做，很顺利。与上一题思路一致
+*/
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        if(nums.size() < 1) return nums.size();
+        
+        int i = 0, j = 0;
+        for(; i < nums.size(); i++){
+            if(nums[i] != val){
+                nums[j++] = nums[i];
+            }
+        }
+        return j;
+    }
+};
