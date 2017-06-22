@@ -47,3 +47,57 @@ public:
         return preheader->next;
     }
 };
+
+
+/*
+第二次做，这次没能一次做对，但是思路与lbc一致，即首先写出链表反转的reverse()函数，然后对原链表作处理，每k个节点翻转一次。
+res:带头结点的结果
+pre:当前段的前一个节点，即上一段的最后一个节点。每k个节点为一段
+head:当前段首节点
+tail:当前段尾节点
+*/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverse(ListNode *head){
+        ListNode *res = NULL;
+        while(head){
+            ListNode * nex = head->next;
+            head->next = res;
+            res = head;
+            head = nex;
+        }
+        return res;
+    }
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if(k < 2) return head;
+        
+        ListNode *res = new ListNode(0);
+        ListNode *pre = res;
+        res->next = head;
+        
+        while(head){
+            ListNode *tail = head;
+            for(int i = 1; i < k; i++){
+                tail = tail->next;
+                if(tail == NULL){ //不足k个，则连接前一段和本段，直接返回
+                    pre->next = head;
+                    return res->next;
+                }
+            }
+            ListNode *nex = tail->next; //下一段首节点
+            tail->next = NULL;
+            pre->next = reverse(head);
+            pre = head;
+            head = nex;
+        }
+        return res->next;
+    }
+};
