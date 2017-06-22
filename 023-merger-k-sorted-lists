@@ -101,3 +101,45 @@ public:
         return res->next;
     }
 };
+
+
+/*
+第二次做，知道利用小顶堆来解决，但是过程中还有一些小问题，详见注解。另外需反复练习掌握堆的代码书写
+*/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    struct cmp{ //注意这里的写法
+        bool operator()(ListNode *a, ListNode *b){
+            return a->val > b->val;
+        }
+    };
+    ListNode* mergeKLists(vector<ListNode*>& lists) {
+        ListNode *head = new ListNode(0);
+        ListNode *tail = head;
+        priority_queue<ListNode*, vector<ListNode*>, cmp> heap;
+        
+        for(int i = 0; i < lists.size(); i++){
+            if(lists[i] != NULL){ //这里不为空的判断不能少，不然插入空节点后结果有问题
+                heap.push(lists[i]);
+            }
+        }
+        while(!heap.empty()){
+            ListNode *tmp = heap.top();
+            tail->next = tmp;
+            tail = tmp;
+            heap.pop();
+            
+            if(tmp->next) heap.push(tmp->next); //这里不能少！！！
+        }
+        tail->next = NULL;
+        return head->next;
+    }
+};
