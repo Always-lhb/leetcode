@@ -40,3 +40,75 @@ public:
         return head;
     }
 };
+
+
+/*
+第二次做，由于先做了25题，回过头来看本题，是25题在k=2时的特殊情况。故使用两种方法解决本题，一种直接利用25题代码，另一种与25题思路一致的带头节点链表
+*/
+class Solution { //直接使用25题代码
+public:
+    ListNode* reverse(ListNode *head){
+        ListNode *res = NULL;
+        while(head){
+            ListNode * nex = head->next;
+            head->next = res;
+            res = head;
+            head = nex;
+        }
+        return res;
+    }
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if(k < 2) return head;
+        
+        ListNode *res = new ListNode(0);
+        ListNode *pre = res;
+        res->next = head;
+        
+        while(head){
+            ListNode *tail = head;
+            for(int i = 1; i < k; i++){
+                tail = tail->next;
+                if(tail == NULL){ //不足k个，则连接前一段和本段，直接返回
+                    pre->next = head;
+                    return res->next;
+                }
+            }
+            ListNode *nex = tail->next; //下一段首节点
+            tail->next = NULL;
+            pre->next = reverse(head);
+            pre = head;
+            head = nex;
+        }
+        return res->next;
+    }
+    ListNode* swapPairs(ListNode* head) {
+        return reverseKGroup(head, 2);
+    }
+};
+
+
+class Solution { //带头结点的链表，与25题思路一致
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if(head == NULL || head->next == NULL) return head;
+        
+        ListNode *res = new ListNode(0);
+        ListNode *pre = res;
+        res->next = head;
+        
+        while(head){
+            ListNode *second = head->next;
+            if(second == NULL){
+                pre->next = head;
+                return res->next;
+            }
+            head->next = second->next;
+            second->next = head;
+            pre->next = second;
+            
+            pre = head;
+            head = head->next;
+        }
+        return res->next;
+    }
+};
