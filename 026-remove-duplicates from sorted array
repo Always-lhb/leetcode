@@ -46,3 +46,23 @@ public:
         return len;
     }
 };
+
+
+/*
+第二次做，很顺利。通过i遍历数组，j代表不重复元素的实际位置。
+*/
+class Solution {
+public:
+    int removeDuplicates(vector<int>& nums) {
+        if(nums.size() < 2) return nums.size();
+        
+        int i = 1, j = 1;
+        for(; i < nums.size(); i++){
+            if(nums[i] != nums[i-1]){
+                nums[j] = nums[i];
+                j++;
+            }
+        }
+        return j;
+    }
+};
