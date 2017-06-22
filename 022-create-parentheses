@@ -36,3 +36,28 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，想到使用dfs，但是具体如何实现没做出来，看了之前的答案才做出来。
+*/
+class Solution {
+public:
+    void dfs(vector<string>& res, string cur, int l, int r){
+        if(l == 0 && r == 0){
+            res.push_back(cur);
+            return;
+        }
+        if(l == r) dfs(res, cur+'(', l-1, r);
+        else{
+            if(l > 0) dfs(res, cur+'(', l-1, r);
+            if(r > 0) dfs(res, cur+')', l, r-1);
+        }
+    }
+    vector<string> generateParenthesis(int n) {
+        vector<string> res;
+        if(n < 1) return res;
+        dfs(res, "", n, n);
+        return res;
+    }
+};
