@@ -29,3 +29,26 @@ public:
         return index;
     }
 };
+
+
+/*
+第二次做，超时，原因见注释
+*/
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        int m = haystack.size(), n = needle.size();
+        
+        if(n == 0) return 0;
+        
+        for(int i = 0; i < m - n + 1; i++){ //这里退出循环条件要注意，否则超时
+            int j = i, k = 0;
+            while(j < m && k < n && haystack[j] == needle[k]){
+                j++;
+                k++;
+            }
+            if(k == n) return i;
+        }
+        return -1;
+    }
+};
