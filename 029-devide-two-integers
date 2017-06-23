@@ -81,3 +81,34 @@ public:
             return -res;
     }
 };
+
+
+/*
+第二次做，想到位运算，但还是没做出来。需要多练习本题
+*/
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        if(divisor == 0) return INT_MAX;
+        if(dividend == INT_MIN && divisor == -1) return INT_MAX;
+        
+        int res = 0;
+        bool flag = true;
+        if(dividend > 0 && divisor < 0 || dividend < 0 && divisor > 0) flag = false;
+        long n1 = dividend, n2 = divisor; 
+        n1 = abs(n1); //注意这里，必须分成两步，取绝对值，不然在dividend=INT_MIN时溢出导致结果出错！
+        n2 = abs(n2);
+        
+        while(n1 >= n2){
+            long cur = n2;
+            int count = 0;
+            while(n1 >=cur){
+                count++;
+                cur = n2 << count;
+            }
+            res += 1 << (count-1);
+            n1 -= n2 << (count-1);
+        }
+        return flag ? res : -res;
+    }
+};
