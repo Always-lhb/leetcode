@@ -29,3 +29,20 @@ public:
         }
     }
 };
+
+/*
+第二次做，未使用二分法，遍历了数组，代码很简练。但是对于有序数组的查找问题，还是应该使用二分法，下面给出简练的二分法代码。
+*/
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int l = 0, r = nums.size() - 1, m;
+        while(l <= r){
+            m = (l + r) / 2;
+            if(nums[m] == target) return m;
+            else if(nums[m] < target) l = m + 1;
+            else r = m - 1;
+        }
+        return l;
+    }
+};
