@@ -31,3 +31,29 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，很顺利。利用卡尺法求解，如果命中，则分别向左向右扫描查找start和end
+*/
+class Solution {
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int> res(2, -1);
+        int l = 0, r = nums.size() - 1, m;
+        while(l <= r){
+            m = (l + r) / 2;
+            if(nums[m] == target){
+                r = m + 1, l = m - 1;
+                while(r < nums.size() && nums[r] == target) r++;
+                while(l >= 0 && nums[l] == target) l--;
+                res[0] = l + 1;
+                res[1] = r - 1;
+                return res;
+            }
+            else if(nums[m] < target) l = m + 1;
+            else r = m - 1;
+        }
+        return res;
+    }
+};
