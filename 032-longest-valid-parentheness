@@ -39,3 +39,39 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，还是没做出来，看了答案才做出来，本题需要练习。
+思路：声明栈stack<int> st，用于存储所有未匹配的下标，然后利用st求出最长匹配长度。
+*/
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int res = 0;
+        if(s.size() < 2) return res;
+        
+        stack<int> st;
+        for(int i = 0; i < s.size(); i++){
+            if(s[i] == '(') st.push(i);
+            else{
+                if(!st.empty()){
+                    if(s[st.top()] == '(') st.pop();
+                    else st.push(i);
+                }
+                else st.push(i);
+            }
+        }
+        
+        if(st.empty()) return s.size();
+        int l = 0, r = s.size();
+        while(!st.empty()){
+            l = st.top();
+            st.pop();
+            res = max(res, r - l -1);
+            r = l;
+        }
+        res = max(res, r);
+        return res;
+    }
+};
