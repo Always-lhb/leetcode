@@ -34,3 +34,34 @@ public:
         }
     }
 };
+
+
+/*
+第二次做，思路明确：排序+dfs。但是出现了一个很不应该的问题，即进行回溯时参数的传递
+*/
+class Solution {
+public:
+    void dfs(vector<vector<int>>& res, vector<int> cur, vector<int>& candidates, int remain, int pos){
+        if(remain <= 0){
+            if(remain == 0){
+                res.push_back(cur);
+            }
+            return;
+        }
+        for(int i = pos; i < candidates.size(); i++){
+            if(candidates[i] <= remain){
+                cur.push_back(candidates[i]);
+                dfs(res, cur, candidates, remain-candidates[i], i); //注意！！！！！！这里应该传入i，而非pos
+                cur.pop_back();
+            }
+        }
+    }
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> res;
+        vector<int> cur;
+        sort(candidates.begin(), candidates.end());
+        if(target < candidates[0]) return res;
+        dfs(res, cur, candidates, target, 0);
+        return res;
+    }
+};
