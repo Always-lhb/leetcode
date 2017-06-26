@@ -50,3 +50,49 @@ public:
         return true;
     }
 };
+
+
+/*
+第二次做，一次AC
+*/
+class Solution {
+public:
+    bool isValidSudoku(vector<vector<char>>& board) {
+        for(int i = 0; i < 9; i++){ //row
+            unordered_map<char, int>dict;
+            for(int j = 0; j < 9; j++){
+                if(board[i][j] != '.'){
+                    dict[board[i][j]]++;
+                    if(dict[board[i][j]] > 1)
+                        return false;
+                }
+            }
+        }
+        for(int j = 0; j < 9; j++){ //col
+            unordered_map<char, int>dict;
+            for(int i = 0; i < 9; i++){
+                if(board[i][j] != '.'){
+                    dict[board[i][j]]++;
+                    if(dict[board[i][j]] > 1)
+                        return false;
+                }
+            }
+        }
+        for(int i = 0; i < 3; i++){ //subcube
+            for(int j = 0; j < 3; j++){
+                unordered_map<char, int>dict;
+                int row = 3*i, col = 3*j;
+                for(int k = 0; k < 3; k++){
+                    for(int l = 0; l < 3; l++){
+                        if(board[row+k][col+l] != '.'){
+                            dict[board[row+k][col+l]]++;
+                            if(dict[board[row+k][col+l]] > 1)
+                                return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+};
