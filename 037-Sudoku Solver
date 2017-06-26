@@ -111,3 +111,58 @@ public:
         }
     }
 };
+
+
+/*
+第二次做，思路没问题，但是具体代码实验有错，详见注释。需要练习
+*/
+class Solution {
+public:
+    bool isInRow(vector<vector<char>>& board, int row, char c){
+        for(int j = 0; j < 9; j++){
+            if(board[row][j] == c){
+                return true;
+            }
+        }
+        return false;
+    }
+    bool isInCol(vector<vector<char>>& board, int col, char c){
+        for(int i = 0; i < 9; i++){
+            if(board[i][col] == c){
+                return true;
+            }
+        }
+        return false;
+    }
+    bool isInCub(vector<vector<char>>& board, int row, int col, char c){ 
+        for(int k = 0; k < 3; k++){
+            for(int l = 0; l < 3; l++){
+                if(board[row / 3 * 3 + k][col / 3 * 3 + l] == c){ //注意这里，在进行判断时，要把行列号转换到左上角位置，然后继续判断
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    bool dfs(vector<vector<char>>& board, int pos){ //注意这里，返回值类型应该是bool，而非void
+        if(pos == 81) return true;
+        int row = pos / 9, col = pos % 9;
+        
+        if(board[row][col] == '.'){
+            for(char c = '1'; c <= '9'; c++){
+                if(!isInRow(board, row, c) && !isInCol(board, col, c) && !isInCub(board, row, col, c)){
+                    board[row][col] = c;
+                    if(dfs(board, pos + 1)) return true; //如果回溯下一位置返回true，则本位置返回true，否则重置本位为'.'
+                    else board[row][col] = '.'; 
+                }
+            }
+            return false; //本位没有合适的c，返回false
+        }
+        else{
+            return dfs(board, pos + 1);
+        }
+    }
+    void solveSudoku(vector<vector<char>>& board) {
+        dfs(board, 0);
+    }
+};
