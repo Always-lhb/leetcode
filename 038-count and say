@@ -23,3 +23,30 @@ public:
         return s;
     }
 };
+
+
+/*
+第二次做，简直不敢相信，这题真的蠢。循环求解每次所得字符串即可
+*/
+class Solution {
+public:
+    string countAndSay(int n) {
+        string s = "1";
+        if(n == 1) return s;
+        
+        for(int i = 1; i < n; i++){
+            string t = "";
+            for(int j = 0; j < s.size(); j++){
+                int k = j + 1;
+                while(k < s.size() && s[k] == s[j]){
+                    k++;
+                }
+                char c = '0' + k - j;
+                t = t + c + s[j];
+                j = k - 1;
+            }
+            s = t;
+        }
+        return s;
+    }
+};
