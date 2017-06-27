@@ -34,3 +34,31 @@ public:
         return res.substr(i);
     }
 };
+
+
+/*
+第二次做，不是很顺利，但是加深了印象。需要练习
+*/
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        if(num1 == "0" || num2 == "0") return "0";
+        
+        string res(num1.size() + num2.size(), '0');
+        for(int i = num2.size() - 1; i >= 0; i--){ //外层循环num2，与自身做乘法的计算顺序一致，加深理解
+            int carry = 0;
+            for(int j = num1.size() - 1; j >= 0; j--){
+                int tmp = (res[i+j+1] - '0') + (num2[i] - '0') * (num1[j] - '0') + carry;
+                res[i+j+1] = (tmp % 10) + '0';
+                carry = tmp / 10;
+            }
+            res[i] += carry;
+        }
+        int i = 0;
+        for(; i < res.size(); i++){
+            if(res[i] != '0')
+                break;
+        }
+        return res.substr(i);
+    }
+};
