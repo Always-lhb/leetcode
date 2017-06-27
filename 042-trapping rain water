@@ -35,3 +35,31 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，有印象通过lwall和rwall求解，但是具体思路有问题
+*/
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        if(height.size() < 2) return 0;
+        
+        int res = 0;
+        int l = 0, r = height.size() -1;
+        int lwall = height[l], rwall = height[r];
+        while(l <= r){
+            if(height[l] <= height[r]){ //tips1，记得需要先比较height[l]和height[r]
+                if(height[l] < lwall) res += (lwall - height[l]);
+                else lwall = height[l];
+                l++; //tips2，不论是更新墙高还是存水操作后，都需要更新该下标
+            }
+            else{
+                if(height[r] < rwall) res += (rwall - height[r]);
+                else rwall = height[r];
+                r--;
+            }
+        }
+        return res;
+    }
+};
