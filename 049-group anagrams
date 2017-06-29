@@ -26,3 +26,27 @@ public:
         return res;
     }
 };
+
+
+
+/*
+第二次做，没做出。本题思路真的很棒，需要练习
+*/
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> res;
+        if(strs.size() < 1) return res;
+        
+        unordered_map<string, vector<string>> dict;
+        for(string s : strs){
+            string key = s;
+            sort(key.begin(), key.end());
+            dict[key].push_back(s);
+        }
+        for(auto s : dict){
+            res.push_back(s.second);
+        }
+        return res;
+    }
+};
