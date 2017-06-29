@@ -27,3 +27,29 @@ public:
         }
     }
 };
+
+
+/*
+第二次做，并不顺利，需要练习
+1. 四个一组，找对应关系
+2. 下标控制没问题，有进步
+3. 二维数组取值书写出现了问题，真的尴尬...
+*/
+class Solution {
+public:
+    void rotate(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        if(n < 2) return;
+        
+        for(int i = 0; i < (n+1) / 2; i++){
+            for(int j = 0; j < n / 2; j++){
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[n-j-1][i];
+                matrix[n-j-1][i] = matrix[n-i-1][n-j-1];
+                matrix[n-i-1][n-j-1] = matrix[j][n-i-1];
+                matrix[j][n-i-1] = tmp;
+            }
+        }
+        return;
+    }
+};
