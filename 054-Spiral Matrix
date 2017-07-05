@@ -42,3 +42,39 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，很顺利
+*/
+class Solution {
+public:
+    vector<int> spiralOrder(vector<vector<int>>& matrix) {
+        vector<int> res;
+        if(matrix.size() == 0) return res;
+        
+        int l = 0, r = matrix[0].size() - 1, t = 0, b = matrix.size() - 1;
+        while(l <= r && t <= b){
+            for(int col = l; col <= r; col++){
+                res.push_back(matrix[t][col]);
+            }
+            if(++t > b) break;
+            
+            for(int row = t; row <= b; row++){
+                res.push_back(matrix[row][r]);
+            }
+            if(l > --r) break;
+            
+            for(int col = r; col >= l; col--){
+                res.push_back(matrix[b][col]);
+            }
+            if(t > --b) break;
+            
+            for(int row = b; row >= t; row--){
+                res.push_back(matrix[row][l]);
+            }
+            if(++l > r) break;
+        }
+        return res;
+    }
+};
