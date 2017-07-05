@@ -7,7 +7,7 @@
 解题思路：
 N-Sum问题，固定一个数num1，查找target-num1
 1. vector:需使用algorithm的find()方法，但无法获取下标
-2. 为了获取下标，需使用unordered_map<int, int>，存储下标与对应值，并且unordered_map拥有find()方法
+2. 为了获取下标，需使用unordered_map<int, int>，存储值-下标，并且unordered_map拥有find()方法
 
 */
 
