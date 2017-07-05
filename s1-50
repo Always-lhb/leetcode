@@ -1,0 +1,216 @@
+1.TwoSum 返回i,j，使得nums[i]+nums[j]=target，唯一
+  对于N-Sum问题，固定一个数，查找另一个数；并利用unordered_map<int, int>使复杂度为O(n)
+2.Add Two Numbers 以链表形式实现两数相加
+  使用带头结点的结果链表。注意要先求进位再求当前位的值，不然flag恒等于0
+3.Longest-substring-without-repeating-characters 返回字符串的无重复字符的最长子串
+  遍历找到每个字符起始的最长符合要求子串即可
+4.Median-of-two-sorted-arrays 求两个有序数组合并后的中位数
+  查找两个有序数列A,B合并后的中位数，转化为查找A,B合并后的第k小数（k根据奇偶而定）
+  递归：分别查找A,B的第pa，pb(pb=k-pa)小数
+  if(A[pa-1] < B[pb-1]): A[0..pa-1]均属于合并后的前k小数，舍弃
+  if(A[pa-1] > B[pb-1]): B[0..pb-1]均属于合并后的前k小数，舍弃
+  if(A[pa-1] == B[pb-1]): 命中，返回
+  临界条件：假设总有A.size()<=B.size()
+  if(A.size() == 0) return B[k-1];
+  if(k == 1) return min(A[0], B[0]);
+  
+  tips:奇偶判断 
+  if(a & 0x1) 奇数
+  else  偶数
+5.Longest-palindromic-substring 求最长回文子串
+  Manacher算法
+  对字符串预处理，统一奇偶：abba -> #a#b#b#a#
+  声明辅助数组p，存放以每个字符为中心的最长回文串半径
+  
+  当得到回文串中心id,回文串半径max_len之后，对应于原字符串，
+  回文子串起始位置为(id-max_len+1)/2，回文子串总长度为max_len-1.
+6.Zigzag-conversion 将字符串转换成Z字形
+  定义nrows个string，分别存储转换后的每行，再按行号连接string即可
+  根据字符下标和方向，找到应存入的string
+7.Reverse Integer 整形反转
+  public:
+    int reverse(int x) {
+        long res = 0;
+        while(x != 0){
+            res = res * 10 + x % 10;
+            x /= 10;
+        }
+        return (res > INT_MAX || res < INT_MIN) ? 0 : res;
+    }
+  };
+8.String to Integer 
+  将string转换为integer
+  1.忽略string开始的所有空格
+  2.正负号可选
+  3.正负号后跟尽可能多的数字
+  4.数字后面的其他字符忽略即可
+  5.integer越界返回INT_MAX或INT_MIN
+
+  ps:
+  1.为防止溢出，声明为long
+  2.得到res后，直接进行溢出判断
+9.Palindrome-number 给定一个int，判定是否为回文数
+  对最高位和最低位进行判断，如果相同，去掉这两位继续判断，否则返回false;负数不是回文数
+10.Regular-expression-matching 正则匹配，其中'.'代表任何字符，'*'表示前一位字符重复任意次
+  f[i][j]: s[0..i-1]与p[0..j-1]是否匹配，问题变成了求解f[s.size()][p.size()]
+  f[i][j]:
+      if(p[j-1] == '*'): 
+          此时p[j-2]+p[j-1]可能表示empty，即去掉p的后两位: f[i][j-2]
+          或者p[j-2]+p[j-1]表示>=1个s[i-1]，即去掉s的末位: (s[i-1]==p[j-2]||p[j-2]=='.')&&(f[i-1][j])
+      if(p[j-1] != '*'):
+          s和p的末位比较且去掉s和p的末位：f[i][j] = (s[i-1] == p[i-1] || p[i-1] == '.') && f[i-1][j-1]
+  初始化：
+      1.f[0][0] = true;
+      2.当p空时，对于s的第i个字符有f[i][0]=false
+      3.当s空时，对于p的第j个字符，判断 j > 1 && p[j-1] == '*' && f[0][j-2]
+11.Container-with-most-water 给定数组 height,其中height[i]表示坐标轴上的一个点(i, height[i])，对每个点做垂直于x轴的线段，求出两条线段与x轴所代表容器能盛放的最大水量
+  首先通过第一个和最后一个点求出widest container，其他container必须比这个container更高才有可能超过它的容量
+12.Integer to Roman 将integer类型转换为Roman字符串,假设此ineger大小在0-3999之间
+  I:1
+  V:5
+  X:10
+  L:50
+  C:100
+  D:500
+  M:1000
+  分别定义4个string数组，对应千百十个位，再将字符串连接即可
+13.Roman to Integer
+  将罗马数字对应的integer存入map，从个到千判断，若um[s[i]]<um[s[i+1]]，sum-=um[s[i]];否则sum+=um[s[i]]
+14.longest-common-prefix 对于vector<string> strs，返回最长共同前缀
+  对每一位，遍历整个string数组，如果均相同则加入，否则退出循环
+15.3Sum 对给定vector<int>，返回所有的a,b,c，使得a+b+c=0;注意去重
+  排序，对给定nums[i],利用卡尺法查找nums[left]+nums[right] = -nums[i]
+16.3Sum Closest 对给定vector<int> nums和target，返回nums中的a,b,c，使得a+b+c最接近target；假设只有一组，不需去重。
+  排序+卡尺法
+17.letter-combinations-of-a-phonenumber 对于输入的数字，按照手机键位，返回所有可能的字符串和
+  dfs
+18.4Sum
+  N-Sum问题：排序+卡尺法
+19.remove-nth-node-from-end-of-list 删除链表的倒数第n个节点
+  计算出倒数第n个节点是正数第几个，然后求解。注意当去掉的节点是首节点时的特殊判断。
+20.valid parentheses 对于由(),[],{}构成的字符串，判断是否符合规范
+  栈stack的简单应用
+21.merge-two-sorted-list 合并两有序链表
+  对两个链表，从起始位置开始判断。链表问题都统一使用带头结点的链表即可。
+22.create-parentheses 根据输入的个数n，构造所有符合规则的具有n个'('和n个')'的字符串
+  dfs
+  left,right分别代表剩余左右括号数目，合法情况下left<=right。
+  当left=right=0时：得到一个解，返回；
+  当left<right时：如果left>0，插入一个左括号递归，如果right>0，插入一个右括号递归
+  当left=right时：只能插入左括号并递归
+23.merger-k-sorted-lists 合并k个有序链表
+  k路归并->堆priority_queue<>
+24.swap-nodes-in-pairs 给定一个链表，交换两个相邻节点的值，返回头指针。如：给定1->2->3->4，要求返回2->1->4->3。要求只能用常数空间。
+  每次交换前判断链表是否还有两个节点，如果有就交换这两个节点。需要标注尾节点，将链表连接起来
+25.reverse nodes in k-group 给定链表和数字k，以k个节点为一组进行反转
+  首先写出链表反转的reverse()函数，然后对原链表作处理，每k个节点翻转一次。
+  res:带头结点的结果
+  pre:当前段的前一个节点，即上一段的最后一个节点。每k个节点为一段
+  head:当前段首节点
+  tail:当前段尾节点
+26.remove-duplicates from sorted array 对升序数组，去除数组中重复的项，并返回剩余数组长度。确保数组的前len个元素是不重复的，之后的元素无所谓
+  用两个指针分别指向当前位置，与当前有效位置。通过i遍历数组，j代表不重复元素的实际位置。
+27.remove-element 与上一题基本相同，返回数组中值不为val的元素个数len，只需要保证前len个元素正确即可
+  同样，用两个指针分别指向当前位置，与当前有效位置
+28.implement strStr 给定两个字符串haystack,needle，返回needle在haystack里的其实下标，如果没有则返回1
+  从起始位置开始，对每个合法位置进行遍历。
+  kmp算法
+29.devide-two-integers 不允许使用/,*,%,计算出两数相除的结果
+  位运算，即左移<<和右移>>。左移代表乘2，右移代表除2
+  tips:
+    将正负号单独处理
+    为避免计算过程出现溢出，采用long
+    溢出条件有两个：1.divisor == 0  2. dividend == INT_MIN && divisor == -1
+30.substring-with-concatenation-of-all-words 给一个字符串，和一堆等长度的单词,在字符串中找出所有单词组成的字串的位置。
+  利用map存储words里每个word应该出现的次数，然后对可能的起始位置遍历，利用map2存储从该位置出发，
+  实际上每个word出现的次数；如果得到的word不在map里或者word出现的次数过多，说明此位置不满足条件
+31.next-permutation 给定一个整数序列，返回该序列的下一个字典序列；如果是降序序列，直接返回升序序列
+  对所给序列，从右至左查找，找到第一个index，使得nums[index]<nums[index+1]，如果找不到，说明原序列为降序排序，直接返回升序序列；
+  对找到的index,从nums.size()-1遍历到index+1,找到第一个大于nums[index]的i，交换nums[index],nums[i]；
+  最后再将nums[index+1..nums.size()-1]逆序即可
+32.longest-valid-parentheness 给定一个由'('和')'组成的字符串，返回这个字符串最长合法括号的长度
+  声明栈stack<int> st，用于存储所有未匹配的下标，然后利用st求出最长匹配长度
+33.search-in-rotated-sorted-array 给定一个数组，它是升序数组在某个位置旋转所得，即012345在3旋转得到345012...返回给定target在数组里的下标
+  初始化low=0,high=nums.size()-1,mid=(low+high)/2，如果nums[mid]=target则命中返回；否则mid的左右序列必定有一个是有序的；
+  如果nums[mid]<=nums[high]，说明从mid..high是有序的，此时如果target位于mid-high，则low=mid+1,否则high=mid-1;
+  如果nums[mid]>=nums[low],说明从low..mid是有序的，此时如果target位于low-mid，则high=mid-1,否则low=mid+1。
+  即[l..m]和[m..r]中必有一个有序，按情况更新l或r即可
+34.search for a range 给定一个升序数组和target，返回target在数组内的起始和结束位置。要求时间复杂度为O(logn)
+  二分法，命中后，通过两个下标分别向前向后扫描数组，返回起始和结束下标
+35.search insert position 给定一个升序数组和target，如果在数组内找到target则返回下标，如果没找到则返回target应插入的位置。假设数组内无重复元素
+  对于有序数组的位置查找，依然采用二分法解决。
+36.valid-sudoku 判断所给的9*9数独表是否合法，空格用'.'代表，空格不需要判断
+  分别遍历每行，每列，每个子表，如果都合法则返回true
+37.Sudoku Solver 给定一个不完整的数独表，完成数独表填写。假设唯一解
+  声明函数util(vector<vector<char>>, int pos)，对于位置0..80遍历判断，如果pos>=81说明前81个位置均已放入相应数字，直接返回true
+  否则，先得到pos对应的行下标i和列下标j，对于board[i][j]判断，如果不是'.'，直接判断下一位置；
+  否则，对于可能放入的9个字符遍历，如果字符c不在i行且不在j列且不在i,j确定的子表内，则将c放入board[i][j]，然后进行下一位置判断；
+  注意回溯之后要恢复board。
+38.count and say 数和说数列如下：1,11,21,1211,111221..给定一个整数n，生成第n个这样的序列
+  循环求解每次所得字符串即可
+39.combination-sum 给定一个无重复元素的set集合，和一个int类型的target，求出所有利用set里的元素能构成target的结果。set里的元素可多次使用，结果不能有重复
+  先将set排序，然后利用dfs求解
+40.combination-sumII 与上一题类似，给定一个集合和目标target，集合里的每个元素只能使用一次，返回所有的结果集合
+  与上一题类似，排序+dfs
+  tips：本题存在几个需要注意的地方
+  1.每个元素只能使用一次，所以回溯时的下标变成i+1
+  2.在去重之后，应该有一个判定是否为candidates结尾的判断，否则发生数组越界。神奇的是，本题的所有case在不判断的情况下都能通过，但还是应该注意
+41.first missing positive 给定一个无序的数组，找出数组中缺失的第一个正整数。要求算法复杂度为O(n)，使用常数内存空间
+  遍历一次数组，对于下标i：如果nums[i]是合法的，将它放到正确的位置上，注意应该使用循环，对换到位置i的元素不断处理。即if(nums[i]==5),将它与nums[4]交换
+  然后遍历数组，找到第一个位置上错误的下标i,返回i+1
+42.trapping rain water 给定一个非负正数序列，分别表示高度，求出以这些高度为边界所能存储的水量
+  1.为了确定每次能够存储的水量，需要维护leftwall,rightwall，分别表示左边墙和右边墙高度
+  2.当height[left]<=height[right]时：
+    说明此时height[left]一定不大于右边墙，因此将它与左边墙比较，如果height>=heightwall，则更新左边墙高度，否则存水；往右走一格
+  3.右边同理，处理完往左走一格
+43.multiply strings 非负大整数乘法
+  按位计算，迭代。
+  1.对于大整数乘法，结果最多可以有num1.size()+num2.size()位
+  2.对于num1[i]和num2[j]，他们共同决定结果的res[i+j+1]
+  3.对于给定的i，当与所有num2[j]计算结束后，最后一个进位应加入res[i]。可以这样理解，对所有j遍历结束时，j=0，此时共同决定res[i+1]，因此退出循环时最后进位加入res[i]
+  4.最后别忘记对res取子串，因为可能结果位数小于num1.size()+num2.size()
+44.wildcard matching 通配符匹配，'?'代表单个字符，'*'代表任意字符串，包括空串
+  f[i][j]: s[0..i-1]与p[0..j-1]是否匹配，问题转化为求解f[m][n]
+  f[i][j]: 
+    if(p[j-1] != '*'): 判断s与j的末位是否匹配，去除s与p的末位
+    if(p[j-1] == '*'): 
+      *可能表示empty，此时仅去除p的末位，f[i][j-1]
+      *可能表示>=1个任意字符，此时仅去除s的末位，f[i-1][j]
+  初始化：
+    1.f[0][0]=true;
+    2.p为空时，对于s的第i个字符，都有f[i][0]=false;
+    3.s为空时，对于p的第j个字符，判断：p的末位即p[j-1]=='*' && f[0][j-1]
+45.jump game II 给定一个非负整数序列，nums[i]表示在i位置能跳跃的最大步数，求出从i=0跳跃到i=nums.size()-1所需的最小步数(假设一定能到达最后)
+  贪心算法，对nums遍历，如果i超过了上一跳能到达的最远位置，则跳数+1，并更新上一跳的最远位置为本跳最远位置。如果本跳最远位置超过了序列尾则返回当前跳数
+      last-上一跳能到达的最远位置 
+      curr-当前跳能到达的最远位置 
+      jump-跳数
+46.permutation 给定一个无重复数字的set，返回所有可能的字典序列
+  dfs,利用vector<bool> used存储该位是否已使用
+47.Permutations II 给定可能包含重复值的序列，求出所有可能的字典序
+  与上一题几乎一样，多了重复元素的判断，为了判断重复元素，这里加入对nums的排序，使重复元素近邻
+48.rotate image 实现n*n矩阵顺时针旋转90度
+  对于每个需要旋转的元素，将其放到对应位置 a[i][j]->a[j][n-i-1]->a[n-i-1][n-j-1]->a[n-j-1][i]->a[i][j]
+  1. 四个一组，找对应关系
+  2. 注意下标控制
+49.group anagrams 给定字符串数组，返回所有包含相同字符的字符串
+  声明一个key为string，value为vector<string>的map，其中注意对key进行排序
+50.Pow(x, n)
+class Solution {
+public:
+    double myPow(double x, int n) {
+        double res = 1.0, cur = x;
+        
+        if(n == 0) return res;
+        if(n < 0){
+            if(n == INT_MIN) return 1.0 / (myPow(x, INT_MAX) * x);
+            else return 1.0 / myPow(x, -n);
+        }
+        while(n > 0){
+            if(n & 0x1) res *= cur;
+            cur *= cur;
+            n = n >> 1;
+        }
+        return res;
+    }
+};
