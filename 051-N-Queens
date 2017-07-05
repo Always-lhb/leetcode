@@ -40,3 +40,44 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，很顺利，经典的回溯问题“N-皇后”
+*/
+class Solution {
+public:
+    bool isValid(vector<string>& cur, int row, int col, int n){
+        for(int i = 0; i < row; i++)
+            if(cur[i][col] == 'Q')
+                return false;
+        for(int i = row, j = col; i >= 0 && j < n; i--, j++)
+            if(cur[i][j] == 'Q')
+                return false;
+        for(int i = row, j = col; i >= 0 && j >= 0; i--, j--)
+            if(cur[i][j] == 'Q')
+                return false;
+        return true;
+    }
+    void dfs(vector<vector<string>>& res, vector<string>& cur, int row, int n){
+        if(row == n){
+            res.push_back(cur);
+            return;
+        }
+        for(int col = 0; col < n; col++){
+            if(isValid(cur, row, col, n)){
+                cur[row][col] = 'Q';
+                dfs(res, cur, row + 1, n);
+                cur[row][col] = '.';
+            }
+        }
+    }
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> res;
+        vector<string> cur(n, string(n, '.'));
+        
+        if(n < 1) return res;
+        dfs(res, cur, 0, n);
+        return res;
+    }
+};
