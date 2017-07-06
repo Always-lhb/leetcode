@@ -63,3 +63,50 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，想到利用上一题的代码，如下：
+先将newInterval插入intervals，然后调用上一题代码即可。
+/**
+ * Definition for an interval.
+ * struct Interval {
+ *     int start;
+ *     int end;
+ *     Interval() : start(0), end(0) {}
+ *     Interval(int s, int e) : start(s), end(e) {}
+ * };
+ */
+class Solution {
+public:
+    static bool comp(Interval a, Interval b){
+        return a.start < b.start;
+    }
+    vector<Interval> merge(vector<Interval>& intervals) {
+        vector<Interval> res;
+        if(intervals.size() < 1) return res;
+        
+        sort(intervals.begin(), intervals.end(), comp);
+                
+        Interval tmp = intervals[0];
+        for(int i = 1; i < intervals.size(); i++){
+            if(intervals[i].start > tmp.end){
+                res.push_back(tmp);
+                tmp = intervals[i];
+            }
+            else{
+                tmp.end = max(tmp.end, intervals[i].end);
+            }
+        }
+        res.push_back(tmp);
+        return res;
+    }
+    vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
+        vector<Interval> res;
+        
+        intervals.push_back(newInterval);
+        
+        res = merge(intervals);
+        return res;
+    }
+};
