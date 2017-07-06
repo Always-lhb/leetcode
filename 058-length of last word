@@ -26,3 +26,25 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，发现自己好蠢啊。从右至左遍历，找到第一个非空字符串，返回其长度即可
+*/
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int res = 0;
+        if(s.size() == 0) return res;
+        
+        int i = s.size() - 1;
+        while(i >= 0 && s[i] == ' ') i--;
+        
+        while(i >= 0 && s[i] != ' ') {
+            i--;
+            res++;
+        }
+        
+        return res;
+    }
+};
