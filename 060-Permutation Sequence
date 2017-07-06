@@ -59,3 +59,35 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，加深了对本题的理解，需加强练习。
+对于[1..n]有n!个n位字典序列，n! = n*(n-1)!。即把n!个字典序列分成n份，每份是剩余n-1个字符组成的(n-1)!个字典序列。
+根据k求出每一位应该填入的字符，循环求出n位字典序列。
+*/
+class Solution {
+public:
+    int factorial(int n){
+        int res = 1;
+        while(n > 0){
+            res *= n;
+            n--;
+        }
+        return res;
+    }
+    string getPermutation(int n, int k) {
+        string res;
+        vector<int> nums;
+        for(int i = 1; i <= n; i++) nums.push_back(i);
+        
+        k -= 1;
+        for(int i = 1; i <= n; i++){
+            int index = k / factorial(n - i);
+            res += (nums[index] + '0');
+            nums.erase(nums.begin() + index);
+            k %= factorial(n - i);
+        }
+        return res;
+    }
+};
