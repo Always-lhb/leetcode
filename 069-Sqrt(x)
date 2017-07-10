@@ -26,3 +26,24 @@ public:
         return high; // when break, low > high
     }
 };
+
+
+/*
+第二次做，不顺利。本题需要加强练习，与myPow一起
+*/
+class Solution {
+public:
+    int mySqrt(int x) {
+        if(x < 2) return x;
+        
+        int low = 0, high = x;
+        while(low <= high){
+            int mid = (low + high) / 2;
+            int div = x / mid;
+            if(div == mid) return mid;
+            else if(div < mid) high = mid - 1;
+            else low = mid + 1;
+        }
+        return high;
+    }
+};
