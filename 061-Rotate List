@@ -50,3 +50,50 @@ public:
         return res;
     }
 };
+
+
+/*
+第二次做，很顺利。只用到一个指针tmp，没有第一次的代码简练
+*/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(!head || !head->next) return head;
+        
+        ListNode *newhead = new ListNode(0);
+        ListNode *tmp = head;
+        int len = 0;
+        
+        while(tmp){
+            len++;
+            tmp = tmp->next;
+        }
+        int step = k % len;
+        
+        if(step == 0) return head;
+        
+        tmp = head;
+        
+        for(int i = 0; i < (len - step - 1); i++){
+            tmp = tmp->next;
+        }
+        newhead->next = tmp->next;
+        tmp->next = NULL;
+        
+        tmp = newhead->next;
+        for(int i = 0; i < step - 1; i++){
+            tmp = tmp->next;
+        }
+        tmp->next = head;
+        
+        return newhead->next;
+    }
+};
