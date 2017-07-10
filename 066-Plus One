@@ -19,3 +19,21 @@ public:
         return digits;
     }
 };
+
+
+/*
+第二次做，问题在于读懂题意，题目本身很简单。
+*/
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        int flag = 1;
+        for(int i = digits.size() - 1; i >= 0; i--){
+            int tmp = digits[i] + flag;
+            flag = tmp / 10;
+            digits[i] = tmp % 10;
+        }
+        if(flag) digits.insert(digits.begin(), 1);
+        return digits;
+    }
+};
