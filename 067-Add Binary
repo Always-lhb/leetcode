@@ -28,3 +28,29 @@ public:
         return a;
     }
 };
+
+
+/*
+第二次做，看到这道题很受伤。前几天阿里电面刚考了，写的一塌糊涂，哎...多练习！！！
+*/
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        int flag = 0;
+        if(b.size() > a.size()) return addBinary(b, a);
+        if(b.size() == 0) return a;
+        
+        for(int i = a.size() - 1, j = b.size() - 1; j >= 0; i--, j--){
+            int sum = a[i] - '0' + b[j] - '0' + flag;
+            a[i] = sum % 2 + '0';
+            flag = sum / 2;
+        }
+        for(int i = a.size() - b.size() - 1; i >= 0; i--){
+            int sum = a[i] - '0' + flag;
+            a[i] = sum % 2 + '0';
+            flag = sum / 2;
+        }
+        if(flag) a.insert(a.begin(), '1');
+        return a;
+    }
+};
