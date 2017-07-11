@@ -215,3 +215,92 @@ public:
         return res;
     }
 };
+51.N-Queens
+52.N-QueensII
+  经典问题，dfs。按行进行递归(避免行冲突)，对该行的每个位置，判断是否可以放入皇后，只需进行列/45°/135°三个方向的判定即可
+53.Maximum Subarray 给定一个数组，返回数组中子串最大和
+  利用currMax存储以nums[i]结尾的最大子串和，如果currMax>max则更新max
+54.Spiral Matrix 将给定矩阵螺旋输出
+  分别按向右，向下，向左，向上四个方向扫描并存储
+55.Jump Game 对给定数组，从位置0出发，判断能否走到最后
+  与45题比较。本题更简单，利用curr存储当前跳最远距离。如果最远位置等于下标，说明无法再往前跳，返回false；如果最远位置>=nums.size()-1，说明可以到达
+56.Merge Intervals 给定一些时间间隔Interval，合并有重合的Interval
+  先按照Interval.start进行升序排序，声明tmp，初始化为intervals[0]，然后遍历剩余元素，进行相应操作。
+  注意sort(a.begin(), a.end(), comp)的写法
+57.insert intervals 将newInterval插入intervals序列，假设原intervals序列按照Interval.start升序排列
+  与上一题基本一致，先将newInterval插入intervals，然后调用上一题代码即可
+58.length of last word 求最后一个word的长度
+  从右至左遍历，找到第一个非空字符串，返回其长度即可
+59.Spiral Matrix II 与54题几乎一致，改读取为填入。给定行数列数n，按照螺旋式填写矩阵
+  与54题一致，定义startRow,endRow,startCol,endCol,然后逐个填入num
+60.Permutation Sequence 对于给定n，有n!个字典序列，返回第k个序列
+  对于[1..n]有n!个n位字典序列，n! = n*(n-1)!。即把n!个字典序列分成n份，每份是剩余n-1个字符组成的(n-1)!个字典序列。
+  根据k求出每一位应该填入的字符，循环求出n位字典序列。
+61.Rotate List 将链表右移k个位置
+  这里的k是可以大于链表长度的，因此先求出链表长度num，然后pos = k % num表示右移的量。
+  链表右移：
+    声明两个指针pre,cur均指向头节点，先把pre右移pos个位置，然后当pre->next != NULL时，同时右移pre和cur，此时pre指向尾节点，cur->next为
+    结果的头节点。
+62.Unique Paths 从矩阵左上角走到右下角共有多少条路径
+  动态规划。
+  res[i][j]：从[0][0]走到[i][j]的路径数，则题目变成求解res[m-1][n-1]
+  res[i][j] = res[i-1][j] + res[i][j-1];
+  初始化：start位置，第一行，第一列
+63.Unique Paths II 与上一题目相似，当obstacleGrid[i][j]=1时表示为障碍物
+  用动归解决，当前点若为障碍点，则当前点的方案数为0，否则，到当前点的方案数为它的上边格子和左边格子的方案和
+64.Minimum Path Sum 给定一个矩阵，矩阵元素非负，求出从左上走到右下的最小数之和
+  解题思路：简单的动归。
+  dp[i][j]:从dp[0][0]到dp[i][j]的最小数之和，题目变成求解dp[m-1][n-1]
+  dp[i][j] = grid[i][j] + min(dp[i-1][j], dp[i][j-1]);
+  初始化：出发点，第一行，第一列
+65.Valid Number 判断给定字符串是否是数字
+  1.去除s前后的空格，如果s为空，说明原s全部由空格组成，返回false
+  2.合法数字可以由'+','-'号开头，但正负号后必须有内容
+  3.正负号之后可以跟数字或小数点，但小数点个数不能大于一，数字个数不能为0
+  4.如果有指数符号'e'/'E'，同理指数符号后必须有内容
+  5.指数符号后可以跟正负号或数字且正负号不能在最后
+  6.最终返回index == s.size();即合法数字后不能再有其他不合法符号
+  综上：小数点一个，指数符号一个，正负号两个
+66.Plus One 一个非负整数由数组表示，数组下标0的位置保存该数最高位，返回该数加1的数
+  从后往前遍历数组，对末位执行加1操作，利用flag保存进位
+67.Add Binary 二进制加法
+  假设a的长度总是不小于b的长度，若b长度为0，直接返回a；否则的话，对于a,b从右向左扫描，当a,b均不为空时，当只有a不为空时
+68.Text Justification 给定一个字符串数组和每行长度maxWidth，贪心地把每个字符串放入当前行，每个字符串之间用空格分开，空格平均分布，且当空格不能平均分布时，多余空格
+从左往右填入；最后一行，每个字符串之间只放入一个空格，剩下的空格全部填入最后
+  对字符串数组遍历，首先计算得到所有能放在当前行的字符串words[i]..words[i+k-1]
+  然后对于最后一行，每个字符串之间填入一个空格；对于其他行，按要求填入空格
+69.Sqrt(x) 二分法
+  int mySqrt(int x) {
+        if(x < 2) return x;
+        
+        int low = 0, high = x;
+        while(low <= high){
+            int mid = (low + high) / 2;
+            int div = x / mid;
+            if(div == mid) return mid;
+            else if(div < mid) high = mid - 1;
+            else low = mid + 1;
+        }
+        return high;
+    }
+70.Climbing Stairs 爬梯子，一共需要爬n步，每步可以爬1或2格，求共有多少种爬法
+  解题思路：简单的dp
+  dp[i]：从0爬到i的不同路径数，问题转化为求解dp[n]
+  dp[i] = dp[i-1] + dp[i-2];
+  初始化：dp[0] = 1, dp[1] = 1
+71.Simplify Path  简化所给的Unix形式的绝对路径
+  解题思路：利用stack。
+  保存每两个'/'之间的字符串，如果是".."则弹出用栈保存的上一层文件夹，如果是'.'或空则不做处理，如果是字符串则将当前文件夹名压入栈。
+  如果栈空则压入'/'，最后利用栈得到结果
+72.Edit Distance 给定字符串word1，word2，求从word1变成word2所需的最小步数。每步有三种情况：replace, delete, insert
+  解题思路：dp
+  dp[i][j]：将word1[0..i-1]变成word2[0..j-1]所需的最小步数，则问题转化为求解dp[m][n]，其中m，n分别为word1和word2的长度
+  dp[i][j]：如果word1[i-1]=word2[j-1]，则dp[i][j] = dp[i-1][j-1]
+            否则，有三种转换方法:
+              replace: dp[i][j] = dp[i-1][j-1] + 1;
+              delete:  dp[i][j] = dp[i-1][j] + 1; 即删除word1[i-1]，然后加上word1[0..i-2]变成word2[0..j-1]的步数
+              insert:  dp[i][j] = dp[i][j-1] + 1; 即将word1[0..j-1]变成word2[0..j-2]，然后在word1最后填入word2[j-1]
+  初始化：对应word1/word2为空的情况，易知分别需要i/j个delete/insert操作
+73.Set Matrix Zeroes 对给定矩阵，如果matrix[i][j]为0，则把矩阵的该行和该列全部置0
+  解题思路：把每行是否应置0存入该行第一列的元素中，把每列是否应置0存入该列第一行的元素中，这样，对于第一行和第一列都应存入matrix[0][0]，
+  所以额外声明flag1,flag2分别存储第一行和第一列是否应置0。然后对除去第一行第一列的矩阵执行置零操作，最后根据标志位对第一行第一列分别置零。
