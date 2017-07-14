@@ -1,0 +1,55 @@
+/*
+题目：给定无序数组a, b,合并成升序数组
+思路：先将a,b进行快排，然后合并即可
+*/
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int partition(vector<int>& nums, int low, int high) { //返回哨兵位置pos
+	int pivot = nums[low]; //哨兵
+	while (low < high) {
+		while (low < high && nums[high] >= pivot) high--;
+		nums[low] = nums[high];
+		while (low < high && nums[low] <= pivot) low++;
+		nums[high] = nums[low];
+	}
+	nums[low] = pivot;
+	return low;
+}
+void quickSort(vector<int>& nums, int low, int high) { //递归实现nums的快排
+	if (low < high) {
+		int pos = partition(nums, low, high);
+		quickSort(nums, low, pos - 1);
+		quickSort(nums, pos + 1, high);
+	}
+}
+void merge(vector<int>& num1, vector<int>& num2, vector<int>& res) {
+	int i, j, k;
+	for (i = 0, j = 0, k = 0; i < num1.size() && j < num2.size(); k++) {
+		if (num1[i] <= num2[j]) res[k] = num1[i++];
+		else res[k] = num2[j++];
+	}
+	while (i < num1.size()) res[k++] = num1[i++];
+	while (j < num2.size()) res[k++] = num2[j++];	
+}
+int main()
+{
+	int a[] = { 5, 3, 1, 6, 2 };
+	int b[] = { 3, 2, 5, 1, 2, 6 };
+
+	vector<int> num1;
+	vector<int> num2;
+	for (auto n : a) num1.push_back(n);
+	for (auto n : b) num2.push_back(n);
+	quickSort(num1, 0, 4);
+	quickSort(num2, 0, 5);
+
+	vector<int> res(num1.size() + num2.size(), 0);
+	merge(num1, num2, res);
+	for (auto n : res) {
+		cout << n << ' ';
+	}
+
+	return 0;
+}
