@@ -53,3 +53,42 @@ int main()
 
 	return 0;
 }
+
+/*
+题目：实现二进制加法
+思路：判断长短，然后按位加即可，注意进位
+*/
+#include<iostream>
+#include<string>
+using namespace std;
+
+string addBinary(string a, string b) {
+	int flag = 0;
+	if (a.size() < b.size()) return addBinary(b, a); //assume len(a) >= len(b)
+	if (b.size() == 0) return a;
+
+	int i = a.size() - 1, j = b.size() - 1;
+	for (; i >= 0 && j >= 0; i--, j--) {
+		int tmp = a[i] - '0' + b[j] - '0' + flag;
+		flag = tmp / 2;
+		a[i] = tmp % 2 + '0';
+	}
+	while (i >= 0) {
+		int tmp = a[i] - '0' + flag;
+		flag = tmp / 2;
+		a[i] = tmp % 2 + '0';
+		i--;
+	}
+	if (flag) a.insert(a.begin(), '1');
+
+	return a;
+}
+int main()
+{
+	string a = "1101";
+	string b = "10110";
+	string c = addBinary(a, b);
+
+	cout << c << endl;
+	return 0;
+}
