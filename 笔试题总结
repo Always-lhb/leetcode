@@ -92,3 +92,63 @@ int main()
 	cout << c << endl;
 	return 0;
 }
+
+
+/*
+题目：实现有向带权图结构，并利用dfs实现从图中起点到终点的最长路径，没有该路径则返回-1
+思路：dfs
+*/
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+using namespace std;
+
+
+struct DirectedGraph {
+	char labels[4] = {'A', 'B', 'C', 'D'}; //顶点集
+	int matrix[4][4] = { //邻接矩阵，边集
+		{ 10, 1, 4, 10 },
+		{ 10, 10, 2, 10 },
+		{ 10, 10, 10, 1 },
+		{ 10, 10, 10, 10 }
+	};
+};
+
+
+int res = -1;
+vector<char> getNeighbor(DirectedGraph G, char n) { //返回n的所有相邻节点
+	vector<char> res;
+
+	int row = n - 'A';
+	for (int i = 0; i < 4; i++)
+		if (G.matrix[row][i] != 10)
+			res.push_back(i + 'A');
+	return res;
+}
+void dfs(DirectedGraph G, vector<bool>& visited, char cur, char end, int sum) {
+	if (cur == end) {
+		if (sum > res) res = sum;
+		return;
+	}
+	for (auto a : getNeighbor(G, cur)) {
+		if (!visited[a - 'A']) {
+			visited[a - 'A'] = true;
+			int len = G.matrix[cur - 'A'][a - 'A'];
+			dfs(G, visited, a, end, sum + len);
+			visited[a - 'A'] = false;
+		}
+	}
+}
+int getMaxPath(DirectedGraph G, char start, char end) {
+	vector<bool> visited(4, false);
+	dfs(G, visited, start, end, 0);
+	return res;
+}
+
+int main()
+{
+	DirectedGraph G;
+	int res = getMaxPath(G, 'A', 'D');
+	cout << res;
+	return 0;
+}
