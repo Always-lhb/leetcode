@@ -152,3 +152,57 @@ int main()
 	cout << res;
 	return 0;
 }
+
+
+/*
+题目：利用整数加法实现整数减法乘法除法
+*/
+#include<iostream>
+using namespace std;
+
+int sub(int a, int b) { // return a - b
+	return a + (-b);
+}
+int mul(int a, int b) { // return a * b
+	if (a == 0 || b == 0) return 0;
+
+	bool flag = true;
+	if ((a > 0 && b < 0) || (a < 0 && b > 0)) flag = false;
+
+	int num1 = abs(a), num2 = abs(b);
+	int res = 0;
+	while (num2 > 0) {
+		res += num1;
+		num2--;
+	}
+	return flag ? res : -res;
+}
+int divide(int a, int b) { // return a / b
+	if (a == 0) return 0;
+
+	bool flag = true;
+	if ((a > 0 && b < 0) || (a < 0 && b > 0)) flag = false;
+
+	int num1 = abs(a), num2 = abs(b);
+	int res = 0;
+	while (num1 >= num2) {
+		long cur = num2;
+		int count = 0;
+		while (num1 >= cur) {
+			count++;
+			cur = num2 << count;
+		}
+		res += 1 << (count - 1);
+		num1 -= num2 << (count - 1);
+	}
+	return flag ? res : -res;
+}
+
+int main() 
+{
+	int a = 10, b = -5;
+	cout << sub(a, b) << endl;
+	cout << mul(a, b) << endl;
+	cout << divide(a, b) << endl;
+	return 0;
+}
