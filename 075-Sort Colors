@@ -19,3 +19,56 @@ public:
         }
     }
 };
+
+
+//第二次做，利用快排和归并排序分别实现
+/*快排*/
+class Solution {
+public:
+    int partition(vector<int>& nums, int low, int high){
+        int pivot = nums[low];
+        while(low < high){
+            while(low < high && nums[high] >= pivot) high--;
+            nums[low] = nums[high];
+            while(low < high && nums[low] <= pivot) low++;
+            nums[high] = nums[low];
+        }
+        nums[low] = pivot;
+        return low;
+    }
+    void quickSort(vector<int>& nums, int low, int high){
+        if(low < high){
+            int pos = partition(nums, low, high);
+            quickSort(nums, low, pos - 1);
+            quickSort(nums, pos + 1, high);
+        }
+    }
+    void sortColors(vector<int>& nums) {
+        return quickSort(nums, 0, nums.size() - 1);
+    }
+};
+/*归并排序*/
+class Solution {
+public:
+    void merge(vector<int>& nums, int low, int mid, int high){
+        vector<int> p(nums);
+        int i, j, k;
+        for(i = low, j = mid + 1, k = low; i <= mid && j <= high; k++){
+            if(p[i] <= p[j]) nums[k] = p[i++];
+            else nums[k] = p[j++];
+        }
+        while(i <= mid) nums[k++] = p[i++];
+        while(j <= high) nums[k++] = p[j++];
+    }
+    void mergeSort(vector<int>& nums, int low, int high){
+        if(low < high){
+            int mid = (low + high) / 2;
+            mergeSort(nums, low, mid);
+            mergeSort(nums, mid + 1, high);
+            merge(nums, low, mid, high);
+        }
+    }
+    void sortColors(vector<int>& nums) {
+        return mergeSort(nums, 0, nums.size() - 1);
+    }
+};
