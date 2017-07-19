@@ -1,0 +1,32 @@
+/*
+直接插入排序
+思想：对L[1..n]进行排序，初始假设L[1]有序，对于L[2..n]依次插入到前面已排好序的子序列中
+空间复杂度：O(1)
+时间复杂度：O(n^2)
+稳定性：稳定
+*/
+#include<iostream>
+#include<vector>
+using namespace std;
+
+void insertSort(vector<int>& nums) {
+	for (int i = 1; i < nums.size(); i++) {
+		if (nums[i] < nums[i - 1]) {
+			int tmp = nums[i];
+			int j;
+			for (j = i - 1; j >= 0 && nums[j] > tmp; j--)
+				nums[j + 1] = nums[j];
+			nums[j + 1] = tmp;
+		}
+	}
+}
+int main()
+{
+	vector<int>	nums;
+	nums.push_back(3);
+	nums.push_back(1);
+	nums.push_back(2);
+	insertSort(nums);
+	for (int i = 0; i < nums.size(); i++) cout << nums[i] << ' ';
+	return 0;
+}
