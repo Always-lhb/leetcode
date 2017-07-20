@@ -224,3 +224,28 @@
         if(postorder.size() == 0) return NULL;
         return build(postorder, inorder, 0, postorder.size() - 1, 0, inorder.size() - 1);
     }
+
+
+补充：树的子结构，给定两颗二叉树p,q，判断q是否为p的子结构
+思路：第一步，遍历p，查找与q根节点值一样的节点R；第二步，判断以R为根节点的子树是否包含和树q一样的结构。
+class Solution {
+public:
+    bool findTree(TreeNode* p, TreeNode* q){
+        if(q == null) return true;
+        if(p == null) return false;
+        if(p->val != q->val) return false;
+        return findTree(p->left, q->left) && findTree(p->right, q->right);
+    }
+    bool hasSubTree(TreeNode* p, TreeNode* q) {
+        bool result = false;
+        if(p != null && q != null){
+            if(p->val == q->val) 
+                result = findTree(p, q);
+            if(!result) 
+                result = hasSubTree(p->left, q);
+            if(!result)
+                result = hasSubTree(p->right, q);
+        }
+        return result;
+    }
+};
