@@ -1,5 +1,18 @@
+//所有main()函数一致，如下
+//不稳定排序：快，希，选，堆
+int main()
+{
+	vector<int>	nums;
+	nums.push_back(3);
+	nums.push_back(1);
+	nums.push_back(2);
+	nums.push_back(4);
+	insertSort(nums);
+	for (int i = 0; i < nums.size(); i++) cout << nums[i] << ' ';
+	return 0;
+}
 /*
-直接插入排序
+直接插入排序/折半插入排序
 思想：对L[1..n]进行排序，初始假设L[1]有序，对于L[2..n]依次插入到前面已排好序的子序列中
 空间复杂度：O(1)
 时间复杂度：O(n^2)
@@ -20,13 +33,181 @@ void insertSort(vector<int>& nums) {
 		}
 	}
 }
+
+/*
+希尔排序
+思想：以步长d = nums.size()/2将待排序表分割成d个组，分别进行直接插入排序，每进行完一次步长d减半，直到d=1，即对所有元素进行排序
+空间复杂度：O(1)
+时间复杂度：O(n^2)
+稳定性：不稳定
+*/
+#include<iostream>
+#include<vector>
+using namespace std;
+
+void shellSort(vector<int>& nums) {
+	for (int d = nums.size() / 2; d >= 1; d /= 2) { //步长
+		for (int i = d; i < nums.size(); i++) {
+			if (nums[i] < nums[i - d]) {
+				int tmp = nums[i];
+				int j;
+				for (j = i - d; j >= 0 && nums[j] > tmp; j -= d) {
+					nums[j + d] = nums[j];
+				}
+				nums[j + d] = tmp;
+			}
+		}
+	}
+}
+
+
+/*
+冒泡排序
+思想：对长度为n的数组进行n-1趟排序，每趟从前往后两两比较相邻元素，若为逆序则交换，知道序列比较完。即每趟把最大的元素冒泡到最后一位
+空间复杂度：O(1)
+时间复杂度：O(n^2)
+稳定性：稳定
+*/
+void bubbleSort(vector<int>& nums) {
+	for (int i = 0; i < nums.size() - 1; i++) { //趟数
+		bool flag = false;
+		for (int j = i; j < nums.size() - 1; j++) {
+			if (nums[j] > nums[j + 1]) {
+				swap(nums[j], nums[j + 1]);
+				flag = true;
+			}
+		}
+		if (flag == false) return;
+	}
+}
+
+/*
+简单选择排序
+思想：进行n-1趟选择，第i趟从nums[i..n]中选出最小的元素与nums[i]交换。与冒泡排序相比，都是进行n-1趟排序，每趟获得一个最大/小的元素，但冒泡排序是
+      相邻元素两两比较，选择排序是与nums[i]进行比较
+空间复杂度：O(1)
+时间复杂度：O(n^2)
+稳定性：不稳定（第i趟找到最小元素与nums[i]交换后，可能导致第i个元素与含有相同关键字的元素相对位置改变）
+*/
+void selectSort(vector<int>& nums) {
+	for (int i = 0; i < nums.size() - 1; i++) { //趟数
+		int min = i;
+		for (int j = i + 1; j < nums.size(); j++)
+			if (nums[j] < nums[min])
+				min = j;
+		if(min != i)
+			swap(nums[i], nums[min]);
+	}
+}
+
+/*
+快排
+思想：递归。每次取一个元素作为基准，通过一趟快排找到基准的位置，并把原数组分成nums[0..pos-1]和nums[pos+1..n]两部分，然后分别对这两部分进行快排
+空间复杂度：借助递归工作栈，平均复杂度O(logn)，最坏复杂度O(n)
+时间复杂度：最坏复杂度O(n^2)，平均复杂度O(n*logn)
+稳定性：不稳定（若右区间存在两个相等且小于基准的关键字，交换到左区间之后相对位置改变）
+*/
+#include<iostream>
+using namespace std;
+
+int Partition(int A[], int low, int high) {
+	int pivot = A[low];
+	while (low < high) {
+		while (low < high && A[high] >= pivot) high--; //tips
+		A[low] = A[high];
+		while (low < high && A[low] <= pivot) low++; //tips
+		A[high] = A[low];
+	}
+	A[low] = pivot;
+	return low;
+}
+void QuickSort(int A[], int low, int high) {
+	if (low < high) {
+		int pivotpos = Partition(A, low, high);
+		QuickSort(A, low, pivotpos - 1);
+		QuickSort(A, pivotpos + 1, high);
+	}
+}
 int main()
 {
-	vector<int>	nums;
+	int nums[] = { 2, 4, 1, 5, 3 };
+	QuickSort(nums, 0, 4);
+	for (int i = 0; i < 5; i++)
+		cout << nums[i];
+	cout << endl;
+	return 0;
+}
+
+/*
+堆排序
+思想：将序列看出完全二叉树的顺序存储结构，利用完全二叉树的性质，选择最大/最小值
+空间复杂度：O(1)
+时间复杂度：O(n*logn)
+稳定性：不稳定
+*/
+void adjustDown(vector<int>& nums, int root) { //一次向下调整构造堆的过程
+	int tmp = nums[root];
+	for (int i = 2 * root; i < nums.size(); i *= 2) {
+		if (i < nums.size() - 1 && nums[i] < nums[i + 1]) i++; //子树中较大的节点
+		if (tmp >= nums[i]) break; //调整结束
+		else {
+			nums[root] = nums[i];
+			root = i;
+		}
+	}
+	nums[root] = tmp; //放入最终位置
+}
+void buildMaxHeap(vector<int>& nums) { //构造大顶堆，最后一个节点的父节点是nums[n/2]，依次向前使以i为根的子树为堆
+	for (int i = nums.size() / 2; i >= 0; i--) {
+		adjustDown(nums, i);
+	}
+}
+void heapSort(vector<int>& nums) {
+	buildMaxHeap(nums); //初始建堆
+	for (int i = nums.size() - 1; i > 0; i--) { //n-1趟交换和建堆过程
+		swap(nums[i], nums[0]); //输出堆顶元素
+		adjustDown(nums, 0); //向下调整
+	}
+}
+
+/*
+归并排序
+思想：递归。将含有n个元素的表看作n个有序的子表，子表长度为1，然后两两归并，得到n/2个长度为2或1的有序表；再两两归并...直到合并成一个长度为n的有序表
+空间复杂度：O(n)
+时间复杂度：O(n*logn)
+稳定性：稳定
+*/
+#include<iostream>
+#include<vector>
+using namespace std;
+
+void Merge(vector<int>& nums, int low, int mid, int high) {
+	vector<int> p(nums);
+	int i, j, k;
+	for (i = low, j = mid + 1, k = low; i <= mid && j <= high; k++) {
+		if (p[i] <= p[j]) nums[k] = p[i++];
+		else nums[k] = p[j++];
+	}
+	while (i <= mid) nums[k++] = p[i++];
+	while (j <= high) nums[k++] = p[j++];
+}
+void MergeSort(vector<int>& nums, int low, int high) {
+	if (low < high) {
+		int mid = (low + high) / 2;
+		MergeSort(nums, low, mid);
+		MergeSort(nums, mid + 1, high);
+		Merge(nums, low, mid, high);
+	}
+}
+int main()
+{
+	vector<int> nums;
 	nums.push_back(3);
 	nums.push_back(1);
 	nums.push_back(2);
-	insertSort(nums);
-	for (int i = 0; i < nums.size(); i++) cout << nums[i] << ' ';
+	MergeSort(nums, 0, 2);
+	for (int i = 0; i < 3; i++)
+		cout << nums[i];
+	cout << endl;
 	return 0;
 }
