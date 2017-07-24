@@ -1,0 +1,134 @@
+//顺序表，静态分配
+#define ElemType int
+#define MaxSize 50
+typedef struct {
+	ElemType data[MaxSize];
+	int length;
+}SqList;
+
+//顺序表，动态分配
+#define ElemType int
+#define InitSize 50
+typedef struct {
+	ElemType *data;
+	int MaxSize, length;
+}SqList;
+
+//单链表
+struct  ListNode
+{
+	int val;
+	ListNode * next;
+	ListNode(int x) : val(x), next(NULL) {}
+};
+
+//栈
+#define MaxSize 50
+#define ElemType int
+typedef struct {
+	ElemType data[MaxSize]; //栈中元素
+	int top; //栈顶指针
+}SqStack;
+
+bool push(SqStack &s, ElemType x) {
+	if (s.top == MaxSize - 1) return false; //栈满
+	s.data[++s.top] = x;
+	return true;
+}
+
+bool pop(SqStack &s, ElemType &x) {
+	if (s.top == -1) return false; //栈空
+	x = s.data[s.top--];
+	return true;
+}
+
+//共享栈
+0号栈空：top0 == -1;
+1号栈空：top1 == MaxSize;
+栈满：top1 - top0 == 1;
+0号栈入栈：s.data[++s.top0] = x; //top0先加1再赋值
+1号栈入栈：s.data[--s.top1] = x; //top1先减1再赋值
+0号栈出栈：x = s.data[s.top0--]; 
+1号栈出栈：x = s.data[s.top1++];
+
+/*队列
+#define MaxSize 50
+#define ElemType int
+typedef struct {
+	ElemType data[MaxSize]; 
+	int front, rear; 
+}SqQueue;
+
+front：队头指针，指向队头元素
+rear：队尾指针，指向队尾元素的下一个位置
+初始（队空）：Q.front = Q.rear = 0;
+入队：队不满时，先送值到队尾元素，再将队尾指针加1
+出队：队不空时，先取队头元素值，再将队头指针加1
+*/
+
+/*
+循环队列
+bool EnQueue(SqQueue &Q, ElemType x) { //入队
+	if ((Q.rear + 1) % MaxSize == Q.front) return false; //队满
+	Q.data[Q.rear] = x;
+	Q.rear = (Q.rear + 1) % MaxSize;
+	return true;
+}
+
+bool DeQueue(SqQueue &Q, ElemType &x) { //出队
+	if (Q.front == Q.rear) return false; //队空
+	x = Q.data[Q.front];
+	Q.front = (Q.front + 1) % MaxSize;
+	return true;
+}
+*/
+
+/*
+队列链式存储
+#define MaxSize 50
+#define ElemType int
+struct ListNode
+{
+	int val;
+	ListNode * next;
+	ListNode(int x) : val(x), next(NULL) {}
+};
+typedef struct {
+	ListNode * front, *rear;
+}LinkQueue;
+
+void EnQueue(LinkQueue &Q, ElemType x) { //入队
+	ListNode * n = new ListNode(x);
+	Q.rear->next = n;
+	Q.rear = n;
+}
+
+bool DeQueue(LinkQueue &Q, ElemType &x) { //出队
+	if (Q.front == Q.rear) return false; //队空
+	ListNode * p = Q.front->next;
+	x = p->val;
+	Q.front->next = p->next;
+	if (Q.rear == p) Q.rear = Q.front; //若原队列只有一个节点，删除后变空
+	return true;
+}
+*/
+
+/*
+二叉树
+struct TreeNode
+{
+	int val;
+	TreeNode * left;
+	TreeNode * right;
+	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+*/
+
+/*
+图：邻接矩阵存储
+#define MaxVertexNum 100
+typedef struct {
+	char Vex[MaxVertexNum]; //顶点集
+	int Edge[MaxVertexNum][MaxVertexNum]; //边集
+}Graph;
+*/
