@@ -208,11 +208,124 @@ int main()
 }
 
 /*
+牛客网1
 题目：一个字符串如果由两个相同的字符串连接而成，则成为偶串。给定一偶串s，从s的末尾删除1位或多位，求删除后得到的最长偶串长度
 思路：偶串的长度必须为偶数，对于所给偶串s，从末尾不断地删除两位，判断剩余部分是否为偶串，如果是则返回当前长度
 */
+#include<iostream>
+#include<string>
+using namespace std;
+
+bool isOuchuan(string s) {
+	if (s.size() & 0x1) return false;
+	string s1 = s.substr(0, s.size() / 2);
+	string s2 = s.substr(s.size() / 2, s.size() / 2);
+	if (s1 == s2) return true;
+	else return false;
+}
+int main()
+{
+	string s;
+	cin >> s;
+	int len;
+	for (len = s.size() - 2; len >= 0; len -= 2) {
+		string tmp = s.substr(0, len);
+		if (isOuchuan(tmp)) {
+			cout << len << endl;
+			break;
+		}
+	}
+	return 0;
+}
+
 
 /*
+牛客网2
 题目：对给定的字符串s，求出s最少可以分割成几个回文串。例如s="abbaa"，则baaab是回文串，返回1；s="abc"，返回3
 思路：利用unordered_map<char, int>存储每个字符串对应的数目，奇数字符个数即为所求
 */
+#include<iostream>
+#include<string>
+#include<unordered_map>
+using namespace std;
+
+int main()
+{
+	unordered_map<char, int>dict;
+	string s;
+	int odd = 0, even = 0;
+	cin >> s;
+	for (char c : s) dict[c]++;
+	for (auto d : dict) {
+		if (d.second & 0x1) odd++;
+		else even++;
+	}
+	cout << odd << endl;
+
+	return 0;
+}
+
+
+/*
+hihocoder-20-1
+题目：给定一棵包含 N 个节点的无根树，如果指定其中某个节点 K 为根，那么每个节点的父节点是谁？
+输入：
+第一行包含一个整数 N 和 K。1 ≤ N ≤ 1000, 1 ≤ K ≤ N。    
+以下N-1行每行包含两个整数 a 和 b，代表ab之间存在一条边。 1 ≤ a, b ≤ N。  
+输入保证是一棵树。
+输出：
+输出一行包含 N 个整数，分别代表1~N的父节点的编号。对于 K 的父节点输出0。
+
+样例输入
+5 4  
+1 2  
+3 1  
+4 3  
+5 1
+样例输出
+3 1 4 0 1
+
+思路：类似bfs，利用队列queue求解，先放入根节点，逐层求出该节点的父亲节点即可。
+*/
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+#include<queue>
+using namespace std;
+
+int main()
+{
+	int N, K;
+	cin >> N >> K;
+
+	unordered_map<int, vector<int>> dict; 
+	unordered_map<int, int> parent;
+	unordered_map<int, bool> visited;
+	queue<int> q;
+	for (int i = 1; i < N; i++) {
+		visited[i] = false;
+		int a, b;
+		cin >> a >> b;
+		dict[a].push_back(b);
+		dict[b].push_back(a);
+	}
+	parent[K] = 0;
+	visited[K] = true;
+	q.push(K);
+	while (!q.empty()) {
+		int tmp = q.front();
+		q.pop();
+		for (int i : dict[tmp]) {
+			if (!visited[i]) {
+				visited[i] = true;
+				q.push(i);
+				parent[i] = tmp;
+			}
+		}
+	}
+	for (int i = 1; i <= N; i++)
+		cout << parent[i] << ' ';
+	cout << endl;
+
+	return 0;
+}
