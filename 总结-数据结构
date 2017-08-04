@@ -105,7 +105,7 @@ void EnQueue(LinkQueue &Q, ElemType x) { //入队
 
 bool DeQueue(LinkQueue &Q, ElemType &x) { //出队
 	if (Q.front == Q.rear) return false; //队空
-	ListNode * p = Q.front->next;
+	ListNode * p = Q.front->next; //带头结点
 	x = p->val;
 	Q.front->next = p->next;
 	if (Q.rear == p) Q.rear = Q.front; //若原队列只有一个节点，删除后变空
