@@ -145,6 +145,10 @@ int main()
 时间复杂度：O(n*logn)
 稳定性：不稳定
 */
+#include<iostream>
+#include<vector>
+using namespace std;
+
 void adjustDown(vector<int>& nums, int root) { //一次向下调整构造堆的过程
 	int tmp = nums[root];
 	for (int i = 2 * root; i < nums.size(); i *= 2) {
@@ -157,15 +161,15 @@ void adjustDown(vector<int>& nums, int root) { //一次向下调整构造堆的�
 	}
 	nums[root] = tmp; //放入最终位置
 }
-void buildMaxHeap(vector<int>& nums) { //构造大顶堆，最后一个节点的父节点是nums[n/2]，依次向前使以i为根的子树为堆
+void buildMaxHeap(vector<int>& nums) { //构造大顶堆，最后一个节点的父节点是nums[n/2]，依次向前使以i为根的子树为堆，降序排序！！！
 	for (int i = nums.size() / 2; i >= 0; i--) {
 		adjustDown(nums, i);
 	}
 }
 void heapSort(vector<int>& nums) {
-	buildMaxHeap(nums); //初始建堆
-	for (int i = nums.size() - 1; i > 0; i--) { //n-1趟交换和建堆过程
-		swap(nums[i], nums[0]); //输出堆顶元素
+	buildMaxHeap(nums); //初始建堆，第一个元素位置确定
+	for (int i = nums.size() - 1; i > 0; i--) { //n-1趟交换和建堆过程，确定剩余n-1个元素位置
+		swap(nums[i], nums[0]); //
 		adjustDown(nums, 0); //向下调整
 	}
 }
