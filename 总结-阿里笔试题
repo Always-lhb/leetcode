@@ -329,3 +329,93 @@ int main()
 
 	return 0;
 }
+
+
+/*
+网易1：01串判定
+题目：给定只包含0和1的字符串，返回该字符串中最长01串（01串：0和1交替出现）
+思路：遍历字符串，比较当前位与上一位是否不同，如果不同则对cur执行加1操作，否则将cur置1
+#include<iostream>
+#include<string>
+using namespace std;
+
+int func(string s) {
+	int res = 0;
+	if (s.size() <= 1) return s.size();
+
+	char tmp = '-1';
+	int cur = 0;
+	for (int i = 0; i < s.size(); i++) {
+		char c = s[i];
+		if (c != tmp) {
+			cur++;
+			tmp = c;
+		}
+		else {
+			cur = 1;
+			tmp = c;
+		}
+		res = (cur > res) ? cur : res;
+	}
+	return res;
+}
+int main()
+{
+	string s;
+	cin >> s;
+	
+	int result = func(s);
+	cout << result << endl;
+
+	return 0;
+}
+*/
+
+/*
+网易3：疯狂队列
+题目：对给定整数队列，求出相邻元素差值和的最大值
+思路：将最大最小值依次相隔放入辅助数组，再把最后一个数放入首位即可
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int func(vector<int>& nums) {
+	sort(nums.begin(), nums.end());
+	vector<int> b;
+	int i = 0, j = nums.size() - 1;
+	if (nums.size() & 0x1) {
+		while (i < j) {
+			b.push_back(nums[i++]);
+			b.push_back(nums[j--]);
+		}
+		b.push_back(nums[i]);
+		
+	}
+	else {
+		while (i < j) {
+			b.push_back(nums[i++]);
+			b.push_back(nums[j--]);
+		}
+	}
+	int pre = b[nums.size() - 1], res = 0;
+	for (int i = 0; i < b.size() - 1; i++) {
+		int high = abs(b[i] - pre);
+		pre = b[i];
+		res += high;
+	}
+	return res;
+}
+int main()
+{
+	int n;
+	cin >> n;
+	vector<int> nums(n, 0);
+	for (int i = 0; i < n; i++) cin >> nums[i];
+
+	int res = func(nums);
+	cout << res << endl;
+	return 0;
+}
+*/
