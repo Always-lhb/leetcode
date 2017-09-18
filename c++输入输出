@@ -1,0 +1,20 @@
+/*
+目的：不断地按行读入，直到空行结束，利用getline(cin, s)，且前后一致，都要使用getline
+*/
+
+int main()
+{
+	string s;
+	getline(cin, s);
+	while (s != "-") {
+		getline(cin, s);
+	}
+
+	vector<string> aaa;
+	string e;
+	getline(cin, e);
+	while (e.size() > 0) {
+		aaa.push_back(e);
+		getline(cin, e);
+	}
+}
