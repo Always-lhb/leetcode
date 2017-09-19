@@ -141,6 +141,7 @@ int main()
 /*
 堆排序
 思想：将序列看出完全二叉树的顺序存储结构，利用完全二叉树的性质，选择最大/最小值
+备注：大顶堆，每次把最大的元素向下调整到最后，故升序！！！
 空间复杂度：O(1)
 时间复杂度：O(n*logn)
 稳定性：不稳定
@@ -149,29 +150,44 @@ int main()
 #include<vector>
 using namespace std;
 
-void adjustDown(vector<int>& nums, int root) { //一次向下调整构造堆的过程
-	int tmp = nums[root];
-	for (int i = 2 * root; i < nums.size(); i *= 2) {
-		if (i < nums.size() - 1 && nums[i] < nums[i + 1]) i++; //子树中较大的节点
+void adjustDown(vector<int>& nums, int start, int end) { //一次向下调整构造堆的过程 start:起始下标 end:终止下标的下一位
+	int tmp = nums[start];
+	for (int i = 2 * start + 1; i < end; i = i * 2 + 1) {
+		if (i < end - 1 && nums[i] < nums[i + 1]) i++; //子树中较大的节点
 		if (tmp >= nums[i]) break; //调整结束
 		else {
-			nums[root] = nums[i];
-			root = i;
+			nums[start] = nums[i];
+			start = i;
 		}
 	}
-	nums[root] = tmp; //放入最终位置
+	nums[start] = tmp; //放入最终位置
 }
-void buildMaxHeap(vector<int>& nums) { //构造大顶堆，最后一个节点的父节点是nums[n/2]，依次向前使以i为根的子树为堆，降序排序！！！
-	for (int i = nums.size() / 2; i >= 0; i--) {
-		adjustDown(nums, i);
+void buildMaxHeap(vector<int>& nums) { //构造大顶堆，最后一个节点的父节点是nums[n/2 - 1]
+	for (int i = nums.size() / 2 - 1; i >= 0; i--) {
+		adjustDown(nums, i, nums.size());
 	}
 }
 void heapSort(vector<int>& nums) {
-	buildMaxHeap(nums); //初始建堆，第一个元素位置确定
-	for (int i = nums.size() - 1; i > 0; i--) { //n-1趟交换和建堆过程，确定剩余n-1个元素位置
-		swap(nums[i], nums[0]); //
-		adjustDown(nums, 0); //向下调整
+	buildMaxHeap(nums); //初始建堆
+	for (int i = nums.size() - 1; i > 0; i--) { //n-1趟交换和向下调整过程
+		swap(nums[i], nums[0]); 
+		adjustDown(nums, 0, i); 
 	}
+}
+
+int main()
+{
+	vector<int> nums;
+	nums.push_back(3);
+	nums.push_back(1);
+	nums.push_back(2);
+	nums.push_back(6);
+	nums.push_back(8);
+	heapSort(nums);
+	for (int i = 0; i < 5; i++)
+		cout << nums[i];
+	cout << endl;
+	return 0;
 }
 
 /*
