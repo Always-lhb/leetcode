@@ -1,5 +1,8 @@
 /*
-目的：不断地按行读入，直到空行结束，利用getline(cin, s)，且前后一致，都要使用getline
+目的：不断地按行读入，直到空行结束
+	1. 利用getline(cin, s)，且前后一致，都要使用getline
+	2. 使用cin读入后，需使用getchar()读入换行符
+	3. 不断地使用getchar()读入
 */
 
 int main()
