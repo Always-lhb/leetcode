@@ -1,8 +1,8 @@
 /*
 目的：不断地按行读入，直到空行结束
-	1. 利用getline(cin, s)，且前后一致，都要使用getline
-	2. 使用cin读入后，需使用getchar()读入换行符
-	3. 不断地使用getchar()读入
+	1. 使用cin读入后，需使用getchar()读入换行符
+	2. 不断地使用getchar()读入
+	3. 其实使用while循环即可，醉了...
 */
 
 int main()
@@ -20,4 +20,42 @@ int main()
 		aaa.push_back(e);
 		getline(cin, e);
 	}
+}
+
+
+
+//给定年月日，返回在一年中的第几天
+#include<iostream>
+#include<vector>
+using namespace std;
+
+int main()
+{
+	int year, mon, day;
+	vector<int> res;
+	while (cin >> year >> mon >> day) {
+		int flag = 0;
+		if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))flag = 1;
+		int a = 0;
+		switch (mon - 1)
+		{
+		case 11:a += 30;
+		case 10:a += 31;
+		case 9:a += 30;
+		case 8:a += 31;
+		case 7:a += 31;
+		case 6:a += 30;
+		case 5:a += 31;
+		case 4:a += 30;
+		case 3:a += 31;
+		case 2:a += 28 + flag;
+		case 1:a += 31; break;
+		default: break;
+		}
+		a += day;
+		res.push_back(a);
+	}
+	for (int i : res) cout << i << endl;
+
+	return 0;
 }
