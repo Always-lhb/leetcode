@@ -1,0 +1,2 @@
+1.判断val是否为2的幂次
+return (val & -val) == val
