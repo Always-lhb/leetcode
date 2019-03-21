@@ -73,3 +73,26 @@ public:
         }
     }
 };
+
+
+
+/*
+Java版本：N-Sum问题，固定一个数，查找另一个数。利用map存储value->index，遍历一次数组
+*/
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        int[] res = new int[2];
+        Map<Integer, Integer> value2Index = new HashMap<Integer, Integer>();
+
+        for (int i = 0; i < nums.length; i++) {
+            if (value2Index.containsKey(target - nums[i])) {
+                res[0] = value2Index.get(target - nums[i]);
+                res[1] = i;
+                return res;
+            } else {
+                value2Index.put(nums[i], i);
+            }
+        }
+        return res;
+    }
+}
