@@ -59,3 +59,39 @@ public:
         return res;
     }
 };
+
+
+****************************
+JAVA版本，比原来的代码不知道高到哪里去了...
+
+/**
+ * leetcode 003
+ * 思路：定义两个下标指针start,end
+ * 如果s[start, end-1]包含s[end]，说明找到了一个不包含重复字符的子串s[start, end-1]，更新结果；否则，end往后移动一位
+ * 当end=s.length()时，若s[start, end-1]仍旧不包括s[end]，需要将当前子串长度加1，并更新结果
+ *
+ * @author lihb
+ */
+public class LengthOfLongestSubstring {
+
+    public int lengthOfLongestSubstring(String s) {
+        if (s == null || s.length() == 0) return 0;
+        int start = 0, end = 1;
+        int res = 1;
+
+        while (end < s.length()) {
+            String sub = s.substring(start, end);
+            if (sub.indexOf(s.charAt(end)) != -1) {
+                res = res < sub.length() ? sub.length() : res;
+                start++;
+            } else {
+                end++;
+                if (end == s.length()) {
+                    res = res < sub.length() + 1 ? sub.length() + 1 : res;
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+}
