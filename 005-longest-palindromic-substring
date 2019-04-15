@@ -89,3 +89,52 @@ public:
         return s.substr((id-max_len+1)/2, max_len-1); //注意这里的返回
     }
 };
+
+
+/******************* JAVA版本 *********************/
+
+/**
+ * leetcode 005 最长回文子串
+ *
+ * 思路：Manacher算法
+ *      对字符串预处理，统一奇偶，abba -> #a#b#b#a#
+ *      对处理后的字符串找到最长回文子串中心下标index，和回文半径maxLen
+ *      对于原字符串，回文子串起始下标为(index - maxLen + 1) / 2，长度为maxLen - 1
+ *
+ * @author lihb
+ */
+public class LongestPalindrome {
+
+    public static String longestPalindrome(String s) {
+        if (s.length() < 2) return s;
+
+        String pres = preHandle(s);
+
+        int index = 0, maxLen = 1;
+        for (int i = 0; i < pres.length(); i++) {
+            int len = 1;
+            while ((i - len) >= 0 && (i + len) <= pres.length() - 1 && pres.charAt(i - len) == pres.charAt(i + len)) {
+                len++;
+            }
+            if (len > maxLen) {
+                index = i;
+                maxLen = len;
+            }
+        }
+        return s.substring((index - maxLen + 1) / 2, (index - maxLen + 1) / 2 + maxLen - 1);
+    }
+
+    private static String preHandle(String s) {
+        char[] res = new char[2 * s.length() + 1];
+        for (int i = 0; i < s.length(); i++) {
+            res[2 * i] = '#';
+            res[2 * i + 1] = s.charAt(i);
+        }
+        res[2 * s.length()] = '#';
+        return String.valueOf(res);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(longestPalindrome("babad"));
+    }
+}
