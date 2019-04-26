@@ -71,7 +71,7 @@ public:
 
 /**************************** JAVA *****************************/
 
-注意点：StringBuilder数组需要对每个元素进行一遍初始化！
+注意点：String[], StringBuilder[], StringBuffer[]需要循环对每个元素进行一遍初始化！
 
 /**
  * leetcode 006
