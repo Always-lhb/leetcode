@@ -67,3 +67,57 @@ public:
         return res;
     }
 };
+
+
+/**************************** JAVA *****************************/
+
+注意点：StringBuilder数组需要对每个元素进行一遍初始化！
+
+/**
+ * leetcode 006
+ * 思路：
+ *      numRows个StringBuilder存储：对每个字符，找到存放它的StringBuilder，
+ *      最后按照下标对所有StringBuilder连接
+ *
+ * @author lihb
+ */
+public class ZigZagConversion {
+
+    private static String convert(String s, int numRows) {
+        if (numRows < 2) return s;
+        
+        StringBuilder res = new StringBuilder();
+        StringBuilder[] stringBuilders = new StringBuilder[numRows];
+        for (int i = 0; i < numRows; i++) {
+            stringBuilders[i] = new StringBuilder();
+        }
+        int row = 0;
+        boolean isDown = true;  // 方向是否向下
+
+        for (int i = 0; i < s.length(); i++) {
+            if (isDown) {
+                stringBuilders[row++].append(s.charAt(i));
+                if (row == numRows) {
+                    row -= 2;
+                    isDown = false;
+                }
+            } else {
+                stringBuilders[row--].append(s.charAt(i));
+                if (row == -1) {
+                    row += 2;
+                    isDown = true;
+                }
+            }
+        }
+
+        for (int i = 0; i < numRows; i++) {
+            res.append(stringBuilders[i]);
+        }
+        return String.valueOf(res);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(convert("PAYPALISHIRING", 3));
+        System.out.println(convert("PAYPALISHIRING", 4));
+    }
+}
