@@ -29,3 +29,32 @@ public:
 简单题，第二次做神奇的出错了，原因在于应该声明res为long型。对于可能越界的题，注意声明为long
 这里仍采用以上代码，简练。
 */
+
+
+/********************** java **************************/
+
+自己想复杂了，还对正负进行了区分，导致还得对Integer.MIN_VALUE特殊处理；实际上直接翻转即可，想到利用long存储res是个进步
+/**
+ * leetcode 07
+ *
+ * @author lihb
+ */
+public class ReverseInteger {
+
+    public static int reverse(int x) {
+        long res = 0;
+        int last;
+
+        while (x != 0) {
+            last = x % 10;
+            x /= 10;
+            res = res * 10 + last;
+        }
+        if (res > Integer.MAX_VALUE || res < Integer.MIN_VALUE) return 0;
+        return (int) res;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(reverse(Integer.MIN_VALUE));
+    }
+}
