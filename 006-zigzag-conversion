@@ -121,3 +121,37 @@ public class ZigZagConversion {
         System.out.println(convert("PAYPALISHIRING", 4));
     }
 }
+
+// java版本，一次ac，但是忘记对String[]进行循环初始化了
+public String convert(String s, int numRows) {
+        if (numRows < 2) return s;
+
+        String result = "";
+        String[] strs = new String[numRows];
+        for (int i = 0; i < numRows; i++) strs[i] = "";
+        boolean isDown = true;
+        int index = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (isDown) {
+                strs[index] = strs[index] + s.charAt(i);
+                index++;
+                if (index == numRows) {
+                    isDown = false;
+                    index -= 2;
+                }
+            } else {
+                strs[index] = strs[index] + s.charAt(i);
+                index--;
+                if (index < 0) {
+                    isDown = true;
+                    index += 2;
+                }
+            }
+        }
+
+        for (int i = 0; i < numRows; i++) {
+            result = result.concat(strs[i]);
+        }
+        return result;
+    }
