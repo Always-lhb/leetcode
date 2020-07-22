@@ -122,7 +122,11 @@ public class ZigZagConversion {
     }
 }
 
-// java版本，一次ac，但是忘记对String[]进行循环初始化了
+/** 
+java版本，一次ac
+    1. 忘记对String[]进行循环初始化了
+    2. 频繁地修改最好使用StringBuilder而非String
+*/
 public String convert(String s, int numRows) {
         if (numRows < 2) return s;
 
