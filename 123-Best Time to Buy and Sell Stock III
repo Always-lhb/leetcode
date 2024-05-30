@@ -19,3 +19,21 @@ public:
         return release2;
     }
 };
+
+
+// Java版本代码
+class Solution {
+    public int maxProfit(int[] prices) {
+        if (prices == null || prices.length < 2) return 0;
+
+        int hold1 = Integer.MIN_VALUE, release1 = 0, hold2 = Integer.MIN_VALUE, release2 = 0;
+
+        for (int price : prices) {
+            hold1 = Math.max(hold1, -price);
+            release1 = Math.max(release1, hold1 + price);
+            hold2 = Math.max(hold2, release1 - price);
+            release2 = Math.max(release2, hold2 + price);
+        }
+        return release2;
+    }
+}
